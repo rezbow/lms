@@ -18,15 +18,11 @@ templ LoanInfo(loan *models.Loan) {
 			}
 		</div>
 		<div>
-			<form
+			<button
 				hx-post={ fmt.Sprintf("/loans/%d/delete", loan.ID) }
 				hx-target="#result"
 				hx-swap="innerHtml"
-			>
-				<button
-					type="submit"
-				>Delete Loan</button>
-			</form>
+			>Delete</button>
 			if loan.Status == models.StatusBorrowed {
 				<a href={ fmt.Sprintf("/loans/%d/return", loan.ID) }>
 					<button type="button">Return</button>

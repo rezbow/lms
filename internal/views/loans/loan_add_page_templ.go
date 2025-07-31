@@ -8,7 +8,7 @@ package books
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func LoanAddForm() templ.Component {
+func LoanAddForm(memberId, bookId int) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,7 +29,53 @@ func LoanAddForm() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><form hx-post=\"/loans/add\" hx-target=\"#results\" hx-swap=\"innerHTML\"><div><label for=\"bookId\">Book Id:</label> <input id=\"bookId\" type=\"number\" name=\"bookId\" required></div><div><label for=\"memberId\">Member Id:</label> <input id=\"memberId\" type=\"number\" name=\"memberId\" required></div><div><label for=\"dueDate\">Due Date:</label> <input id=\"dueDate\" type=\"date\" name=\"dueDate\" required></div><div><label for=\"borrowDate\">Borrow Date:</label> <input type=\"date\" id=\"borrowDate\" name=\"borrowDate\" required></div><button type=\"submit\">Add Loan</button></form><div id=\"results\"></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><form hx-post=\"/loans/add\" hx-target=\"#results\" hx-swap=\"innerHTML\"><div><label for=\"bookId\">Book Id:</label> <input id=\"bookId\" type=\"number\" name=\"bookId\" required")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if bookId > 0 {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " value=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var2 string
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(bookId)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `loans/loan_add_page.templ`, Line: 18, Col: 20}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" readonly")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "></div><div><label for=\"memberId\">Member Id:</label> <input id=\"memberId\" type=\"number\" name=\"memberId\" required")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if memberId > 0 {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " value=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var3 string
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(memberId)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `loans/loan_add_page.templ`, Line: 31, Col: 22}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "\" readonly")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "></div><div><label for=\"dueDate\">Due Date:</label> <input id=\"dueDate\" type=\"date\" name=\"dueDate\" required></div><div><label for=\"borrowDate\">Borrow Date:</label> <input type=\"date\" id=\"borrowDate\" name=\"borrowDate\" required></div><button type=\"submit\">Add Loan</button></form><div id=\"results\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

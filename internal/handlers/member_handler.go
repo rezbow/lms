@@ -5,6 +5,7 @@ import (
 	"lms/internal/models"
 	"lms/internal/repositories"
 	commonViews "lms/internal/views/common"
+	loanViews "lms/internal/views/loans"
 	memberViews "lms/internal/views/members"
 	"strconv"
 
@@ -34,9 +35,10 @@ func (mh *MemberHandler) Index(ctx *gin.Context) {
 
 func (mh *MemberHandler) GetById(ctx *gin.Context) {
 	// hx := htmxHandler(ctx)
-	memberId := ctx.Param("id")
-	if _, err := strconv.Atoi(memberId); err != nil {
-		render(ctx, commonViews.NotFound(), "404:((")
+
+	memberId, err := readID(ctx)
+	if err != nil {
+		notfound(ctx)
 		return
 	}
 	member, err := mh.Repo.GetById(memberId)
@@ -103,14 +105,18 @@ func (mh *MemberHandler) Add(ctx *gin.Context) {
 }
 
 func (mh *MemberHandler) EditPage(ctx *gin.Context) {
-	memberId := ctx.Param("id")
+	memberId, err := readID(ctx)
+	if err != nil {
+		notfound(ctx)
+		return
+	}
 	member, err := mh.Repo.GetById(memberId)
 	if err != nil {
 		if err == repositories.ErrNotFound {
-			render(ctx, commonViews.NotFound(), "404:((")
+			notfound(ctx)
 			return
 		}
-		render(ctx, commonViews.ServerError(""), "internal server error")
+		serverError(ctx)
 		return
 	}
 	render(ctx, memberViews.MemberEditForm(member), member.Name)
@@ -193,4 +199,23 @@ func (mh *MemberHandler) Search(ctx *gin.Context) {
 		return
 	}
 	render(ctx, memberViews.MemberList(members), "members")
+}
+
+func (mh *MemberHandler) AddLoanPage(ctx *gin.Context) {
+	memberId, err := readID(ctx)
+	if err != nil {
+		notfound(ctx)
+		return
+	}
+
+	_, err = mh.Repo.GetById(memberId)
+	if err != nil {
+		if err == repositories.ErrNotFound {
+			notfound(ctx)
+			return
+		}
+		serverError(ctx)
+		return
+	}
+	render(ctx, loanViews.LoanAddForm(memberId, 0), "add loan")
 }

@@ -13,13 +13,14 @@ templ MemberInfo(member *models.Member) {
 			<p><strong>Join date:</strong> { member.JoinDate.Format("2006-01-02") }</p>
 		</div>
 		<div>
-			<form
+			<a href={ fmt.Sprintf("/members/%d/addloan", member.ID) }>
+				<button>Add Loan</button>
+			</a>
+			<button
 				hx-post={ fmt.Sprintf("/members/%d/delete", member.ID) }
 				hx-swap="innerHTML"
 				hx-target="#result"
-			>
-				<button type="submit">Delete</button>
-			</form>
+			>Delete</button>
 			<a href={ fmt.Sprintf("/members/%d/edit", member.ID) }>
 				<button>Edit</button>
 			</a>

@@ -69,7 +69,7 @@ func (lh *LoanHandler) DeleteById(ctx *gin.Context) {
 }
 
 func (lh *LoanHandler) AddPage(ctx *gin.Context) {
-	render(ctx, loanViews.LoanAddForm(), "add loan")
+	render(ctx, loanViews.LoanAddForm(0, 0), "add loan")
 }
 
 func (lh *LoanHandler) Add(ctx *gin.Context) {

@@ -13,7 +13,7 @@ type MemberRepo struct {
 	DB *gorm.DB
 }
 
-func (mr *MemberRepo) GetById(id string) (*models.Member, error) {
+func (mr *MemberRepo) GetById(id int) (*models.Member, error) {
 	var member models.Member
 	result := mr.DB.First(&member, id)
 	if result.Error != nil {

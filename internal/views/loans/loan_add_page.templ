@@ -1,6 +1,6 @@
 package books
 
-templ LoanAddForm() {
+templ LoanAddForm(memberId, bookId int) {
 	<div>
 		<form
 			hx-post="/loans/add"
@@ -9,11 +9,29 @@ templ LoanAddForm() {
 		>
 			<div>
 				<label for="bookId">Book Id:</label>
-				<input id="bookId" type="number" name="bookId" required/>
+				<input
+					id="bookId"
+					type="number"
+					name="bookId"
+					required
+					if bookId > 0 {
+						value={ bookId }
+						readonly
+					}
+				/>
 			</div>
 			<div>
 				<label for="memberId">Member Id:</label>
-				<input id="memberId" type="number" name="memberId" required/>
+				<input
+					id="memberId"
+					type="number"
+					name="memberId"
+					required
+					if memberId > 0 {
+						value={ memberId }
+						readonly
+					}
+				/>
 			</div>
 			<div>
 				<label for="dueDate">Due Date:</label>
