@@ -1,0 +1,20 @@
+package members
+
+import "lms/internal/models"
+import "fmt"
+
+templ MemberList(members []models.Member) {
+	<ul>
+		if len(members) == 0 {
+			<li>No Member found :((</li>
+		} else {
+			for _, m:= range members {
+				<li>
+					<a href={ fmt.Sprintf("/members/%d", m.ID) }>
+						{ m.Name }
+					</a>
+				</li>
+			}
+		}
+	</ul>
+}

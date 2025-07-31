@@ -1,0 +1,10 @@
+package common
+
+import "fmt"
+import "lms/internal/utils"
+
+templ Flash(msg string, color string) {
+	if msg != "" {
+		<p style={ fmt.Sprintf("color:%s;", utils.DefaultString(color, "blue")) }>{ msg }</p>
+	}
+}

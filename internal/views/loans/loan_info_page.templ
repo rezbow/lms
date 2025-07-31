@@ -1,0 +1,41 @@
+package books
+
+import "lms/internal/models"
+
+import "fmt"
+import "time"
+
+templ LoanInfo(loan *models.Loan) {
+	<div>
+		<div>
+			<p><strong>Book: </strong> <a href={ fmt.Sprintf("/books/%d", loan.BookId) }>{ loan.Book.TitleFa } </a></p>
+			<p><strong>Member:</strong><a href={ fmt.Sprintf("/members/%d", loan.MemberId) }>{ loan.Member.Name }</a></p>
+			<p><strong>Borrow Date:</strong> { loan.BorrowDate.Format(time.RFC3339) }</p>
+			<p><strong>Due Date:</strong> { loan.DueDate.Format(time.RFC3339) }</p>
+			<p><strong>Status:</strong> { loan.Status }</p>
+			if loan.Status == models.StatusReturned {
+				<p><strong>Return Date:</strong> { loan.ReturnDate.Format(time.RFC3339) }</p>
+			}
+		</div>
+		<div>
+			<form
+				hx-post={ fmt.Sprintf("/loans/%d/delete", loan.ID) }
+				hx-target="#result"
+				hx-swap="innerHtml"
+			>
+				<button
+					type="submit"
+				>Delete Loan</button>
+			</form>
+			if loan.Status == models.StatusBorrowed {
+				<a href={ fmt.Sprintf("/loans/%d/return", loan.ID) }>
+					<button type="button">Return</button>
+				</a>
+			}
+			<a href={ fmt.Sprintf("/loans/%d/edit", loan.ID) }>
+				<button type="button">Edit</button>
+			</a>
+		</div>
+		<div id="result"></div>
+	</div>
+}

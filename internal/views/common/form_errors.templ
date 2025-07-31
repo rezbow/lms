@@ -1,0 +1,11 @@
+package common
+
+templ FormErrors(errors []string) {
+	if len(errors) > 0 {
+		<ul class="errors" style="color: red;">
+			for _, e := range errors {
+				<li>{ e }</li>
+			}
+		</ul>
+	}
+}

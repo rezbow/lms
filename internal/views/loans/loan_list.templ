@@ -1,0 +1,20 @@
+package books
+
+import "lms/internal/models"
+import "fmt"
+
+templ LoanList(loans []models.Loan) {
+	<ul>
+		if len(loans) == 0 {
+			<li>No Loans found</li>
+		} else {
+			for _, l := range loans {
+				<li>
+					<a href={ fmt.Sprintf("/loans/%d", l.ID) }>
+						{ fmt.Sprintf("'%s' borrowed by '%s'",l.Book.TitleEn,l.Member.Name) }
+					</a>
+				</li>
+			}
+		}
+	</ul>
+}

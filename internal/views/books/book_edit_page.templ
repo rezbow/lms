@@ -1,0 +1,40 @@
+package books
+
+import "lms/internal/views"
+import "lms/internal/models"
+import "fmt"
+
+templ BookEditForm(book *models.Book) {
+	@views.Layout("edit") {
+		<div>
+			<form
+				hx-post={ fmt.Sprintf("/books/%d/edit", book.ID) }
+				hx-target="#results"
+				hx-swap="innerHTML"
+			>
+				<div>
+					<label for="title_en">English Title:</label>
+					<input id="title_en" type="text" name="title_en" value={ book.TitleEn }/>
+				</div>
+				<div>
+					<label for="title_fa">Persian Title:</label>
+					<input id="title_fa" type="text" name="title_fa" value={ book.TitleFa }/>
+				</div>
+				<div>
+					<label for="isbn">ISBN:</label>
+					<input id="isbn" type="text" name="isbn" value={ book.ISBN }/>
+				</div>
+				<div>
+					<label for="total_copies">Total Copies:</label>
+					<input id="total_copies" type="number" name="total_copies" value={ book.TotalCopies }/>
+				</div>
+				<div>
+					<label for="author_id">Author:</label>
+					<input id="author_id" type="number" name="author_id" value={ book.AuthorId }/>
+				</div>
+				<button type="submit">Update</button>
+			</form>
+			<div id="results"></div>
+		</div>
+	}
+}

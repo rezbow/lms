@@ -1,0 +1,29 @@
+package members
+
+import "lms/internal/models"
+import "fmt"
+
+templ MemberInfo(member *models.Member) {
+	<div>
+		<div>
+			<p><strong>Name:</strong> { member.Name }</p>
+			<p><strong>Email:</strong> { member.Email }</p>
+			<p><strong>Phone:</strong> { member.Phone }</p>
+			<p><strong>Status:</strong> { member.Status }</p>
+			<p><strong>Join date:</strong> { member.JoinDate.Format("2006-01-02") }</p>
+		</div>
+		<div>
+			<form
+				hx-post={ fmt.Sprintf("/members/%d/delete", member.ID) }
+				hx-swap="innerHTML"
+				hx-target="#result"
+			>
+				<button type="submit">Delete</button>
+			</form>
+			<a href={ fmt.Sprintf("/members/%d/edit", member.ID) }>
+				<button>Edit</button>
+			</a>
+		</div>
+		<div id="result"></div>
+	</div>
+}

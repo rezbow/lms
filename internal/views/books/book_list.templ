@@ -1,0 +1,20 @@
+package books
+
+import "lms/internal/models"
+import "fmt"
+
+templ BookList(books []models.Book) {
+	<ul>
+		if len(books) == 0 {
+			<li>No books found</li>
+		} else {
+			for _, b := range books {
+				<li>
+					<a href={ fmt.Sprintf("/books/%d", b.ID) }>
+						{ b.TitleEn }
+					</a>
+				</li>
+			}
+		}
+	</ul>
+}

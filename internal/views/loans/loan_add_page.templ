@@ -1,0 +1,30 @@
+package books
+
+templ LoanAddForm() {
+	<div>
+		<form
+			hx-post="/loans/add"
+			hx-target="#results"
+			hx-swap="innerHTML"
+		>
+			<div>
+				<label for="bookId">Book Id:</label>
+				<input id="bookId" type="number" name="bookId" required/>
+			</div>
+			<div>
+				<label for="memberId">Member Id:</label>
+				<input id="memberId" type="number" name="memberId" required/>
+			</div>
+			<div>
+				<label for="dueDate">Due Date:</label>
+				<input id="dueDate" type="date" name="dueDate" required/>
+			</div>
+			<div>
+				<label for="borrowDate">Borrow Date:</label>
+				<input type="date" id="borrowDate" name="borrowDate" required/>
+			</div>
+			<button type="submit">Add Loan</button>
+		</form>
+		<div id="results"></div>
+	</div>
+}

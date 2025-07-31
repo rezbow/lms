@@ -1,0 +1,29 @@
+package members
+
+import "lms/internal/models"
+
+templ Index(members []models.Member) {
+	<div>
+		<h1>Member Search</h1>
+		<a href="/members/add">Add Member</a>
+		<input
+			type="text"
+			name="name"
+			placeholder="name"
+			hx-get="/members/search"
+			hx-target="#results"
+			hx-trigger="keyup changed delay:300ms"
+		/>
+		<input
+			type="text"
+			name="email"
+			placeholder="email"
+			hx-get="/members/search"
+			hx-target="#results"
+			hx-trigger="keyup changed delay:300ms"
+		/>
+		<div id="results">
+			@MemberList(members)
+		</div>
+	</div>
+}

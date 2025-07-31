@@ -1,0 +1,13 @@
+package views
+
+templ LayoutNew(children templ.Component, title string) {
+	<html>
+		<head>
+			<title>{ title }</title>
+			<script src="https://unpkg.com/htmx.org@1.9.10"></script>
+		</head>
+		<body>
+			@children
+		</body>
+	</html>
+}

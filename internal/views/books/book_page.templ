@@ -1,0 +1,30 @@
+package books
+
+import "lms/internal/models"
+import "lms/internal/views"
+import "fmt"
+
+templ Book(book *models.Book) {
+	@views.Layout(book.TitleEn) {
+		<div>
+			<div>
+				<p><strong>English Title: </strong> { book.TitleEn }</p>
+				<p><strong>Persian Title:</strong> { book.TitleFa }</p>
+				<p><strong>Author:</strong> { book.Author.NameEn }</p>
+			</div>
+			<div>
+				<form
+					method="POST"
+					action={ fmt.Sprintf("/books/%d/delete", book.ID) }
+				>
+					<button
+						type="submit"
+					>Delete Book</button>
+				</form>
+				<a href={ fmt.Sprintf("/books/%d/edit", book.ID) }>
+					<button type="button">Edit</button>
+				</a>
+			</div>
+		</div>
+	}
+}
