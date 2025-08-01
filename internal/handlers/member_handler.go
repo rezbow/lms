@@ -35,7 +35,6 @@ func (mh *MemberHandler) Index(ctx *gin.Context) {
 }
 
 func (mh *MemberHandler) GetById(ctx *gin.Context) {
-	// hx := htmxHandler(ctx)
 
 	memberId, err := readID(ctx)
 	if err != nil {

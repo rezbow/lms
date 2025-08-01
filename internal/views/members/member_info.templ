@@ -2,29 +2,43 @@ package members
 
 import "lms/internal/models"
 import "fmt"
+import "lms/internal/views/loans"
+import "lms/internal/views"
 
 templ MemberInfo(member *models.Member) {
 	<div>
 		<div>
-			<p><strong>Name:</strong> { member.Name }</p>
-			<p><strong>Email:</strong> { member.Email }</p>
-			<p><strong>Phone:</strong> { member.Phone }</p>
-			<p><strong>Status:</strong> { member.Status }</p>
-			<p><strong>Join date:</strong> { member.JoinDate.Format("2006-01-02") }</p>
+			<div>
+				<p><strong>Name:</strong> { member.Name }</p>
+				<p><strong>Email:</strong> { member.Email }</p>
+				<p><strong>Phone:</strong> { member.Phone }</p>
+				<p><strong>Status:</strong> { member.Status }</p>
+				<p><strong>Join date:</strong> { member.JoinDate.Format("2006-01-02") }</p>
+			</div>
+			<div>
+				<a href={ fmt.Sprintf("/members/%d/addloan", member.ID) }>
+					<button>Add Loan</button>
+				</a>
+				<div>
+					<button
+						hx-post={ fmt.Sprintf("/members/%d/delete", member.ID) }
+						if len(member.Loans) > 0 {
+							disabled
+						}
+					>
+						Delete Book
+					</button>
+					if len(member.Loans) > 0 {
+						<small class="pico-color-red-500">this member has active loans and it can't be deleted</small>
+					}
+				</div>
+				<a href={ fmt.Sprintf("/members/%d/edit", member.ID) }>
+					<button>Edit</button>
+				</a>
+			</div>
 		</div>
 		<div>
-			<a href={ fmt.Sprintf("/members/%d/addloan", member.ID) }>
-				<button>Add Loan</button>
-			</a>
-			<button
-				hx-post={ fmt.Sprintf("/members/%d/delete", member.ID) }
-				hx-swap="innerHTML"
-				hx-target="#result"
-			>Delete</button>
-			<a href={ fmt.Sprintf("/members/%d/edit", member.ID) }>
-				<button>Edit</button>
-			</a>
+			@loans.LoanSearch(member.Loans, views.Data{"memberId": member.ID})
 		</div>
-		<div id="result"></div>
 	</div>
 }

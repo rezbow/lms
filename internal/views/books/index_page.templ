@@ -1,34 +1,29 @@
 package books
 
 import "lms/internal/models"
-import "lms/internal/views"
-import "lms/internal/views/common"
 
-templ BookPage(books []models.Book, flashMsg string) {
-	@views.Layout("book search") {
-		<div>
-			<h1>Book Search</h1>
-			<a href="/books/add">Add book </a>
-			@common.Flash(flashMsg, "")
-			<input
-				type="text"
-				name="title"
-				placeholder="Title"
-				hx-get="/books/search"
-				hx-target="#results"
-				hx-trigger="keyup changed delay:300ms"
-			/>
-			<input
-				type="text"
-				name="author"
-				placeholder="Author"
-				hx-get="/books/search"
-				hx-target="#results"
-				hx-trigger="keyup changed delay:300ms"
-			/>
-			<div id="results">
-				@BookList(books)
-			</div>
+templ BookPage(books []models.Book) {
+	<div>
+		<h1>Book Search</h1>
+		<a href="/books/add">Add book </a>
+		<input
+			type="text"
+			name="title"
+			placeholder="Title"
+			hx-get="/books/search"
+			hx-target="#results"
+			hx-trigger="keyup changed delay:300ms"
+		/>
+		<input
+			type="text"
+			name="author"
+			placeholder="Author"
+			hx-get="/books/search"
+			hx-target="#results"
+			hx-trigger="keyup changed delay:300ms"
+		/>
+		<div id="results">
+			@BookList(books)
 		</div>
-	}
+	</div>
 }

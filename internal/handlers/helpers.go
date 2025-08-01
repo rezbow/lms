@@ -7,10 +7,12 @@ import (
 	commonViews "lms/internal/views/common"
 	"net/http"
 	"strconv"
+	"unicode"
 
 	"github.com/a-h/templ"
 	"github.com/donseba/go-htmx"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 var htmxApp = htmx.New()
@@ -118,4 +120,25 @@ func readIntFromQuery(str string) (int, error) {
 	}
 	return i, nil
 
+}
+
+func lowerFirst(s string) string {
+	if s == "" {
+		return s
+	}
+	runes := []rune(s)
+	runes[0] = unicode.ToLower(runes[0])
+	return string(runes)
+}
+
+func parseValidationErrors(err error) views.Errors {
+	errors := make(views.Errors)
+	if ve, ok := err.(validator.ValidationErrors); ok {
+		for _, fe := range ve {
+			errors[lowerFirst(fe.Field())] = fe.Error()
+		}
+	} else {
+		errors["_"] = err.Error()
+	}
+	return errors
 }

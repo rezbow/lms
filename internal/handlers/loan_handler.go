@@ -74,8 +74,8 @@ func (lh *LoanHandler) AddPage(ctx *gin.Context) {
 
 func (lh *LoanHandler) Add(ctx *gin.Context) {
 	var userInput struct {
-		BookId     int       `form:"bookId" binding:"required" validate:"required,min=1"`
-		MemberId   int       `form:"memberId" binding:"required" validate:"required,min=1"`
+		BookId     uint      `form:"bookId" binding:"required" validate:"required,min=1"`
+		MemberId   uint      `form:"memberId" binding:"required" validate:"required,min=1"`
 		BorrowDate time.Time `form:"borrowDate" binding:"required" time_format:"2006-01-02" validate:"required"`
 		DueDate    time.Time `form:"dueDate" binding:"required" time_format:"2006-01-02" validate:"required"`
 	}
@@ -137,8 +137,8 @@ func (lh *LoanHandler) Update(ctx *gin.Context) {
 	}
 
 	var userInput struct {
-		BookId     int       `form:"bookId" binding:"omitempty" validate:"omitempty,min=1"`
-		MemberId   int       `form:"memberId" binding:"omitempty" validate:"omitempty,min=1"`
+		BookId     uint      `form:"bookId" binding:"omitempty" validate:"omitempty,min=1"`
+		MemberId   uint      `form:"memberId" binding:"omitempty" validate:"omitempty,min=1"`
 		BorrowDate time.Time `form:"borrowDate" binding:"omitempty" time_format:"2006-01-02"`
 		DueDate    time.Time `form:"dueDate" binding:"omitempty" time_format:"2006-01-02" `
 	}

@@ -1,4 +1,4 @@
-package books
+package loans 
 
 import "lms/internal/models"
 
@@ -8,8 +8,8 @@ import "time"
 templ LoanInfo(loan *models.Loan) {
 	<div>
 		<div>
-			<p><strong>Book: </strong> <a href={ fmt.Sprintf("/books/%d", loan.BookId) }>{ loan.Book.TitleFa } </a></p>
-			<p><strong>Member:</strong><a href={ fmt.Sprintf("/members/%d", loan.MemberId) }>{ loan.Member.Name }</a></p>
+			<p><strong>Book: </strong> <a href={ fmt.Sprintf("/books/%d", loan.BookId) }>{ loan.BookId } </a></p>
+			<p><strong>Member:</strong><a href={ fmt.Sprintf("/members/%d", loan.MemberId) }>{ loan.MemberId }</a></p>
 			<p><strong>Borrow Date:</strong> { loan.BorrowDate.Format(time.RFC3339) }</p>
 			<p><strong>Due Date:</strong> { loan.DueDate.Format(time.RFC3339) }</p>
 			<p><strong>Status:</strong> { loan.Status }</p>

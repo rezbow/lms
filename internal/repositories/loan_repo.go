@@ -20,7 +20,7 @@ var (
 
 func (lp *LoanRepo) GetById(id int) (*models.Loan, error) {
 	var loan models.Loan
-	result := lp.DB.Preload("Book").Preload("Member").First(&loan, id)
+	result := lp.DB.First(&loan, id)
 
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -52,7 +52,7 @@ func (lp *LoanRepo) Insert(loan *models.Loan) error {
 func (lp *LoanRepo) All(page, pageSize int) ([]models.Loan, error) {
 	var loans []models.Loan
 	offset := (page - 1) * pageSize
-	result := lp.DB.Preload("Book").Preload("Member").Limit(pageSize).Offset(offset).Find(&loans)
+	result := lp.DB.Limit(pageSize).Offset(offset).Find(&loans)
 	if result.Error != nil {
 		return nil, ErrInternal
 	}
@@ -85,7 +85,7 @@ func (lr *LoanRepo) handleInsertError(err error) error {
 
 func (lr *LoanRepo) Filter(bookId, memberId int, status string, pagination *utils.Pagination) ([]models.Loan, error) {
 	var loans []models.Loan
-	query := lr.DB.Model(&models.Loan{}).Preload("Book").Preload("Member")
+	query := lr.DB.Model(&models.Loan{})
 
 	if bookId >= 0 {
 		query.Where("book_id = ? ", bookId)

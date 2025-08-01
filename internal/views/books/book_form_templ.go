@@ -8,9 +8,10 @@ package books
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
+import "lms/internal/models"
 import "lms/internal/views"
 
-func BookAddForm(errors views.Errors) templ.Component {
+func BookForm(book *models.Book, errors views.Errors) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,7 +32,7 @@ func BookAddForm(errors views.Errors) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div id=\"addForm\"><form hx-post=\"/books/add\" hx-target=\"#addForm\" hx-swap=\"outerHTML\"><div><input id=\"titleEn\" type=\"text\" name=\"titleEn\" required placeholder=\"enter english title\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><input id=\"titleEn\" type=\"text\" name=\"titleEn\" required placeholder=\"enter english title\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -53,7 +54,7 @@ func BookAddForm(errors views.Errors) templ.Component {
 			var templ_7745c5c3_Var2 string
 			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(errors["titleEn"])
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/add_book_page.templ`, Line: 24, Col: 31}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/book_form.templ`, Line: 19, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -86,7 +87,7 @@ func BookAddForm(errors views.Errors) templ.Component {
 			var templ_7745c5c3_Var3 string
 			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(errors["titleFn"])
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/add_book_page.templ`, Line: 39, Col: 31}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/book_form.templ`, Line: 34, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -119,7 +120,7 @@ func BookAddForm(errors views.Errors) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(errors["isbn"])
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/add_book_page.templ`, Line: 54, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/book_form.templ`, Line: 49, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -152,7 +153,7 @@ func BookAddForm(errors views.Errors) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(errors["totalCopies"])
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/add_book_page.templ`, Line: 69, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/book_form.templ`, Line: 64, Col: 33}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -185,7 +186,7 @@ func BookAddForm(errors views.Errors) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(errors["authorId"])
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/add_book_page.templ`, Line: 84, Col: 32}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/book_form.templ`, Line: 79, Col: 30}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -208,7 +209,7 @@ func BookAddForm(errors views.Errors) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(errors["_"])
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/add_book_page.templ`, Line: 89, Col: 47}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/book_form.templ`, Line: 84, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -218,10 +219,6 @@ func BookAddForm(errors views.Errors) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</form></div>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
 		}
 		return nil
 	})

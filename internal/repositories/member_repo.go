@@ -15,7 +15,7 @@ type MemberRepo struct {
 
 func (mr *MemberRepo) GetById(id int) (*models.Member, error) {
 	var member models.Member
-	result := mr.DB.First(&member, id)
+	result := mr.DB.Model(&models.Member{}).Preload("Loans").Find(&member, id)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, ErrNotFound
@@ -127,4 +127,13 @@ func (mr *MemberRepo) Total() int64 {
 	var total int64
 	mr.DB.Model(&models.Book{}).Count(&total)
 	return total
+}
+
+func (mr *MemberRepo) HasActiveLoans(memberId int) (bool, error) {
+	var total int64
+	err := mr.DB.Model(&models.Loan{}).Where("member_id = ?", memberId).Count(&total).Error
+	if err != nil {
+		return false, ErrInternal
+	}
+	return total > 0, nil
 }

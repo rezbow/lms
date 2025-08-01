@@ -9,9 +9,9 @@ type Book struct {
 	TitleFa         string
 	TitleEn         string
 	ISBN            string
-	AuthorId        int
+	AuthorId        uint
 	TotalCopies     int
 	AvailableCopies int
 	CreatedAt       time.Time `gorm:"default:current_timestamp"`
-	Author          Author    `gorm:"foreignKey:AuthorId"`
+	Loans           []Loan
 }

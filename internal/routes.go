@@ -29,7 +29,7 @@ func SetupRouter(
 	books.POST("/:id/delete", bookHandler.Delete)
 	books.GET("/:id/edit", bookHandler.EditPage)
 	books.POST("/:id/edit", bookHandler.Update)
-	// books.GET("/:id/addloan", bookHandler.AddLoanPage)
+	books.GET("/:id/addloan", bookHandler.AddLoanPage)
 
 	// memebers
 	members := r.Group("/members")

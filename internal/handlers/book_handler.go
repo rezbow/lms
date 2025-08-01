@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"lms/internal/models"
 	"lms/internal/repositories"
+	"lms/internal/views"
 	bookViews "lms/internal/views/books"
-	commonViews "lms/internal/views/common"
-	"net/http"
-	"strconv"
+	loanViews "lms/internal/views/loans"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -18,23 +17,14 @@ type BookHandler struct {
 	Validator *validator.Validate
 }
 
-func (bh *BookHandler) _get(ctx *gin.Context) (*models.Book, error) {
-	bookId := ctx.Param("id")
-	book, err := bh.BookRepo.GetById(bookId)
-	if err != nil {
-		if err == repositories.ErrNotFound {
-			ctx.HTML(http.StatusNotFound, "", commonViews.NotFound())
-			return nil, err
-		}
-		ctx.HTML(http.StatusInternalServerError, "", commonViews.ServerError(err.Error()))
-		return nil, err
-	}
-	return book, nil
-
-}
-
 func (bh *BookHandler) Get(ctx *gin.Context) {
-	bookId := ctx.Param("id")
+
+	bookId, err := readID(ctx)
+	if err != nil {
+		notfound(ctx)
+		return
+	}
+
 	book, err := bh.BookRepo.GetById(bookId)
 	if err != nil {
 		if err == repositories.ErrNotFound {
@@ -48,42 +38,72 @@ func (bh *BookHandler) Get(ctx *gin.Context) {
 }
 
 func (bh *BookHandler) Delete(ctx *gin.Context) {
-	bookId := ctx.Param("id")
-	err := bh.BookRepo.DeleteById(bookId)
+
+	bookId, err := readID(ctx)
+	if err != nil {
+		notfound(ctx)
+		return
+	}
+
+	err = bh.BookRepo.DeleteById(bookId)
 	if err != nil {
 		switch err {
 		case repositories.ErrBookHasActiveLoan:
-			ctx.HTML(http.StatusConflict, "", commonViews.Flash("this book has active loans and can't be deleted", "red"))
+			redirect(ctx, fmt.Sprintf("/books/%d", bookId))
+			return
 		case repositories.ErrNotFound:
-			ctx.HTML(http.StatusNotFound, "", commonViews.NotFound())
+			notfound(ctx)
+			return
 		default:
-			ctx.HTML(http.StatusInternalServerError, "", commonViews.ServerError(err.Error()))
+			serverError(ctx)
+			return
+
 		}
+	}
+	redirect(ctx, "/books")
+}
+
+func (bh *BookHandler) AddLoanPage(ctx *gin.Context) {
+	bookId, err := readID(ctx)
+	if err != nil {
+		notfound(ctx)
 		return
 	}
-	ctx.Redirect(http.StatusSeeOther, "/books?flash=deleted")
+
+	book, err := bh.BookRepo.GetById(bookId)
+	if err != nil {
+		if err == repositories.ErrNotFound {
+			notfound(ctx)
+			return
+		}
+		serverError(ctx)
+		return
+	}
+
+	render(ctx, loanViews.LoanAddForm(views.Data{"bookId": book.ID}), "add loan")
+
 }
 
 func (bh *BookHandler) AddPage(ctx *gin.Context) {
-	ctx.HTML(http.StatusOK, "", bookViews.BookForm())
+	render(ctx, bookViews.BookAddForm(views.Errors{}), "add book")
 }
 
 func (bh *BookHandler) Add(ctx *gin.Context) {
 	var bookForm struct {
-		TitleFa     string `form:"title_fa" binding:"required" validate:"required,min=1,max=100"`
-		TitleEn     string `form:"title_en" binding:"required" validate:"required,min=1,max=100"`
+		TitleFa     string `form:"titleFa" binding:"required" validate:"required,min=1,max=100"`
+		TitleEn     string `form:"titleEn" binding:"required" validate:"required,min=1,max=100"`
 		ISBN        string `form:"isbn" binding:"required" validate:"required"`
-		TotalCopies int    `form:"total_copies" binding:"required" validate:"required,min=1"`
-		AuthorId    int    `form:"author_id" binding:"required" validate:"required,min=1"`
+		TotalCopies int    `form:"totalCopies" binding:"required" validate:"required,min=1"`
+		AuthorId    uint   `form:"authorId" binding:"required" validate:"required,min=1"`
 	}
 
 	if err := ctx.ShouldBind(&bookForm); err != nil {
-		ctx.HTML(http.StatusBadRequest, "", commonViews.FormErrors([]string{err.Error()}))
+		render(ctx, bookViews.BookAddForm(parseValidationErrors(err)), "add book")
 		return
 	}
 
 	if err := bh.Validator.Struct(bookForm); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid fields", "validation_errors": extractValidationErrs(err)})
+		render(ctx, bookViews.BookAddForm(parseValidationErrors(err)), "add book")
 		return
 	}
 
@@ -99,14 +119,16 @@ func (bh *BookHandler) Add(ctx *gin.Context) {
 	if err := bh.BookRepo.Insert(&book); err != nil {
 		// check for invalid author ID
 		if err == repositories.ErrAuthorIdNotFound {
-			ctx.HTML(http.StatusBadRequest, "", commonViews.FormErrors([]string{err.Error()}))
+			render(ctx, bookViews.BookAddForm(views.Errors{
+				"authorId": "doesn't exist",
+			}), "add book")
 			return
 		}
-		ctx.HTML(http.StatusInternalServerError, "", commonViews.ServerError(err.Error()))
+		serverError(ctx)
 		return
 	}
 
-	HXRedirect(ctx, fmt.Sprintf("/books/%d?flash=added!", book.ID))
+	redirect(ctx, fmt.Sprintf("/books/%d", book.ID))
 }
 
 func (bh *BookHandler) Search(ctx *gin.Context) {
@@ -116,120 +138,120 @@ func (bh *BookHandler) Search(ctx *gin.Context) {
 	author := ctx.Query("author")
 	isbn := ctx.Query("isbn")
 
-	pageStr := ctx.DefaultQuery("page", "1")
-	limitStr := ctx.DefaultQuery("limit", "10")
-
-	page, err := strconv.Atoi(pageStr)
-	limit, err := strconv.Atoi(limitStr)
+	pagination, err := readPagination(ctx)
+	if err != nil {
+		notfound(ctx)
+		return
+	}
 
 	books, err := bh.BookRepo.Filter(
 		title,
 		author,
 		isbn,
-		limit,
-		page,
+		pagination,
 		&total,
 	)
 
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error": gin.H{
-				"code":    CodeInternalErr,
-				"message": "internal server error",
-				"details": err.Error(),
-			},
-		})
+		serverError(ctx)
 		return
 	}
-
-	ctx.HTML(http.StatusOK, "", bookViews.BookList(books))
+	render(ctx, bookViews.BookList(books), "search results")
 }
 
 func (bh *BookHandler) Index(ctx *gin.Context) {
-	flash := ctx.Query("flash")
-	pageStr := ctx.DefaultQuery("page", "1")
-	pageSizeStr := ctx.DefaultQuery("size", "10")
+	pagination, err := readPagination(ctx)
+	var total int64
 
-	page, _ := strconv.Atoi(pageStr)
-	pageSize, _ := strconv.Atoi(pageSizeStr)
-
-	books, err := bh.BookRepo.All(page, pageSize)
+	books, err := bh.BookRepo.Filter("", "", "", pagination, &total)
 	if err != nil {
-		ctx.HTML(http.StatusOK, "", commonViews.ServerError(err.Error()))
+		serverError(ctx)
 		return
 	}
-	ctx.HTML(http.StatusOK, "", bookViews.BookPage(books, flash))
+	render(ctx, bookViews.BookPage(books), "books")
 }
 
 func (bh *BookHandler) EditPage(ctx *gin.Context) {
-	bookId := ctx.Param("id")
+	bookId, err := readID(ctx)
+	if err != nil {
+		notfound(ctx)
+		return
+	}
 	book, err := bh.BookRepo.GetById(bookId)
 	if err != nil {
 		if err == repositories.ErrNotFound {
-			ctx.HTML(http.StatusNotFound, "", commonViews.NotFound())
+			notfound(ctx)
 			return
 		}
-		ctx.HTML(http.StatusInternalServerError, "", commonViews.ServerError(err.Error()))
+		serverError(ctx)
 		return
 	}
-	ctx.HTML(http.StatusOK, "", bookViews.BookEditForm(book))
+	render(ctx, bookViews.BookEditForm(book, views.Errors{}), book.TitleFa)
 }
 
 func (bh *BookHandler) Update(ctx *gin.Context) {
 
-	bookId := ctx.Param("id")
-	id, err := strconv.Atoi(bookId)
+	bookId, err := readID(ctx)
 	if err != nil {
-		ctx.HTML(http.StatusBadRequest, "", commonViews.FormErrors([]string{err.Error()}))
+		notfound(ctx)
 		return
 	}
 
 	var bookUpdateForm struct {
-		TitleFa     *string `form:"title_fa" validate:"omitempty,min=1,max=100"`
-		TitleEn     *string `form:"title_en" validate:"omitempty,min=1,max=100"`
+		TitleFa     *string `form:"titleFa" validate:"omitempty,min=1,max=100"`
+		TitleEn     *string `form:"titleEn" validate:"omitempty,min=1,max=100"`
 		ISBN        *string `form:"isbn"`
-		TotalCopies *int    `form:"total_copies" validate:"omitempty,min=1"`
-		AuthorId    *int    `form:"author_id" validate:"min=0"`
+		TotalCopies *int    `form:"totalCopies" validate:"omitempty,min=1"`
+		AuthorId    *uint   `form:"authorId" validate:"min=0"`
+	}
+
+	book, err := bh.BookRepo.GetById(bookId)
+	if err != nil {
+		if err == repositories.ErrNotFound {
+			notfound(ctx)
+			return
+		}
+		serverError(ctx)
+		return
 	}
 
 	if err := ctx.ShouldBind(&bookUpdateForm); err != nil {
-		ctx.HTML(http.StatusBadRequest, "", commonViews.FormErrors([]string{err.Error()}))
+		render(ctx, bookViews.BookEditForm(book, parseValidationErrors(err)), book.TitleFa)
 		return
 	}
 
 	if err := bh.Validator.Struct(&bookUpdateForm); err != nil {
-		ctx.HTML(http.StatusBadRequest, "", commonViews.FormErrors([]string{err.Error()}))
+		render(ctx, bookViews.BookEditForm(book, parseValidationErrors(err)), book.TitleFa)
 		return
 	}
 
-	book := models.Book{
-		ID: id,
+	newBook := models.Book{
+		ID: bookId,
 	}
 	if bookUpdateForm.TitleEn != nil {
-		book.TitleEn = *bookUpdateForm.TitleEn
+		newBook.TitleEn = *bookUpdateForm.TitleEn
 	}
 	if bookUpdateForm.TitleFa != nil {
-		book.TitleFa = *bookUpdateForm.TitleFa
+		newBook.TitleFa = *bookUpdateForm.TitleFa
 	}
 	if bookUpdateForm.ISBN != nil {
-		book.ISBN = *bookUpdateForm.ISBN
+		newBook.ISBN = *bookUpdateForm.ISBN
 	}
 	if bookUpdateForm.TotalCopies != nil {
-		book.TotalCopies = *bookUpdateForm.TotalCopies
+		newBook.TotalCopies = *bookUpdateForm.TotalCopies
 	}
 	if bookUpdateForm.AuthorId != nil {
-		book.AuthorId = *bookUpdateForm.AuthorId
+		newBook.AuthorId = *bookUpdateForm.AuthorId
 	}
 
-	if err := bh.BookRepo.Update(&book); err != nil {
+	if err := bh.BookRepo.Update(&newBook); err != nil {
 		if err == repositories.ErrAuthorIdNotFound {
-			ctx.HTML(http.StatusOK, "", commonViews.FormErrors([]string{err.Error()}))
+			render(ctx, bookViews.BookEditForm(book, views.Errors{"authorId": "author doesn't exist"}), book.TitleFa)
 			return
 		}
-		ctx.HTML(http.StatusOK, "", commonViews.FormErrors([]string{err.Error()}))
+		serverError(ctx)
 		return
 	}
 
-	HXRedirect(ctx, "/books/"+bookId)
-
+	redirect(ctx, fmt.Sprintf("/books/%d", bookId))
 }

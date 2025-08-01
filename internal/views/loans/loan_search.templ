@@ -1,0 +1,45 @@
+package loans
+
+import "lms/internal/models"
+import "lms/internal/views"
+
+templ LoanSearch(loans []models.Loan, data views.Data) {
+	<div>
+		<form
+			hx-get="/loans/search"
+			hx-target="#results"
+		>
+			<input
+				id="book"
+				name="book"
+				placeholder="book id"
+				if id,ok:= data.GetIntFromData("bookId"); ok {
+					type="hidden"
+					value={ id }
+				} else {
+					type="search"
+				}
+			/>
+			<input
+				id="member"
+				name="member"
+				placeholder="member id"
+				if id,ok:= data.GetIntFromData("memberId"); ok {
+					type="hidden"
+					value={ id }
+				} else {
+					type="search"
+				}
+			/>
+			<select name="status" aria-label="status">
+				<option selected value="">...</option>
+				<option>{ models.StatusBorrowed }</option>
+				<option>{ models.StatusReturned }</option>
+			</select>
+			<button type="submit">Search</button>
+		</form>
+		<div id="results">
+			@LoanList(loans)
+		</div>
+	</div>
+}

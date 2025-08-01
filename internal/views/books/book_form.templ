@@ -1,0 +1,86 @@
+package books
+
+import "lms/internal/models"
+import "lms/internal/views"
+
+templ BookForm(book *models.Book, errors views.Errors) {
+	<div>
+		<input
+			id="titleEn"
+			type="text"
+			name="titleEn"
+			required
+			placeholder="enter english title"
+			if errors["titleEn"] != "" {
+				aria-invalid="true"
+			}
+		/>
+		if errors["titleEn"] != "" {
+			<small>{ errors["titleEn"] }</small>
+		}
+	</div>
+	<div>
+		<input
+			id="titleFa"
+			type="text"
+			name="titleFa"
+			placeholder="enter persian title"
+			required
+			if errors["titleFa"] != "" {
+				aria-invalid="true"
+			}
+		/>
+		if errors["titleFn"] != "" {
+			<small>{ errors["titleFn"] }</small>
+		}
+	</div>
+	<div>
+		<input
+			id="isbn"
+			type="text"
+			name="isbn"
+			placeholder="enter book's isbn"
+			required
+			if errors["isbn"] != "" {
+				aria-invalid="true"
+			}
+		/>
+		if errors["isbn"] != "" {
+			<small>{ errors["isbn"] }</small>
+		}
+	</div>
+	<div>
+		<input
+			id="totalCopies"
+			type="number"
+			name="totalCopies"
+			placeholder="enter book's total copies"
+			required
+			if errors["totalCopies"] != "" {
+				aria-invalid="true"
+			}
+		/>
+		if errors["totalCopies"] != "" {
+			<small>{ errors["totalCopies"] }</small>
+		}
+	</div>
+	<div>
+		<input
+			id="authorId"
+			type="number"
+			name="authorId"
+			placeholder="enter author id"
+			required
+			if errors["authorId"] != "" {
+				aria-invalid="true"
+			}
+		/>
+		if errors["authorId"] != "" {
+			<small>{ errors["authorId"] }</small>
+		}
+	</div>
+	<button type="submit">Add Book</button>
+	if errors["_"] != "" {
+		<p class="pico-color-red-500">{ errors["_"] } </p>
+	}
+}

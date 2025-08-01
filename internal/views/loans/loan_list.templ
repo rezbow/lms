@@ -1,4 +1,4 @@
-package books
+package loans
 
 import "lms/internal/models"
 import "fmt"
@@ -11,7 +11,7 @@ templ LoanList(loans []models.Loan) {
 			for _, l := range loans {
 				<li>
 					<a href={ fmt.Sprintf("/loans/%d", l.ID) }>
-						{ fmt.Sprintf("'%s' borrowed by '%s'",l.Book.TitleEn,l.Member.Name) }
+						{ fmt.Sprintf("'%d' borrowed by '%d'",l.BookId , l.MemberId) }
 					</a>
 				</li>
 			}
