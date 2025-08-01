@@ -69,7 +69,7 @@ func (lh *LoanHandler) DeleteById(ctx *gin.Context) {
 }
 
 func (lh *LoanHandler) AddPage(ctx *gin.Context) {
-	render(ctx, loanViews.LoanAddForm(0, 0), "add loan")
+	render(ctx, loanViews.LoanAddForm(nil), "add loan")
 }
 
 func (lh *LoanHandler) Add(ctx *gin.Context) {
@@ -231,5 +231,39 @@ func (lh *LoanHandler) ReturnLoan(ctx *gin.Context) {
 	}
 
 	redirect(ctx, fmt.Sprintf("/loans/%d", loanId))
+}
 
+func (lh *LoanHandler) Search(ctx *gin.Context) {
+	status := ctx.Query("status")
+
+	bookId, err := readIntFromQuery(ctx.Query("book"))
+	if err != nil {
+		notfound(ctx)
+		return
+	}
+
+	memberId, err := readIntFromQuery(ctx.Query("member"))
+	if err != nil {
+		notfound(ctx)
+		return
+	}
+	pagination, err := readPagination(ctx)
+	if err != nil {
+		fmt.Println(pagination, err.Error())
+		notfound(ctx)
+		return
+	}
+
+	loans, err := lh.Repo.Filter(
+		bookId,
+		memberId,
+		status,
+		pagination,
+	)
+
+	if err != nil {
+		serverError(ctx)
+		return
+	}
+	render(ctx, loanViews.LoanList(loans), "loans")
 }

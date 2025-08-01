@@ -49,7 +49,7 @@ func SetupRouter(
 	loans.GET("", loanHandler.Index)
 	loans.GET("/add", loanHandler.AddPage)
 	loans.POST("/add", loanHandler.Add)
-	loans.GET("/search")
+	loans.GET("/search", loanHandler.Search)
 
 	loans.GET("/:id", loanHandler.GetById)
 	loans.POST("/:id/delete", loanHandler.DeleteById)

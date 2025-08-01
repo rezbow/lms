@@ -1,6 +1,9 @@
 package books
 
-templ LoanAddForm(memberId, bookId int) {
+import "lms/internal/views"
+
+templ LoanAddForm(data views.Data) {
+	{{ errors, ok := data.GetErrorsFromData() }}
 	<div>
 		<form
 			hx-post="/loans/add"
@@ -14,11 +17,17 @@ templ LoanAddForm(memberId, bookId int) {
 					type="number"
 					name="bookId"
 					required
-					if bookId > 0 {
+					if bookId,ok:= data.GetIntFromData("bookId") ; ok {
 						value={ bookId }
 						readonly
 					}
+					if ok && errors["bookId"] != "" {
+						aria-invalid="true"
+					}
 				/>
+				if ok && errors["bookId"] != "" {
+					<small>{ errors["bookId"] }</small>
+				}
 			</div>
 			<div>
 				<label for="memberId">Member Id:</label>
@@ -27,11 +36,17 @@ templ LoanAddForm(memberId, bookId int) {
 					type="number"
 					name="memberId"
 					required
-					if memberId > 0 {
+					if memberId,ok:= data.GetIntFromData("memberId"); ok {
 						value={ memberId }
 						readonly
 					}
+					if ok && errors["memberId"] != "" {
+						aria-invalid="true"
+					}
 				/>
+				if ok && errors["memberId"] != "" {
+					<small>{ errors["memberId"] }</small>
+				}
 			</div>
 			<div>
 				<label for="dueDate">Due Date:</label>

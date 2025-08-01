@@ -38,13 +38,13 @@ func (bh *BookHandler) Get(ctx *gin.Context) {
 	book, err := bh.BookRepo.GetById(bookId)
 	if err != nil {
 		if err == repositories.ErrNotFound {
-			ctx.HTML(http.StatusNotFound, "", commonViews.NotFound())
+			notfound(ctx)
 			return
 		}
-		ctx.HTML(http.StatusInternalServerError, "", commonViews.ServerError(err.Error()))
+		serverError(ctx)
 		return
 	}
-	ctx.HTML(http.StatusOK, "", bookViews.Book(book))
+	render(ctx, bookViews.Book(book), book.TitleFa)
 }
 
 func (bh *BookHandler) Delete(ctx *gin.Context) {

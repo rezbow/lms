@@ -3,6 +3,7 @@ package repositories
 import (
 	"errors"
 	"lms/internal/models"
+	"lms/internal/utils"
 	"strings"
 
 	"github.com/jackc/pgerrcode"
@@ -80,4 +81,30 @@ func (lr *LoanRepo) handleInsertError(err error) error {
 		return ErrLoanInvalidStatus
 	}
 	return ErrInternal
+}
+
+func (lr *LoanRepo) Filter(bookId, memberId int, status string, pagination *utils.Pagination) ([]models.Loan, error) {
+	var loans []models.Loan
+	query := lr.DB.Model(&models.Loan{}).Preload("Book").Preload("Member")
+
+	if bookId >= 0 {
+		query.Where("book_id = ? ", bookId)
+	}
+
+	if memberId >= 0 {
+		query.Where("member_id = ? ", memberId)
+	}
+
+	if status != "" {
+		query.Where("status = ? ", status)
+	}
+
+	err := query.Limit(pagination.Limit).Offset(pagination.Offset).Find(&loans).Error
+
+	if err != nil {
+		return nil, ErrInternal
+	}
+
+	return loans, nil
+
 }

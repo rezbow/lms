@@ -6,22 +6,19 @@ templ Index(loans []models.Loan) {
 	<div>
 		<h1>Loan Search</h1>
 		<a href="/loans/add">Add Loan</a>
-		<input
-			type="number"
-			name="book_id"
-			placeholder="enter the book id"
+		<form
 			hx-get="/loans/search"
 			hx-target="#results"
-			hx-trigger="keyup changed delay:300ms"
-		/>
-		<input
-			type="number"
-			name="member_id"
-			placeholder="enter the member id"
-			hx-get="/loans/search"
-			hx-target="#results"
-			hx-trigger="keyup changed delay:300ms"
-		/>
+		>
+			<input type="number" id="book" name="book" placeholder="book id"/>
+			<input type="number" id="member" name="member" placeholder="member id"/>
+			<select name="status" aria-label="status">
+				<option selected value="">...</option>
+				<option>{ models.StatusBorrowed }</option>
+				<option>{ models.StatusReturned }</option>
+			</select>
+			<button type="submit">Search</button>
+		</form>
 		<div id="results">
 			@LoanList(loans)
 		</div>

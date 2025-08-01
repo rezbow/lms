@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"lms/internal/models"
 	"lms/internal/repositories"
+	"lms/internal/views"
 	commonViews "lms/internal/views/common"
 	loanViews "lms/internal/views/loans"
 	memberViews "lms/internal/views/members"
@@ -185,6 +186,11 @@ func (mh *MemberHandler) Search(ctx *gin.Context) {
 	page, err := strconv.Atoi(pageStr)
 	limit, err := strconv.Atoi(limitStr)
 
+	if err != nil {
+		notfound(ctx)
+		return
+	}
+
 	members, err := mh.Repo.Filter(
 		name,
 		phone,
@@ -195,7 +201,7 @@ func (mh *MemberHandler) Search(ctx *gin.Context) {
 	)
 
 	if err != nil {
-		render(ctx, commonViews.ServerError(""), "server error")
+		serverError(ctx)
 		return
 	}
 	render(ctx, memberViews.MemberList(members), "members")
@@ -217,5 +223,5 @@ func (mh *MemberHandler) AddLoanPage(ctx *gin.Context) {
 		serverError(ctx)
 		return
 	}
-	render(ctx, loanViews.LoanAddForm(memberId, 0), "add loan")
+	render(ctx, loanViews.LoanAddForm(views.Data{"memberId": memberId}), "add loan")
 }

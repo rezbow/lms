@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"errors"
+	"lms/internal/utils"
 	"lms/internal/views"
 	commonViews "lms/internal/views/common"
 	"net/http"
@@ -68,4 +70,52 @@ func notfound(ctx *gin.Context) {
 
 func formError(ctx *gin.Context, err error) {
 	render(ctx, commonViews.FormErrors([]string{err.Error()}), "error")
+}
+
+func readPagination(ctx *gin.Context) (*utils.Pagination, error) {
+	var page int
+	var limit int
+	var err error
+
+	pageStr := ctx.Query("page")
+	limitStr := ctx.Query("limit")
+
+	if pageStr == "" {
+		page = 1
+	} else {
+		page, err = strconv.Atoi(pageStr)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if limitStr == "" {
+		limit = 10
+	} else {
+		limit, err = strconv.Atoi(limitStr)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if page <= 0 || limit <= 0 {
+		return nil, errors.New("needs positive integer")
+	}
+	return utils.NewPagination(page, limit), nil
+}
+
+func readIntFromQuery(str string) (int, error) {
+	if str == "" {
+		return -1, nil
+	}
+
+	i, err := strconv.Atoi(str)
+	if err != nil {
+		return 0, err
+	}
+	if i < 0 {
+		return 0, errors.New("needs positive integer")
+	}
+	return i, nil
+
 }
