@@ -6,16 +6,17 @@ import "fmt"
 templ LoanReturnForm(loan *models.Loan) {
 	<div>
 		<form
-			hx-post={ fmt.Sprintf("/loans/%d/return", loan.ID) }
-			hx-target="#results"
-			hx-swap="innerHTML"
+			method="POST"
+			action={ fmt.Sprintf("/loans/%d/return", loan.ID) }
 		>
 			<div>
-				<label for="returnDate">Return Date:</label>
-				<input id="returnDate" type="date" name="returnDate"/>
+				<input
+					id="returnDate"
+					type="date"
+					name="returnDate"
+				/>
 			</div>
 			<button type="submit">Return</button>
 		</form>
-		<div id="results"></div>
 	</div>
 }

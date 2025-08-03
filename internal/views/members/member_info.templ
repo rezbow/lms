@@ -9,32 +9,38 @@ templ MemberInfo(member *models.Member) {
 	<div>
 		<div>
 			<div>
-				<p><strong>Name:</strong> { member.Name }</p>
+				<p><strong>Full Name:</strong> { member.FullName }</p>
 				<p><strong>Email:</strong> { member.Email }</p>
-				<p><strong>Phone:</strong> { member.Phone }</p>
+				<p><strong>Phone Number:</strong> { member.PhoneNumber }</p>
+				<p><strong>National id:</strong> { member.NationalId }</p>
 				<p><strong>Status:</strong> { member.Status }</p>
-				<p><strong>Join date:</strong> { member.JoinDate.Format("2006-01-02") }</p>
+				<p><strong>Join date:</strong> { member.JoinedAt.Format("2006-01-02") }</p>
 			</div>
 			<div>
 				<a href={ fmt.Sprintf("/members/%d/addloan", member.ID) }>
 					<button>Add Loan</button>
 				</a>
-				<div>
-					<button
-						hx-post={ fmt.Sprintf("/members/%d/delete", member.ID) }
-						if len(member.Loans) > 0 {
-							disabled
-						}
-					>
-						Delete Book
-					</button>
-					if len(member.Loans) > 0 {
-						<small class="pico-color-red-500">this member has active loans and it can't be deleted</small>
-					}
-				</div>
 				<a href={ fmt.Sprintf("/members/%d/edit", member.ID) }>
 					<button>Edit</button>
 				</a>
+				<div>
+					<form
+						method="POST"
+						action={ fmt.Sprintf("/members/%d/delete", member.ID) }
+					>
+						<button
+							type="submit"
+							if len(member.Loans) > 0 {
+								disabled
+							}
+						>
+							Delete Book
+						</button>
+						if len(member.Loans) > 0 {
+							<small class="pico-color-red-500">this member has active loans and it can't be deleted</small>
+						}
+					</form>
+				</div>
 			</div>
 		</div>
 		<div>

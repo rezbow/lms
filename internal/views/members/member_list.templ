@@ -11,7 +11,7 @@ templ MemberList(members []models.Member) {
 			for _, m:= range members {
 				<li>
 					<a href={ fmt.Sprintf("/members/%d", m.ID) }>
-						{ m.Name }
+						{ m.FullName }
 					</a>
 				</li>
 			}

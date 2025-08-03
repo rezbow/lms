@@ -1,0 +1,126 @@
+package members
+
+import "lms/internal/models"
+import "lms/internal/views"
+
+templ MemberForm(member *models.Member, errors views.Errors, endpoint string) {
+	<div>
+		<form
+			method="POST"
+			action={ endpoint }
+		>
+			<div>
+				<input
+					id="fullName"
+					name="fullName"
+					type="text"
+					required
+					placeholder="full name"
+					if errors["fullName"] != "" {
+						aria-invalid="true"
+					}
+					if member != nil {
+						value={ member.FullName }
+					}
+				/>
+				if errors["fullName"] != "" {
+					<small>{ errors["fullName"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="phoneNumber"
+					name="phoneNumber"
+					type="text"
+					required
+					placeholder="phone number"
+					if errors["phoneNumber"] != "" {
+						aria-invalid="true"
+					}
+					if member != nil {
+						value={ member.PhoneNumber }
+					}
+				/>
+				if errors["phoneNumber"] != "" {
+					<small>{ errors["phoneNumber"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="nationalId"
+					name="nationalId"
+					type="text"
+					required
+					placeholder="national id"
+					if errors["nationalId"] != "" {
+						aria-invalid="true"
+					}
+					if member != nil {
+						value={ member.NationalId }
+					}
+				/>
+				if errors["nationalId"] != "" {
+					<small>{ errors["nationalId"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="email"
+					name="email"
+					type="email"
+					required
+					placeholder="email"
+					if errors["email"] != "" {
+						aria-invalid="true"
+					}
+					if member != nil {
+						value={ member.Email }
+					}
+				/>
+				if errors["email"] != "" {
+					<small>{ errors["email"] }</small>
+				}
+			</div>
+			if member != nil {
+				<div>
+					<fieldset>
+						<legend>
+							Member Status
+						</legend>
+						<label>
+							<input
+								type="radio"
+								name="status"
+								if member.Status == "active" {
+									checked
+								}
+							/>
+							Active
+						</label>
+						<label>
+							<input
+								type="radio"
+								name="status"
+								if member.Status == "suspended" {
+									checked
+								}
+							/>
+							Suspended
+						</label>
+					</fieldset>
+					if errors["status"] != "" {
+						<small>{ errors["status"] }</small>
+					}
+				</div>
+			}
+			<button type="submit">
+				if member != nil {
+					Update
+				} else {
+					Add
+				}
+			</button>
+		</form>
+		<div id="results"></div>
+	</div>
+}

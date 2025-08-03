@@ -1,86 +1,166 @@
 package books
 
 import "lms/internal/models"
+
 import "lms/internal/views"
 
-templ BookForm(book *models.Book, errors views.Errors) {
-	<div>
-		<input
-			id="titleEn"
-			type="text"
-			name="titleEn"
-			required
-			placeholder="enter english title"
-			if errors["titleEn"] != "" {
-				aria-invalid="true"
-			}
-		/>
-		if errors["titleEn"] != "" {
-			<small>{ errors["titleEn"] }</small>
-		}
+templ BookForm(book *models.Book, errors views.Errors, endpoint string) {
+	<div id="editForm">
+		<form
+			method="POST"
+			action={ endpoint }
+		>
+			<div>
+				<input
+					id="title"
+					type="text"
+					name="title"
+					required
+					placeholder="title"
+					if errors["title"] != "" {
+						aria-invalid="true"
+					}
+					if book != nil {
+						value={ book.Title }
+					}
+				/>
+				if errors["title"] != "" {
+					<small>{ errors["title"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="isbn"
+					type="text"
+					name="isbn"
+					placeholder="book's isbn"
+					required
+					if errors["isbn"] != "" {
+						aria-invalid="true"
+					}
+					if book != nil {
+						value={ book.ISBN }
+					}
+				/>
+				if errors["isbn"] != "" {
+					<small>{ errors["isbn"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="totalCopies"
+					type="number"
+					name="totalCopies"
+					placeholder="book's total copies"
+					required
+					if errors["totalCopies"] != "" {
+						aria-invalid="true"
+					}
+					if book != nil {
+						value={ book.TotalCopies }
+					}
+				/>
+				if errors["totalCopies"] != "" {
+					<small>{ errors["totalCopies"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="authorId"
+					type="number"
+					name="authorId"
+					placeholder="author id"
+					required
+					if errors["authorId"] != "" {
+						aria-invalid="true"
+					}
+					if book != nil {
+						value={ book.AuthorId }
+					}
+				/>
+				if errors["authorId"] != "" {
+					<small>{ errors["authorId"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="publisher"
+					type="text"
+					name="publisher"
+					placeholder="publisher name"
+					if errors["publisher"] != "" {
+						aria-invalid="true"
+					}
+					if book != nil {
+						value={ book.Publisher }
+					}
+				/>
+				if errors["publisher"] != "" {
+					<small>{ errors["publisher"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="language"
+					type="text"
+					name="language"
+					placeholder="book's language"
+					if errors["language"] != "" {
+						aria-invalid="true"
+					}
+					if book != nil {
+						value={ book.Language }
+					}
+				/>
+				if errors["language"] != "" {
+					<small>{ errors["language"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="translator"
+					type="text"
+					name="translator"
+					placeholder="translator name"
+					if errors["translator"] != "" {
+						aria-invalid="true"
+					}
+					if book != nil {
+						value={ book.Translator }
+					}
+				/>
+				if errors["translator"] != "" {
+					<small>{ errors["translator"] }</small>
+				}
+			</div>
+			<div>
+				<textarea
+					id="summary"
+					name="summary"
+					placeholder="book's summary"
+					if errors["summary"] != "" {
+						aria-invalid="true"
+					}
+				>
+					if book != nil {
+						{ book.Summary }
+					}
+				</textarea>
+				if errors["summary"] != "" {
+					<small>{ errors["summary"] }</small>
+				}
+			</div>
+			<div>
+				<input type="file"/>
+			</div>
+			<button type="submit">
+				if book != nil {
+					Update
+				} else {
+					Add
+				}
+			</button>
+		</form>
+		<div id="results"></div>
 	</div>
-	<div>
-		<input
-			id="titleFa"
-			type="text"
-			name="titleFa"
-			placeholder="enter persian title"
-			required
-			if errors["titleFa"] != "" {
-				aria-invalid="true"
-			}
-		/>
-		if errors["titleFn"] != "" {
-			<small>{ errors["titleFn"] }</small>
-		}
-	</div>
-	<div>
-		<input
-			id="isbn"
-			type="text"
-			name="isbn"
-			placeholder="enter book's isbn"
-			required
-			if errors["isbn"] != "" {
-				aria-invalid="true"
-			}
-		/>
-		if errors["isbn"] != "" {
-			<small>{ errors["isbn"] }</small>
-		}
-	</div>
-	<div>
-		<input
-			id="totalCopies"
-			type="number"
-			name="totalCopies"
-			placeholder="enter book's total copies"
-			required
-			if errors["totalCopies"] != "" {
-				aria-invalid="true"
-			}
-		/>
-		if errors["totalCopies"] != "" {
-			<small>{ errors["totalCopies"] }</small>
-		}
-	</div>
-	<div>
-		<input
-			id="authorId"
-			type="number"
-			name="authorId"
-			placeholder="enter author id"
-			required
-			if errors["authorId"] != "" {
-				aria-invalid="true"
-			}
-		/>
-		if errors["authorId"] != "" {
-			<small>{ errors["authorId"] }</small>
-		}
-	</div>
-	<button type="submit">Add Book</button>
-	if errors["_"] != "" {
-		<p class="pico-color-red-500">{ errors["_"] } </p>
-	}
 }

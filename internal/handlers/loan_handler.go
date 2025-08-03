@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"lms/internal/models"
 	"lms/internal/repositories"
+	"lms/internal/views"
 	commonViews "lms/internal/views/common"
 	loanViews "lms/internal/views/loans"
 	"strconv"
@@ -59,17 +60,19 @@ func (lh *LoanHandler) DeleteById(ctx *gin.Context) {
 	}
 	if err := lh.Repo.DeleteById(loanId); err != nil {
 		if err == repositories.ErrNotFound {
-			render(ctx, commonViews.NotFound(), "404 :((")
-			return
+			notfound(ctx)
+		} else if err == repositories.ErrInternal {
+			serverError(ctx)
+		} else {
+			redirect(ctx, fmt.Sprintf("/loans/%d", loanId))
 		}
-		render(ctx, commonViews.ServerError(err.Error()), "internal server error")
 		return
 	}
 	redirect(ctx, "/loans")
 }
 
 func (lh *LoanHandler) AddPage(ctx *gin.Context) {
-	render(ctx, loanViews.LoanAddForm(nil), "add loan")
+	render(ctx, loanViews.LoanForm(nil, views.Errors{}, "/loans/add"), "add loan")
 }
 
 func (lh *LoanHandler) Add(ctx *gin.Context) {
@@ -99,10 +102,10 @@ func (lh *LoanHandler) Add(ctx *gin.Context) {
 
 	if err := lh.Repo.Insert(&loan); err != nil {
 		if err == repositories.ErrInternal {
-			render(ctx, commonViews.ServerError(err.Error()), "internal server error")
+			serverError(ctx)
 			return
 		}
-		render(ctx, commonViews.FormErrors([]string{err.Error()}), "form error")
+		render(ctx, loanViews.LoanForm(nil, lh.Repo.ConvertErrorToFormError(err), "/loans/add"), "add loan")
 		return
 	}
 	redirect(ctx, fmt.Sprintf("/loans/%d", loan.ID))
@@ -125,7 +128,7 @@ func (lh *LoanHandler) EditPage(ctx *gin.Context) {
 		return
 	}
 
-	render(ctx, loanViews.LoanEditForm(loan), "add loan")
+	render(ctx, loanViews.LoanForm(loan, views.Errors{}, fmt.Sprintf("/loans/%d/edit", loan.ID)), "add loan")
 }
 
 func (lh *LoanHandler) Update(ctx *gin.Context) {

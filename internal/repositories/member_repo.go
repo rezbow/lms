@@ -3,9 +3,8 @@ package repositories
 import (
 	"errors"
 	"lms/internal/models"
+	"lms/internal/views"
 
-	"github.com/jackc/pgerrcode"
-	"github.com/jackc/pgx/v5/pgconn"
 	"gorm.io/gorm"
 )
 
@@ -13,7 +12,7 @@ type MemberRepo struct {
 	DB *gorm.DB
 }
 
-func (mr *MemberRepo) GetById(id int) (*models.Member, error) {
+func (mr *MemberRepo) GetById(id uint) (*models.Member, error) {
 	var member models.Member
 	result := mr.DB.Model(&models.Member{}).Preload("Loans").Find(&member, id)
 	if result.Error != nil {
@@ -25,38 +24,13 @@ func (mr *MemberRepo) GetById(id int) (*models.Member, error) {
 	return &member, nil
 }
 
-var (
-	ErrMemberInvalidPhoneNumber   = errors.New("Invalid phone number")
-	ErrMemberDuplicatePhoneNumber = errors.New("Duplicate phone number")
-	ErrMemberDuplicateEmail       = errors.New("Duplicate email")
-	ErrMemberInvalidStatus        = errors.New("Invalid Status")
-	ErrMemberInvalidEmail         = errors.New("Invalid Email")
-)
-
-func (mr *MemberRepo) constraintViolationError(err *pgconn.PgError) error {
-	switch err.ConstraintName {
-	case "members_phone_validation_check":
-		return ErrMemberInvalidPhoneNumber
-	case "members_phone_key":
-		return ErrMemberDuplicatePhoneNumber
-	case "members_email_key":
-		return ErrMemberDuplicateEmail
-	case "members_status_check":
-		return ErrMemberInvalidStatus
-	case "members_email_validation_check":
-		return ErrMemberInvalidEmail
-	default:
-		return errors.New(err.Message)
-	}
-}
-
 func (mr *MemberRepo) Insert(member *models.Member) error {
-	if err := mr.DB.Create(member).Error; err != nil {
-		pgerr := extractPQError(err)
-		if pgerrcode.IsIntegrityConstraintViolation(pgerr.Code) {
-			return mr.constraintViolationError(pgerr)
+	result := mr.DB.Create(member)
+	if result.Error != nil {
+		if isInternalError(result.Error) {
+			return ErrInternal
 		}
-		return ErrInternal
+		return result.Error
 	}
 	return nil
 }
@@ -64,6 +38,9 @@ func (mr *MemberRepo) Insert(member *models.Member) error {
 func (mr *MemberRepo) DeleteById(id string) error {
 	result := mr.DB.Delete(&models.Member{}, id)
 	if result.Error != nil {
+		if isInternalError(result.Error) {
+			return ErrInternal
+		}
 		return result.Error
 	} else if result.RowsAffected == 0 {
 		return ErrNotFound
@@ -81,12 +58,14 @@ func (mr *MemberRepo) All(page int, pageSize int) ([]models.Member, error) {
 }
 
 func (mr *MemberRepo) Update(member *models.Member) error {
-	if err := mr.DB.Model(&models.Member{}).Where("id = ?", member.ID).Updates(member).Error; err != nil {
-		pgErr := extractPQError(err)
-		if pgerrcode.IsIntegrityConstraintViolation(pgErr.Code) {
-			return mr.constraintViolationError(pgErr)
+	result := mr.DB.Model(&models.Member{}).Where("id = ?", member.ID).Updates(member)
+	if result.Error != nil {
+		if isInternalError(result.Error) {
+			return ErrInternal
 		}
-		return ErrInternal
+		return result.Error
+	} else if result.RowsAffected == 0 {
+		return ErrNotFound
 	}
 	return nil
 }
@@ -129,11 +108,33 @@ func (mr *MemberRepo) Total() int64 {
 	return total
 }
 
-func (mr *MemberRepo) HasActiveLoans(memberId int) (bool, error) {
+func (mr *MemberRepo) HasActiveLoans(memberId uint) (bool, error) {
 	var total int64
 	err := mr.DB.Model(&models.Loan{}).Where("member_id = ?", memberId).Count(&total).Error
 	if err != nil {
 		return false, ErrInternal
 	}
 	return total > 0, nil
+}
+
+func (mr *MemberRepo) ConvertErrorsToFormErrors(err error) views.Errors {
+	errors := make(views.Errors)
+	pgErr := extractPQError(err)
+	switch pgErr.ConstraintName {
+	case "members_phone_validation_check":
+		errors["phoneNumber"] = "invalid phone number"
+	case "members_phone_key":
+		errors["phoneNumber"] = "a member with this phone number already exists"
+	case "members_email_key":
+		errors["email"] = "a member with this email already exists"
+	case "members_email_validation_check":
+		errors["email"] = "invalid email"
+	case "members_status_check":
+		errors["status"] = "invalid status"
+	case "members_national_id_key":
+		errors["nationalId"] = "a memeber with this national id alreadyexists"
+	default:
+		errors["_"] = err.Error()
+	}
+	return errors
 }

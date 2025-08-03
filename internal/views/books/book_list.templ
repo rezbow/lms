@@ -11,7 +11,7 @@ templ BookList(books []models.Book) {
 			for _, b := range books {
 				<li>
 					<a href={ fmt.Sprintf("/books/%d", b.ID) }>
-						{ b.TitleEn }
+						{ b.Title }
 					</a>
 				</li>
 			}

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"lms/internal/models"
 	"lms/internal/utils"
+	"lms/internal/views"
 
 	"github.com/jackc/pgerrcode"
 	"gorm.io/gorm"
@@ -13,11 +14,7 @@ type BookRepo struct {
 	DB *gorm.DB
 }
 
-var (
-	ErrBookHasActiveLoan = errors.New("this book has active loans and cannot be deleted")
-)
-
-func (bp *BookRepo) GetById(id int) (*models.Book, error) {
+func (bp *BookRepo) GetById(id uint) (*models.Book, error) {
 	var book models.Book
 	result := bp.DB.Preload("Loans").First(&book, id)
 
@@ -30,14 +27,13 @@ func (bp *BookRepo) GetById(id int) (*models.Book, error) {
 	return &book, nil
 }
 
-func (bp *BookRepo) DeleteById(id int) error {
+func (bp *BookRepo) DeleteById(id uint) error {
 	result := bp.DB.Delete(&models.Book{}, id)
 	if result.Error != nil {
-		pgErr := extractPQError(result.Error)
-		if pgErr.Code == pgerrcode.ForeignKeyViolation {
-			return ErrBookHasActiveLoan
+		if isInternalError(result.Error) {
+			return ErrInternal
 		}
-		return ErrInternal
+		return result.Error
 	} else if result.RowsAffected == 0 {
 		return ErrNotFound
 	}
@@ -45,12 +41,12 @@ func (bp *BookRepo) DeleteById(id int) error {
 }
 
 func (bp *BookRepo) Insert(book *models.Book) error {
-	if err := bp.DB.Create(book).Error; err != nil {
-		pgErr := extractPQError(err)
-		if pgErr.Code == pgerrcode.ForeignKeyViolation {
-			return ErrAuthorIdNotFound
+	result := bp.DB.Create(book)
+	if result.Error != nil {
+		if isInternalError(result.Error) {
+			return ErrInternal
 		}
-		return err
+		return result.Error
 	}
 	return nil
 }
@@ -103,12 +99,33 @@ func (bp *BookRepo) All(page int, pageSize int) ([]models.Book, error) {
 }
 
 func (bp *BookRepo) Update(book *models.Book) error {
-	if err := bp.DB.Model(&models.Book{}).Where("id = ?", book.ID).Updates(book).Error; err != nil {
-		pgErr := extractPQError(err)
-		if pgErr.Code == pgerrcode.ForeignKeyViolation {
-			return ErrAuthorIdNotFound
+
+	result := bp.DB.Model(&models.Book{}).Where("id = ?", book.ID).Updates(book)
+	if result.Error != nil {
+		if isInternalError(result.Error) {
+			return ErrInternal
 		}
-		return err
+		return result.Error
+	} else if result.RowsAffected == 0 {
+		return ErrNotFound
 	}
 	return nil
+}
+
+func (bp *BookRepo) ConvertErrorsToFormErrors(err error) views.Errors {
+	errors := make(views.Errors)
+	pgErr := extractPQError(err)
+	switch {
+	case pgErr.Code == pgerrcode.ForeignKeyViolation:
+		errors["authorId"] = "cannot find author"
+	case pgErr.ConstraintName == "books_isbn_key":
+		errors["isbn"] = "a books with this isbn already exists"
+	case pgErr.Message == "INVALID_TOTAL_COPIES":
+		errors["totalCopies"] = "invalid total copies"
+	case pgErr.Message == "INVALID_AVAILABLE_COPIES":
+		errors["availableCopies"] = "invalid available copies"
+	default:
+		errors["_"] = err.Error()
+	}
+	return errors
 }

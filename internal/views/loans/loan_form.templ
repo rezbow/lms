@@ -1,0 +1,93 @@
+package loans
+
+import "lms/internal/models"
+import "lms/internal/views"
+
+templ LoanForm(loan *models.Loan, errors views.Errors, endpoint string) {
+	<div>
+		<form
+			method="POST"
+			action={ endpoint }
+		>
+			<div>
+				<input
+					id="bookId"
+					name="bookId"
+					type="number"
+					required
+					placeholder="book id"
+					if errors["bookId"] != "" {
+						aria-invalid="true"
+					}
+					if loan != nil && loan.BookId != 0 {
+						value={ loan.BookId }
+					}
+				/>
+				if errors["bookId"] != "" {
+					<small>{ errors["bookId"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="memberId"
+					name="memberId"
+					type="number"
+					required
+					placeholder="member id"
+					if errors["memberId"] != "" {
+						aria-invalid="true"
+					}
+					if loan != nil && loan.MemberId != 0 {
+						value={ loan.MemberId }
+					}
+				/>
+				if errors["memberId"] != "" {
+					<small>{ errors["memberId"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="borrowDate"
+					name="borrowDate"
+					type="date"
+					required
+					placeholder="borrow date"
+					if errors["borrowDate"] != "" {
+						aria-invalid="true"
+					}
+					if loan != nil {
+						value={ loan.BorrowDate.Format("2006-01-02") }
+					}
+				/>
+				if errors["borrowDate"] != "" {
+					<small>{ errors["borrowDate"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="dueDate"
+					name="dueDate"
+					type="date"
+					required
+					placeholder="borrow date"
+					if errors["dueDate"] != "" {
+						aria-invalid="true"
+					}
+					if loan != nil {
+						value={ loan.DueDate.Format("2006-01-02") }
+					}
+				/>
+				if errors["dueDate"] != "" {
+					<small>{ errors["dueDate"] }</small>
+				}
+			</div>
+			<button type="submit">
+				if loan != nil {
+					Update
+				} else {
+					Add
+				}
+			</button>
+		</form>
+	</div>
+}

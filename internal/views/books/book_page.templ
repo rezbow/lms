@@ -11,9 +11,13 @@ templ Book(book *models.Book) {
 	<div>
 		<div>
 			<div>
-				<p><strong>English Title: </strong> { book.TitleEn }</p>
-				<p><strong>Persian Title:</strong> { book.TitleFa }</p>
-				<p><strong>Author:</strong> <a href={ fmt.Sprintf("/authors/%d", book.AuthorId) }></a></p>
+				<p><strong>English Title: </strong> { book.Title }</p>
+				<p><strong>Author:</strong> <a href={ fmt.Sprintf("/authors/%d", book.AuthorId) }>{ book.AuthorId }</a></p>
+				<p><strong>ISBN:</strong> { book.ISBN }</p>
+				<p><strong>Publisher:</strong> { book.Publisher }</p>
+				<p><strong>Language:</strong> { book.Language }</p>
+				<p><strong>Summary:</strong> { book.Summary }</p>
+				<p><strong>Translator:</strong> { book.Translator }</p>
 			</div>
 			<div>
 				<div>
@@ -21,22 +25,27 @@ templ Book(book *models.Book) {
 						<button type="button">Add Loan</button>
 					</a>
 				</div>
-				<div>
-					<button
-						hx-post={ fmt.Sprintf("/books/%d/delete", book.ID) }
-						if len(book.Loans) > 0 {
-							disabled
-						}
-					>
-						Delete Book
-					</button>
-					if len(book.Loans) > 0 {
-						<small class="pico-color-red-500">this book has active loans and it can't be deleted</small>
-					}
-				</div>
 				<a href={ fmt.Sprintf("/books/%d/edit", book.ID) }>
 					<button type="button">Edit</button>
 				</a>
+				<div>
+					<form
+						method="POST"
+						action={ fmt.Sprintf("/books/%d/delete", book.ID) }
+					>
+						<button
+							type="submit"
+							if len(book.Loans) > 0 {
+								disabled
+							}
+						>
+							Delete Book
+						</button>
+						if len(book.Loans) > 0 {
+							<small class="pico-color-red-500">this member has active loans and it can't be deleted</small>
+						}
+					</form>
+				</div>
 			</div>
 		</div>
 		<div>

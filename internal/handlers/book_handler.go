@@ -34,7 +34,7 @@ func (bh *BookHandler) Get(ctx *gin.Context) {
 		serverError(ctx)
 		return
 	}
-	render(ctx, bookViews.Book(book), book.TitleFa)
+	render(ctx, bookViews.Book(book), book.Title)
 }
 
 func (bh *BookHandler) Delete(ctx *gin.Context) {
@@ -48,14 +48,14 @@ func (bh *BookHandler) Delete(ctx *gin.Context) {
 	err = bh.BookRepo.DeleteById(bookId)
 	if err != nil {
 		switch err {
-		case repositories.ErrBookHasActiveLoan:
-			redirect(ctx, fmt.Sprintf("/books/%d", bookId))
-			return
 		case repositories.ErrNotFound:
 			notfound(ctx)
 			return
-		default:
+		case repositories.ErrInternal:
 			serverError(ctx)
+			return
+		default:
+			redirect(ctx, fmt.Sprintf("/books/%d", bookId))
 			return
 
 		}
@@ -80,51 +80,70 @@ func (bh *BookHandler) AddLoanPage(ctx *gin.Context) {
 		return
 	}
 
-	render(ctx, loanViews.LoanAddForm(views.Data{"bookId": book.ID}), "add loan")
+	render(ctx, loanViews.LoanForm(&models.Loan{BookId: book.ID}, views.Errors{}, "/loans/add"), "add loan")
 
 }
 
 func (bh *BookHandler) AddPage(ctx *gin.Context) {
-	render(ctx, bookViews.BookAddForm(views.Errors{}), "add book")
+	render(ctx, bookViews.BookForm(nil, views.Errors{}, "/books/add"), "add book")
 }
 
 func (bh *BookHandler) Add(ctx *gin.Context) {
 	var bookForm struct {
-		TitleFa     string `form:"titleFa" binding:"required" validate:"required,min=1,max=100"`
-		TitleEn     string `form:"titleEn" binding:"required" validate:"required,min=1,max=100"`
+		Title       string `form:"title" binding:"required" validate:"required,min=1,max=100"`
 		ISBN        string `form:"isbn" binding:"required" validate:"required"`
 		TotalCopies int    `form:"totalCopies" binding:"required" validate:"required,min=1"`
 		AuthorId    uint   `form:"authorId" binding:"required" validate:"required,min=1"`
+		// optional
+		Publisher  *string `form:"publisher" binding:"omitempty" validate:"omitempty,max=30"`
+		Language   *string `form:"language" binding:"omitempty" validate:"omitempty,max=30"`
+		Summary    *string `form:"summary" binding:"omitempty" validate:"omitempty,max=1000"`
+		Translator *string `form:"translator" binding:"omitempty" validate:"omitempty,max=50"`
 	}
 
 	if err := ctx.ShouldBind(&bookForm); err != nil {
-		render(ctx, bookViews.BookAddForm(parseValidationErrors(err)), "add book")
+		render(ctx, bookViews.BookForm(nil, parseValidationErrors(err), "/books/add"), "add book")
 		return
 	}
 
 	if err := bh.Validator.Struct(bookForm); err != nil {
-		render(ctx, bookViews.BookAddForm(parseValidationErrors(err)), "add book")
+		render(ctx, bookViews.BookForm(nil, parseValidationErrors(err), "/books/add"), "add book")
 		return
 	}
 
+	fmt.Println(bookForm, ctx.Request.Form)
+
 	book := models.Book{
-		TitleFa:         bookForm.TitleFa,
-		TitleEn:         bookForm.TitleEn,
+		Title:           bookForm.Title,
 		ISBN:            bookForm.ISBN,
 		TotalCopies:     bookForm.TotalCopies,
 		AvailableCopies: bookForm.TotalCopies,
 		AuthorId:        bookForm.AuthorId,
 	}
 
+	if bookForm.Publisher != nil {
+		book.Publisher = *bookForm.Publisher
+	}
+
+	if bookForm.Summary != nil {
+		book.Summary = *bookForm.Summary
+	}
+
+	if bookForm.Translator != nil {
+		book.Translator = *bookForm.Translator
+	}
+
+	if bookForm.Language != nil {
+		book.Publisher = *bookForm.Language
+	}
+
 	if err := bh.BookRepo.Insert(&book); err != nil {
-		// check for invalid author ID
-		if err == repositories.ErrAuthorIdNotFound {
-			render(ctx, bookViews.BookAddForm(views.Errors{
-				"authorId": "doesn't exist",
-			}), "add book")
+		errors := bh.BookRepo.ConvertErrorsToFormErrors(err)
+		if errors["_"] != "" {
+			serverError(ctx)
 			return
 		}
-		serverError(ctx)
+		render(ctx, bookViews.BookForm(nil, errors, "/books/add"), book.Title)
 		return
 	}
 
@@ -186,7 +205,7 @@ func (bh *BookHandler) EditPage(ctx *gin.Context) {
 		serverError(ctx)
 		return
 	}
-	render(ctx, bookViews.BookEditForm(book, views.Errors{}), book.TitleFa)
+	render(ctx, bookViews.BookForm(book, views.Errors{}, fmt.Sprintf("/books/%d/edit", book.ID)), book.Title)
 }
 
 func (bh *BookHandler) Update(ctx *gin.Context) {
@@ -198,11 +217,15 @@ func (bh *BookHandler) Update(ctx *gin.Context) {
 	}
 
 	var bookUpdateForm struct {
-		TitleFa     *string `form:"titleFa" validate:"omitempty,min=1,max=100"`
-		TitleEn     *string `form:"titleEn" validate:"omitempty,min=1,max=100"`
-		ISBN        *string `form:"isbn"`
-		TotalCopies *int    `form:"totalCopies" validate:"omitempty,min=1"`
-		AuthorId    *uint   `form:"authorId" validate:"min=0"`
+		Title       *string `form:"title" binding:"omitempty" validate:"omitempty,min=1,max=100"`
+		ISBN        *string `form:"isbn" binding:"omitempty" validate:"omitempty,min=1"`
+		TotalCopies *int    `form:"totalCopies" binding:"omitempty" validate:"omitempty,min=1"`
+		AuthorId    *uint   `form:"authorId" binding:"omitempty" validate:"omitempty,min=1"`
+		// optional
+		Publisher  *string `form:"publisher" binding:"omitempty" validate:"omitempty,max=30"`
+		Language   *string `form:"language" binding:"omitempty" validate:"omitempty,max=30"`
+		Summary    *string `form:"summary" binding:"omitempty" validate:"omitempty,max=1000"`
+		Translator *string `form:"translator" binding:"omitempty" validate:"omitempty,max=50"`
 	}
 
 	book, err := bh.BookRepo.GetById(bookId)
@@ -215,41 +238,59 @@ func (bh *BookHandler) Update(ctx *gin.Context) {
 		return
 	}
 
+	endpoint := fmt.Sprintf("/books/%d/edit", bookId)
+
 	if err := ctx.ShouldBind(&bookUpdateForm); err != nil {
-		render(ctx, bookViews.BookEditForm(book, parseValidationErrors(err)), book.TitleFa)
+		render(ctx, bookViews.BookForm(book, parseValidationErrors(err), endpoint), book.Title)
 		return
 	}
 
 	if err := bh.Validator.Struct(&bookUpdateForm); err != nil {
-		render(ctx, bookViews.BookEditForm(book, parseValidationErrors(err)), book.TitleFa)
+		render(ctx, bookViews.BookForm(book, parseValidationErrors(err), endpoint), book.Title)
 		return
 	}
 
-	newBook := models.Book{
-		ID: bookId,
-	}
-	if bookUpdateForm.TitleEn != nil {
-		newBook.TitleEn = *bookUpdateForm.TitleEn
-	}
-	if bookUpdateForm.TitleFa != nil {
-		newBook.TitleFa = *bookUpdateForm.TitleFa
-	}
-	if bookUpdateForm.ISBN != nil {
-		newBook.ISBN = *bookUpdateForm.ISBN
-	}
-	if bookUpdateForm.TotalCopies != nil {
-		newBook.TotalCopies = *bookUpdateForm.TotalCopies
-	}
-	if bookUpdateForm.AuthorId != nil {
-		newBook.AuthorId = *bookUpdateForm.AuthorId
+	if bookUpdateForm.Title != nil {
+		book.Title = *bookUpdateForm.Title
 	}
 
-	if err := bh.BookRepo.Update(&newBook); err != nil {
-		if err == repositories.ErrAuthorIdNotFound {
-			render(ctx, bookViews.BookEditForm(book, views.Errors{"authorId": "author doesn't exist"}), book.TitleFa)
+	if bookUpdateForm.ISBN != nil {
+		book.ISBN = *bookUpdateForm.ISBN
+	}
+
+	if bookUpdateForm.TotalCopies != nil {
+		book.TotalCopies = *bookUpdateForm.TotalCopies
+	}
+
+	if bookUpdateForm.TotalCopies != nil {
+		book.AuthorId = *bookUpdateForm.AuthorId
+	}
+
+	if bookUpdateForm.Publisher != nil {
+		book.Publisher = *bookUpdateForm.Publisher
+	}
+
+	if bookUpdateForm.Summary != nil {
+		book.Summary = *bookUpdateForm.Summary
+	}
+
+	if bookUpdateForm.Translator != nil {
+		book.Translator = *bookUpdateForm.Translator
+	}
+
+	if bookUpdateForm.Language != nil {
+		book.Language = *bookUpdateForm.Language
+	}
+
+	fmt.Println(book)
+
+	if err := bh.BookRepo.Update(book); err != nil {
+		errors := bh.BookRepo.ConvertErrorsToFormErrors(err)
+		if errors["_"] != "" {
+			serverError(ctx)
 			return
 		}
-		serverError(ctx)
+		render(ctx, bookViews.BookForm(book, errors, endpoint), book.Title)
 		return
 	}
 

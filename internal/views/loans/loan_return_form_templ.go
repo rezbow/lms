@@ -32,20 +32,20 @@ func LoanReturnForm(loan *models.Loan) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><form hx-post=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><form method=\"POST\" action=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/loans/%d/return", loan.ID))
+		var templ_7745c5c3_Var2 templ.SafeURL
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(fmt.Sprintf("/loans/%d/return", loan.ID))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `loans/loan_return_form.templ`, Line: 9, Col: 53}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `loans/loan_return_form.templ`, Line: 10, Col: 52}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" hx-target=\"#results\" hx-swap=\"innerHTML\"><div><label for=\"returnDate\">Return Date:</label> <input id=\"returnDate\" type=\"date\" name=\"returnDate\"></div><button type=\"submit\">Return</button></form><div id=\"results\"></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><div><input id=\"returnDate\" type=\"date\" name=\"returnDate\"></div><button type=\"submit\">Return</button></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -4,9 +4,8 @@ import (
 	"errors"
 	"lms/internal/models"
 	"lms/internal/utils"
-	"strings"
+	"lms/internal/views"
 
-	"github.com/jackc/pgerrcode"
 	"gorm.io/gorm"
 )
 
@@ -14,11 +13,7 @@ type LoanRepo struct {
 	DB *gorm.DB
 }
 
-var (
-	ErrLoanInvalidStatus = errors.New("status should be borrowed or returned")
-)
-
-func (lp *LoanRepo) GetById(id int) (*models.Loan, error) {
+func (lp *LoanRepo) GetById(id uint) (*models.Loan, error) {
 	var loan models.Loan
 	result := lp.DB.First(&loan, id)
 
@@ -31,10 +26,13 @@ func (lp *LoanRepo) GetById(id int) (*models.Loan, error) {
 	return &loan, nil
 }
 
-func (lp *LoanRepo) DeleteById(id int) error {
+func (lp *LoanRepo) DeleteById(id uint) error {
 	result := lp.DB.Delete(&models.Loan{}, id)
 	if result.Error != nil {
-		return ErrInternal
+		if isInternalError(result.Error) {
+			return ErrInternal
+		}
+		return result.Error
 	} else if result.RowsAffected == 0 {
 		return ErrNotFound
 	}
@@ -44,7 +42,10 @@ func (lp *LoanRepo) DeleteById(id int) error {
 func (lp *LoanRepo) Insert(loan *models.Loan) error {
 	result := lp.DB.Create(loan)
 	if result.Error != nil {
-		return lp.handleInsertError(result.Error)
+		if isInternalError(result.Error) {
+			return ErrInternal
+		}
+		return result.Error
 	}
 	return nil
 }
@@ -62,25 +63,33 @@ func (lp *LoanRepo) All(page, pageSize int) ([]models.Loan, error) {
 func (lr *LoanRepo) Update(loan *models.Loan) error {
 	result := lr.DB.Model(&models.Loan{}).Where("id = ?", loan.ID).Updates(loan)
 	if result.Error != nil {
-		return lr.handleInsertError(result.Error)
+		if isInternalError(result.Error) {
+			return ErrInternal
+		}
+		return result.Error
 	} else if result.RowsAffected == 0 {
 		return ErrNotFound
 	}
 	return nil
 }
 
-func (lr *LoanRepo) handleInsertError(err error) error {
+func (lr *LoanRepo) ConvertErrorToFormError(err error) views.Errors {
+	errors := make(views.Errors)
 	pgError := extractPQError(err)
-	if pgError.Code == pgerrcode.ForeignKeyViolation {
-		if idx := strings.Index(pgError.ConstraintName, "book"); idx >= 0 {
-			return ErrBookIdNotFound
-		} else {
-			return ErrMemberIdNotFound
-		}
-	} else if pgError.Code == pgerrcode.CheckViolation {
-		return ErrLoanInvalidStatus
+	switch {
+	case pgError.ConstraintName == "loans_book_id_fkey":
+		errors["bookId"] = "book not found"
+	case pgError.ConstraintName == "loans_member_id_fkey":
+		errors["memberId"] = "member not found"
+	case pgError.ConstraintName == "unique_active_loan":
+		errors["memberId"] = "this member already borrowed this book"
+	case pgError.Message == "OVER_BORROWING":
+		errors["bookId"] = "no available copy to borrow"
+	default:
+		errors["_"] = err.Error()
+
 	}
-	return ErrInternal
+	return errors
 }
 
 func (lr *LoanRepo) Filter(bookId, memberId int, status string, pagination *utils.Pagination) ([]models.Loan, error) {

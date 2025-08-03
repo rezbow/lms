@@ -50,7 +50,7 @@ func (mh *MemberHandler) GetById(ctx *gin.Context) {
 		render(ctx, commonViews.ServerError(err.Error()), "internal server error")
 		return
 	}
-	render(ctx, memberViews.MemberInfo(member), member.Name)
+	render(ctx, memberViews.MemberInfo(member), member.FullName)
 }
 
 func (mh *MemberHandler) DeleteById(ctx *gin.Context) {
@@ -67,40 +67,45 @@ func (mh *MemberHandler) DeleteById(ctx *gin.Context) {
 }
 
 func (mh *MemberHandler) AddPage(ctx *gin.Context) {
-	render(ctx, memberViews.MemberAddForm(), "add member")
+	render(ctx, memberViews.MemberForm(nil, views.Errors{}, "/members/add"), "add member")
 }
 
 func (mh *MemberHandler) Add(ctx *gin.Context) {
 	var userInput struct {
-		Name  string `form:"name" binding:"required" validate:"required,min=4,max=100"`
-		Phone string `form:"phone" binding:"required" validate:"required,min=4,max=20"`
-		Email string `form:"email" binding:"required" validate:"required,email,min=4,max=50"`
+		FullName    string `form:"fullName" binding:"required" validate:"required,min=4,max=100"`
+		PhoneNumber string `form:"phoneNumber" binding:"required" validate:"required,min=4,max=20"`
+		Email       string `form:"email" binding:"required" validate:"required,email,min=4,max=50"`
+		NationalId  string `form:"nationalId" binding:"required" validate:"required,min=4,max=50"`
 	}
 
 	if err := ctx.ShouldBind(&userInput); err != nil {
-		render(ctx, commonViews.FormErrors([]string{err.Error()}), "error")
+		render(ctx, memberViews.MemberForm(nil, parseValidationErrors(err), "/members/add"), "add member")
 		return
 	}
 
 	if err := mh.Validator.Struct(&userInput); err != nil {
-		render(ctx, commonViews.FormErrors([]string{err.Error()}), "error")
+		render(ctx, memberViews.MemberForm(nil, parseValidationErrors(err), "/members/add"), "add member")
 		return
 	}
 
 	member := models.Member{
-		Name:  userInput.Name,
-		Phone: userInput.Phone,
-		Email: userInput.Email,
+		FullName:    userInput.FullName,
+		PhoneNumber: userInput.PhoneNumber,
+		NationalId:  userInput.NationalId,
+		Email:       userInput.Email,
 	}
 
 	if err := mh.Repo.Insert(&member); err != nil {
-		if err == repositories.ErrInternal {
-			render(ctx, commonViews.ServerError(err.Error()), "internal server error")
-			return
+		if err == repositories.ErrNotFound {
+			notfound(ctx)
+		} else if err == repositories.ErrInternal {
+			serverError(ctx)
+		} else {
+			render(ctx, memberViews.MemberForm(nil, mh.Repo.ConvertErrorsToFormErrors(err), "/members/add"), member.FullName)
 		}
-		render(ctx, commonViews.FormErrors([]string{err.Error()}), "form error")
 		return
 	}
+
 	redirect(ctx, fmt.Sprintf("/members/%d", member.ID))
 }
 
@@ -119,57 +124,72 @@ func (mh *MemberHandler) EditPage(ctx *gin.Context) {
 		serverError(ctx)
 		return
 	}
-	render(ctx, memberViews.MemberEditForm(member), member.Name)
+	render(ctx, memberViews.MemberForm(member, views.Errors{}, fmt.Sprintf("/members/%d/edit", member.ID)), member.FullName)
 }
 
 func (mh *MemberHandler) Update(ctx *gin.Context) {
 
-	memberId := ctx.Param("id")
-	id, err := strconv.Atoi(memberId)
+	memberId, err := readID(ctx)
 	if err != nil {
-		render(ctx, commonViews.NotFound(), "404:(")
+		notfound(ctx)
 		return
 	}
 
 	var memberUpdateForm struct {
-		Name  *string `form:"name" validate:"omitempty,min=1,max=100"`
-		Phone *string `form:"phone" validate:"omitempty,min=1,max=20"`
-		Email *string `form:"email" validate:"omitempty,email,min=1,max=50"`
+		FullName    *string `form:"fullName" validate:"omitempty,min=1,max=100"`
+		PhoneNumber *string `form:"phoneNumber" validate:"omitempty,min=1,max=20"`
+		NationalId  *string `form:"nationalId" validate:"omitempty,min=1,max=20"`
+		Email       *string `form:"email" validate:"omitempty,email,min=1,max=50"`
+		Status      *string `form:"status" validate:"omitempty,oneof=active suspended,min=1,max=50"`
 	}
 
+	member, err := mh.Repo.GetById(memberId)
+	if err != nil {
+		if err == repositories.ErrNotFound {
+			notfound(ctx)
+			return
+		}
+		serverError(ctx)
+		return
+	}
+
+	endpoint := fmt.Sprintf("/members/%d/edit", member.ID)
+
 	if err := ctx.ShouldBind(&memberUpdateForm); err != nil {
-		render(ctx, commonViews.FormErrors([]string{err.Error()}), "error")
+		render(ctx, memberViews.MemberForm(member, parseValidationErrors(err), endpoint), member.FullName)
 		return
 	}
 
 	if err := mh.Validator.Struct(&memberUpdateForm); err != nil {
-		render(ctx, commonViews.FormErrors([]string{err.Error()}), "error")
+		render(ctx, memberViews.MemberForm(member, parseValidationErrors(err), endpoint), member.FullName)
 		return
 	}
 
-	member := models.Member{
-		ID: id,
-	}
-
-	if memberUpdateForm.Name != nil {
-		member.Name = *memberUpdateForm.Name
+	if memberUpdateForm.FullName != nil {
+		member.FullName = *memberUpdateForm.FullName
 	}
 	if memberUpdateForm.Email != nil {
 		member.Email = *memberUpdateForm.Email
 	}
-	if memberUpdateForm.Phone != nil {
-		member.Phone = *memberUpdateForm.Phone
+	if memberUpdateForm.PhoneNumber != nil {
+		member.PhoneNumber = *memberUpdateForm.PhoneNumber
 	}
 
-	if err := mh.Repo.Update(&member); err != nil {
-		if err == repositories.ErrInternal {
-			render(ctx, commonViews.ServerError(err.Error()), "internal server error")
-			return
+	if memberUpdateForm.NationalId != nil {
+		member.NationalId = *memberUpdateForm.NationalId
+	}
+
+	if err := mh.Repo.Update(member); err != nil {
+		if err == repositories.ErrNotFound {
+			notfound(ctx)
+		} else if err == repositories.ErrInternal {
+			serverError(ctx)
+		} else {
+			render(ctx, memberViews.MemberForm(member, mh.Repo.ConvertErrorsToFormErrors(err), endpoint), member.FullName)
 		}
-		render(ctx, commonViews.FormErrors([]string{err.Error()}), "form error")
 		return
 	}
-	HXRedirect(ctx, "/members/"+memberId)
+	redirect(ctx, fmt.Sprintf("/members/%d", memberId))
 }
 
 func (mh *MemberHandler) Search(ctx *gin.Context) {
@@ -213,7 +233,7 @@ func (mh *MemberHandler) AddLoanPage(ctx *gin.Context) {
 		return
 	}
 
-	_, err = mh.Repo.GetById(memberId)
+	member, err := mh.Repo.GetById(memberId)
 	if err != nil {
 		if err == repositories.ErrNotFound {
 			notfound(ctx)
@@ -222,5 +242,9 @@ func (mh *MemberHandler) AddLoanPage(ctx *gin.Context) {
 		serverError(ctx)
 		return
 	}
-	render(ctx, loanViews.LoanAddForm(views.Data{"memberId": memberId}), "add loan")
+	render(ctx, loanViews.LoanForm(&models.Loan{MemberId: member.ID}, views.Errors{}, "/loans/add"), "add loan")
+}
+
+func parseRepoError(err error) {
+
 }
