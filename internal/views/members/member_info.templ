@@ -2,8 +2,6 @@ package members
 
 import "lms/internal/models"
 import "fmt"
-import "lms/internal/views/loans"
-import "lms/internal/views"
 
 templ MemberInfo(member *models.Member) {
 	<div>
@@ -42,9 +40,6 @@ templ MemberInfo(member *models.Member) {
 					</form>
 				</div>
 			</div>
-		</div>
-		<div>
-			@loans.LoanSearch(member.Loans, views.Data{"memberId": member.ID})
 		</div>
 	</div>
 }

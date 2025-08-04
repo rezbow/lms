@@ -3,8 +3,6 @@ package books
 import (
 	"fmt"
 	"lms/internal/models"
-	"lms/internal/views"
-	loanViews "lms/internal/views/loans"
 )
 
 templ Book(book *models.Book) {
@@ -47,9 +45,6 @@ templ Book(book *models.Book) {
 					</form>
 				</div>
 			</div>
-		</div>
-		<div>
-			@loanViews.LoanSearch(book.Loans, views.Data{"bookId": book.ID})
 		</div>
 	</div>
 }

@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "lms/internal/models"
 
-func Index(members []models.Member) templ.Component {
+func MemberSearch(members []models.Member) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,7 +31,7 @@ func Index(members []models.Member) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><h1>Member Search</h1><a href=\"/members/add\">Add Member</a> <input type=\"text\" name=\"name\" placeholder=\"name\" hx-get=\"/members/search\" hx-target=\"#results\" hx-trigger=\"keyup changed delay:300ms\"> <input type=\"text\" name=\"email\" placeholder=\"email\" hx-get=\"/members/search\" hx-target=\"#results\" hx-trigger=\"keyup changed delay:300ms\"><div id=\"results\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><h1>Member Search</h1><a href=\"/members/add\">Add Member</a><form method=\"GET\" action=\"/members/search\"><input type=\"search\" name=\"fullName\" placeholder=\"full name\"> <input type=\"search\" name=\"email\" placeholder=\"email\"> <input type=\"search\" name=\"phoneNumber\" placeholder=\"phone number\"> <input type=\"search\" name=\"nationalId\" placeholder=\"national id\"> <button type=\"submit\">Search</button></form><div id=\"results\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

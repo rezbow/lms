@@ -19,5 +19,15 @@ type Book struct {
 	CreatedAt       time.Time `gorm:"default:current_timestamp"`
 	UpdatedAt       time.Time `gorm:"default:current_timestamp"`
 	version         uint
-	Loans           []Loan
+	Loans           []*Loan
+	Categories      []*Category `gorm:"many2many:category_books"`
+}
+
+type BookFilter struct {
+	Title      string
+	ISBN       string
+	Publisher  string
+	Language   string
+	Translator string
+	AuthorId   uint
 }

@@ -4,6 +4,11 @@ import (
 	"time"
 )
 
+var (
+	StatusActive    = "active"
+	StatusSuspended = "suspended"
+)
+
 type Member struct {
 	ID          uint
 	FullName    string
@@ -15,5 +20,13 @@ type Member struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	version     uint
-	Loans       []Loan
+	Loans       []*Loan
+}
+
+type MemberFilter struct {
+	FullName    string
+	Email       string
+	PhoneNumber string
+	NationalId  string
+	JoinedAt    time.Time
 }

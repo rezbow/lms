@@ -3,6 +3,7 @@ package repositories
 import (
 	"errors"
 	"lms/internal/models"
+	"lms/internal/utils"
 	"lms/internal/views"
 
 	"gorm.io/gorm"
@@ -48,10 +49,9 @@ func (mr *MemberRepo) DeleteById(id string) error {
 	return nil
 }
 
-func (mr *MemberRepo) All(page int, pageSize int) ([]models.Member, error) {
+func (mr *MemberRepo) All(pagination *utils.Pagination) ([]models.Member, error) {
 	var members []models.Member
-	offset := (page - 1) * pageSize
-	if err := mr.DB.Limit(pageSize).Offset(offset).Find(&members).Error; err != nil {
+	if err := mr.DB.Limit(pagination.Limit).Offset(pagination.Offset).Find(&members).Error; err != nil {
 		return nil, ErrInternal
 	}
 	return members, nil
@@ -71,32 +71,32 @@ func (mr *MemberRepo) Update(member *models.Member) error {
 }
 
 func (mr *MemberRepo) Filter(
-	name string,
-	phone string,
-	email string,
-	limit int,
-	page int,
+	filter *models.MemberFilter,
+	pagination *utils.Pagination,
 	total *int64,
 ) ([]models.Member, error) {
 	var members []models.Member
 	query := mr.DB.Model(&models.Member{})
 
-	if name != "" {
-		query.Where("members.name ILIKE ?", "%"+name+"%")
+	if filter.FullName != "" {
+		query.Where("members.full_name ILIKE ?", "%"+filter.FullName+"%")
 	}
 
-	if phone != "" {
-		query.Where("members.phone ILIKE ?", "%"+phone+"%")
+	if filter.PhoneNumber != "" {
+		query.Where("members.phone_number ILIKE ?", "%"+filter.PhoneNumber+"%")
 	}
 
-	if email != "" {
-		query.Where("members.phone ILIKE ?", "%"+email+"%")
+	if filter.Email != "" {
+		query.Where("members.email ILIKE ?", "%"+filter.Email+"%")
+	}
+
+	if filter.NationalId != "" {
+		query.Where("members.national_id ILIKE ?", "%"+filter.NationalId+"%")
 	}
 
 	query.Count(total)
-	offset := (page - 1) * limit
 
-	if err := query.Offset(offset).Limit(limit).Find(&members).Error; err != nil {
+	if err := query.Offset(pagination.Offset).Limit(pagination.Limit).Find(&members).Error; err != nil {
 		return nil, ErrInternal
 	}
 	return members, nil

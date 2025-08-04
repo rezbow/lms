@@ -11,7 +11,7 @@ templ LoanList(loans []models.Loan) {
 			for _, l := range loans {
 				<li>
 					<a href={ fmt.Sprintf("/loans/%d", l.ID) }>
-						{ fmt.Sprintf("'%d' borrowed by '%d'",l.BookId , l.MemberId) }
+						{ fmt.Sprintf("'%s' borrowed by '%s'",l.Book.Title , l.Member.FullName) }
 					</a>
 				</li>
 			}

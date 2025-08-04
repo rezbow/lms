@@ -15,7 +15,7 @@ type LoanRepo struct {
 
 func (lp *LoanRepo) GetById(id uint) (*models.Loan, error) {
 	var loan models.Loan
-	result := lp.DB.First(&loan, id)
+	result := lp.DB.Preload("Book").Preload("Member").First(&loan, id)
 
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -50,10 +50,9 @@ func (lp *LoanRepo) Insert(loan *models.Loan) error {
 	return nil
 }
 
-func (lp *LoanRepo) All(page, pageSize int) ([]models.Loan, error) {
+func (lp *LoanRepo) All(pagination *utils.Pagination) ([]models.Loan, error) {
 	var loans []models.Loan
-	offset := (page - 1) * pageSize
-	result := lp.DB.Limit(pageSize).Offset(offset).Find(&loans)
+	result := lp.DB.Preload("Book").Preload("Member").Limit(pagination.Limit).Offset(pagination.Offset).Find(&loans)
 	if result.Error != nil {
 		return nil, ErrInternal
 	}
@@ -92,20 +91,20 @@ func (lr *LoanRepo) ConvertErrorToFormError(err error) views.Errors {
 	return errors
 }
 
-func (lr *LoanRepo) Filter(bookId, memberId int, status string, pagination *utils.Pagination) ([]models.Loan, error) {
+func (lr *LoanRepo) Filter(filter *models.LoanFilter, pagination *utils.Pagination) ([]models.Loan, error) {
 	var loans []models.Loan
 	query := lr.DB.Model(&models.Loan{})
 
-	if bookId >= 0 {
-		query.Where("book_id = ? ", bookId)
+	if filter.BookId > 0 {
+		query.Where("book_id = ? ", filter.BookId)
 	}
 
-	if memberId >= 0 {
-		query.Where("member_id = ? ", memberId)
+	if filter.MemberId > 0 {
+		query.Where("member_id = ? ", filter.MemberId)
 	}
 
-	if status != "" {
-		query.Where("status = ? ", status)
+	if filter.Status != "" {
+		query.Where("status = ? ", filter.Status)
 	}
 
 	err := query.Limit(pagination.Limit).Offset(pagination.Offset).Find(&loans).Error

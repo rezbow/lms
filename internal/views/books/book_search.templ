@@ -1,0 +1,49 @@
+package books
+
+import "lms/internal/models"
+
+templ BookSearch(books []models.Book) {
+	<div>
+		<h1>Book Search</h1>
+		<a href="/books/add">Add book </a>
+		<form
+			method="GET"
+			action="/books/search"
+		>
+			<input
+				type="text"
+				name="isbn"
+				placeholder="ISBN"
+			/>
+			<input
+				type="text"
+				name="title"
+				placeholder="Title"
+			/>
+			<input
+				type="text"
+				name="authorId"
+				placeholder="Author"
+			/>
+			<input
+				type="text"
+				name="publisher"
+				placeholder="publisher"
+			/>
+			<input
+				type="text"
+				name="language"
+				placeholder="language"
+			/>
+			<input
+				type="text"
+				name="translator"
+				placeholder="translator"
+			/>
+			<button type="submit">Search</button>
+		</form>
+		<div id="results">
+			@BookList(books)
+		</div>
+	</div>
+}

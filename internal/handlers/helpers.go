@@ -84,7 +84,7 @@ func readPagination(ctx *gin.Context) (*utils.Pagination, error) {
 
 func readIntFromQuery(str string) (int, error) {
 	if str == "" {
-		return -1, nil
+		return 0, nil
 	}
 
 	i, err := strconv.Atoi(str)

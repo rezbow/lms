@@ -1,0 +1,36 @@
+package members
+
+import "lms/internal/models"
+
+templ MemberSearch(members []models.Member) {
+	<div>
+		<h1>Member Search</h1>
+		<a href="/members/add">Add Member</a>
+		<form method="GET" action="/members/search">
+			<input
+				type="search"
+				name="fullName"
+				placeholder="full name"
+			/>
+			<input
+				type="search"
+				name="email"
+				placeholder="email"
+			/>
+			<input
+				type="search"
+				name="phoneNumber"
+				placeholder="phone number"
+			/>
+			<input
+				type="search"
+				name="nationalId"
+				placeholder="national id"
+			/>
+			<button type="submit">Search</button>
+		</form>
+		<div id="results">
+			@MemberList(members)
+		</div>
+	</div>
+}

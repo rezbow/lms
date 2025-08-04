@@ -10,4 +10,5 @@ type Author struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	version     uint
+	Books       []*Book
 }

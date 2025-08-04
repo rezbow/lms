@@ -52,27 +52,35 @@ func (bp *BookRepo) Insert(book *models.Book) error {
 }
 
 func (bp *BookRepo) Filter(
-	title string,
-	author string,
-	isbn string,
+	filter *models.BookFilter,
 	pagination *utils.Pagination,
 	total *int64,
 ) ([]models.Book, error) {
 	var books []models.Book
-	query := bp.DB.Model(&models.Book{}).Preload("Loans")
+	query := bp.DB.Model(&models.Book{})
 
-	if title != "" {
-		query.Where("books.title_fa ILIKE ?", "%"+title+"%").
-			Or("books.title_en ILIKE ?", "%"+title+"%")
+	if filter.Title != "" {
+		query.Where("books.title ILIKE ?", "%"+filter.Title+"%")
 	}
 
-	if author != "" {
-		query.Where("authors.name_fa ILIKE ?", "%"+author+"%").
-			Or("authors.name_en ILIKE ?", "%"+author+"%")
+	if filter.AuthorId > 0 {
+		query.Where("books.author_id = ?", filter.AuthorId)
 	}
 
-	if isbn != "" {
-		query.Where("isbn = ?", isbn)
+	if filter.ISBN != "" {
+		query.Where("books.isbn = ?", filter.ISBN)
+	}
+
+	if filter.Publisher != "" {
+		query.Where("books.publisher ILIKE ?", "%"+filter.Publisher+"%")
+	}
+
+	if filter.Language != "" {
+		query.Where("books.language ILIKE ? ", "%"+filter.Language+"%")
+	}
+
+	if filter.Translator != "" {
+		query.Where("books.translator ILIKE ? ", "%"+filter.Translator+"%")
 	}
 
 	query.Count(total)
@@ -89,10 +97,9 @@ func (bp *BookRepo) Total() int64 {
 	return total
 }
 
-func (bp *BookRepo) All(page int, pageSize int) ([]models.Book, error) {
+func (bp *BookRepo) All(pagination *utils.Pagination) ([]models.Book, error) {
 	var books []models.Book
-	offset := (page - 1) * pageSize
-	if err := bp.DB.Preload("Loan").Limit(pageSize).Offset(offset).Find(&books).Error; err != nil {
+	if err := bp.DB.Preload("Loans").Limit(pagination.Limit).Offset(pagination.Offset).Find(&books).Error; err != nil {
 		return nil, err
 	}
 	return books, nil

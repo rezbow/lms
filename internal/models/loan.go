@@ -18,4 +18,12 @@ type Loan struct {
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	version    uint
+	Book       *Book
+	Member     *Member
+}
+
+type LoanFilter struct {
+	BookId   uint
+	MemberId uint
+	Status   string
 }

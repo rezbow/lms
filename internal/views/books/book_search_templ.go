@@ -10,7 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "lms/internal/models"
 
-func BookPage(books []models.Book) templ.Component {
+func BookSearch(books []models.Book) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,7 +31,7 @@ func BookPage(books []models.Book) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><h1>Book Search</h1><a href=\"/books/add\">Add book </a> <input type=\"text\" name=\"title\" placeholder=\"Title\" hx-get=\"/books/search\" hx-target=\"#results\" hx-trigger=\"keyup changed delay:300ms\"> <input type=\"text\" name=\"author\" placeholder=\"Author\" hx-get=\"/books/search\" hx-target=\"#results\" hx-trigger=\"keyup changed delay:300ms\"><div id=\"results\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><h1>Book Search</h1><a href=\"/books/add\">Add book </a><form method=\"GET\" action=\"/books/search\"><input type=\"text\" name=\"isbn\" placeholder=\"ISBN\"> <input type=\"text\" name=\"title\" placeholder=\"Title\"> <input type=\"text\" name=\"authorId\" placeholder=\"Author\"> <input type=\"text\" name=\"publisher\" placeholder=\"publisher\"> <input type=\"text\" name=\"language\" placeholder=\"language\"> <input type=\"text\" name=\"translator\" placeholder=\"translator\"> <button type=\"submit\">Search</button></form><div id=\"results\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

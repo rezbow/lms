@@ -8,7 +8,6 @@ import (
 	commonViews "lms/internal/views/common"
 	loanViews "lms/internal/views/loans"
 	memberViews "lms/internal/views/members"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -20,18 +19,17 @@ type MemberHandler struct {
 }
 
 func (mh *MemberHandler) Index(ctx *gin.Context) {
-	pageStr := ctx.DefaultQuery("page", "1")
-	pageSizeStr := ctx.DefaultQuery("size", "10")
-
-	page, _ := strconv.Atoi(pageStr)
-	pageSize, _ := strconv.Atoi(pageSizeStr)
-
-	members, err := mh.Repo.All(page, pageSize)
+	pagination, err := readPagination(ctx)
+	if err != nil {
+		notfound(ctx)
+		return
+	}
+	members, err := mh.Repo.All(pagination)
 	if err != nil {
 		render(ctx, commonViews.ServerError(err.Error()), "server error")
 		return
 	}
-	render(ctx, memberViews.Index(members), "members")
+	render(ctx, memberViews.MemberSearch(members), "members")
 }
 
 func (mh *MemberHandler) GetById(ctx *gin.Context) {
@@ -195,15 +193,12 @@ func (mh *MemberHandler) Update(ctx *gin.Context) {
 func (mh *MemberHandler) Search(ctx *gin.Context) {
 	var total int64
 
-	name := ctx.Query("name")
-	phone := ctx.Query("phone")
+	name := ctx.Query("fullName")
+	phone := ctx.Query("phoneNumber")
 	email := ctx.Query("email")
+	nationalId := ctx.Query("nationalId")
 
-	pageStr := ctx.DefaultQuery("page", "1")
-	limitStr := ctx.DefaultQuery("limit", "10")
-
-	page, err := strconv.Atoi(pageStr)
-	limit, err := strconv.Atoi(limitStr)
+	pagination, err := readPagination(ctx)
 
 	if err != nil {
 		notfound(ctx)
@@ -211,11 +206,13 @@ func (mh *MemberHandler) Search(ctx *gin.Context) {
 	}
 
 	members, err := mh.Repo.Filter(
-		name,
-		phone,
-		email,
-		limit,
-		page,
+		&models.MemberFilter{
+			FullName:    name,
+			PhoneNumber: phone,
+			Email:       email,
+			NationalId:  nationalId,
+		},
+		pagination,
 		&total,
 	)
 
@@ -223,7 +220,7 @@ func (mh *MemberHandler) Search(ctx *gin.Context) {
 		serverError(ctx)
 		return
 	}
-	render(ctx, memberViews.MemberList(members), "members")
+	render(ctx, memberViews.MemberSearch(members), "members")
 }
 
 func (mh *MemberHandler) AddLoanPage(ctx *gin.Context) {

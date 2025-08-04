@@ -7,7 +7,6 @@ import (
 	"lms/internal/views"
 	commonViews "lms/internal/views/common"
 	loanViews "lms/internal/views/loans"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -20,18 +19,18 @@ type LoanHandler struct {
 }
 
 func (lh *LoanHandler) Index(ctx *gin.Context) {
-	pageStr := ctx.DefaultQuery("page", "1")
-	pageSizeStr := ctx.DefaultQuery("size", "10")
+	pagination, err := readPagination(ctx)
+	if err != nil {
+		notfound(ctx)
+		return
+	}
 
-	page, _ := strconv.Atoi(pageStr)
-	pageSize, _ := strconv.Atoi(pageSizeStr)
-
-	loans, err := lh.Repo.All(page, pageSize)
+	loans, err := lh.Repo.All(pagination)
 	if err != nil {
 		render(ctx, commonViews.ServerError(err.Error()), "server error")
 		return
 	}
-	render(ctx, loanViews.Index(loans), "members")
+	render(ctx, loanViews.LoanSearch(loans), "members")
 }
 
 func (lh *LoanHandler) GetById(ctx *gin.Context) {
@@ -258,9 +257,11 @@ func (lh *LoanHandler) Search(ctx *gin.Context) {
 	}
 
 	loans, err := lh.Repo.Filter(
-		bookId,
-		memberId,
-		status,
+		&models.LoanFilter{
+			BookId:   uint(bookId),
+			MemberId: uint(memberId),
+			Status:   status,
+		},
 		pagination,
 	)
 
@@ -268,5 +269,8 @@ func (lh *LoanHandler) Search(ctx *gin.Context) {
 		serverError(ctx)
 		return
 	}
-	render(ctx, loanViews.LoanList(loans), "loans")
+
+	fmt.Println(loans)
+
+	render(ctx, loanViews.LoanSearch(loans), "loans")
 }
