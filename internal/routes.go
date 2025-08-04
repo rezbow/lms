@@ -11,6 +11,7 @@ func SetupRouter(
 	authorHandler *handlers.AuthorHandler,
 	memberHandler *handlers.MemberHandler,
 	loanHandler *handlers.LoanHandler,
+	categoryHandler *handlers.CategoryHandler,
 ) *gin.Engine {
 	r := gin.Default()
 
@@ -57,5 +58,15 @@ func SetupRouter(
 	loans.POST("/:id/edit", loanHandler.Update)
 	loans.POST("/:id/return", loanHandler.ReturnLoan)
 	loans.GET("/:id/return", loanHandler.ReturnPage)
+
+	// categories
+	categories := r.Group("/categories")
+	categories.GET("/add", categoryHandler.AddPage)
+	categories.POST("/add", categoryHandler.Add)
+
+	categories.GET("/:slug", categoryHandler.Get)
+	categories.GET("/:slug/edit", categoryHandler.EditPage)
+	categories.POST("/:slug/edit", categoryHandler.Edit)
+	categories.POST("/:slug/delete", categoryHandler.Delete)
 	return r
 }

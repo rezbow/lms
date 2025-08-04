@@ -6,7 +6,9 @@ import (
 	"lms/internal/views"
 	commonViews "lms/internal/views/common"
 	"net/http"
+	"regexp"
 	"strconv"
+	"strings"
 	"unicode"
 
 	"github.com/a-h/templ"
@@ -117,4 +119,26 @@ func parseValidationErrors(err error) views.Errors {
 		errors["_"] = err.Error()
 	}
 	return errors
+}
+
+func slugify(input string) string {
+	var builder strings.Builder
+	for _, c := range input {
+		switch {
+		case unicode.Is(unicode.Latin, c) && unicode.IsLetter(c):
+			builder.WriteRune(unicode.ToLower(c))
+		case unicode.Is(unicode.Arabic, c):
+			builder.WriteRune(c)
+		case unicode.IsDigit(c):
+			builder.WriteRune(c)
+		case c == ' ' || c == '-' || c == '_':
+			builder.WriteRune('-')
+		}
+	}
+
+	slug := builder.String()
+
+	slug = regexp.MustCompile(`-+`).ReplaceAllString(slug, "-")
+
+	return strings.Trim(slug, "-")
 }

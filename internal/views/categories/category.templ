@@ -1,0 +1,28 @@
+package categories
+
+import "lms/internal/models"
+import "fmt"
+
+templ Category(category *models.Category) {
+	<div>
+		<div>
+			<p>
+				<strong>Name:</strong>
+				{ category.Name }
+			</p>
+		</div>
+		<div>
+			<div>
+				<form
+					method="POST"
+					action={ fmt.Sprintf("/categories/%s/delete", category.Slug) }
+				>
+					<button type="submit">Delete</button>
+				</form>
+			</div>
+			<a href={ fmt.Sprintf("/categories/%s/edit", category.Slug) }>
+				<button type="button">Edit</button>
+			</a>
+		</div>
+	</div>
+}

@@ -29,6 +29,9 @@ func main() {
 	loanRepo := repositories.LoanRepo{DB: db}
 	loanHandler := handlers.LoanHandler{Repo: &loanRepo, Validator: validate}
 
-	r := internal.SetupRouter(&bookHandler, &authorHandler, &memberHandler, &loanHandler)
+	categoryRepo := repositories.CategoryRepo{DB: db}
+	categoryHandler := handlers.CategoryHandler{Repo: &categoryRepo, Validator: validate}
+
+	r := internal.SetupRouter(&bookHandler, &authorHandler, &memberHandler, &loanHandler, &categoryHandler)
 	r.Run(":8080")
 }

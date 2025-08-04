@@ -50,7 +50,7 @@ func LoanList(loans []models.Loan) templ.Component {
 				var templ_7745c5c3_Var2 templ.SafeURL
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(fmt.Sprintf("/loans/%d", l.ID))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/loans/loan_list.templ`, Line: 13, Col: 45}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `loans/loan_list.templ`, Line: 13, Col: 45}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
@@ -63,7 +63,7 @@ func LoanList(loans []models.Loan) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("'%s' borrowed by '%s'", l.Book.Title, l.Member.FullName))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/loans/loan_list.templ`, Line: 14, Col: 77}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `loans/loan_list.templ`, Line: 14, Col: 77}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
