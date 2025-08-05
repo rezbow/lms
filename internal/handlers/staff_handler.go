@@ -343,7 +343,7 @@ func (sh *StaffHandler) Login(ctx *gin.Context) {
 	}
 
 	session := sessions.Default(ctx)
-	session.Set("staffId", staff.ID)
+	session.Set("staff", *staff)
 	session.Save()
 
 	redirect(ctx, "/")

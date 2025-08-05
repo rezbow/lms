@@ -12,6 +12,7 @@ import (
 	"unicode"
 
 	"github.com/a-h/templ"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
@@ -22,9 +23,12 @@ func redirect(ctx *gin.Context, location string) {
 }
 
 func render(ctx *gin.Context, html templ.Component, title string) {
+	session := sessions.Default(ctx)
+
 	views.Layout(
 		html,
 		title,
+		session,
 	).Render(ctx.Request.Context(), ctx.Writer)
 	ctx.Status(http.StatusOK)
 }

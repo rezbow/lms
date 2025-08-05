@@ -3,7 +3,7 @@ package views
 type Data map[string]any
 type Errors map[string]string
 
-func (d Data) GetIntFromData(key string) (int, bool) {
+func (d Data) GetInt(key string) (int, bool) {
 	i, ok := d[key].(int)
 	if !ok {
 		return 0, ok
@@ -11,7 +11,7 @@ func (d Data) GetIntFromData(key string) (int, bool) {
 	return i, ok
 }
 
-func (d Data) GetErrorsFromData() (Errors, bool) {
+func (d Data) GetErrors() (Errors, bool) {
 	errors, ok := d["errors"].(Errors)
 	if !ok {
 		return nil, ok

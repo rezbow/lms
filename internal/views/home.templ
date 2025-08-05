@@ -1,6 +1,11 @@
 package views
 
-templ Home() {
+import "lms/internal/utils"
+import "github.com/gin-contrib/sessions"
+import "lms/internal/models"
+
+templ Home(session sessions.Session) {
+	{{ staff := utils.ExtractStaffFromSession(session) }}
 	<div>
 		<section>
 			<form role="search">
@@ -36,6 +41,9 @@ templ Home() {
 				<a role="button" href="/books/add">Add New Book</a>
 				<a role="button" href="/loans/add">Create New Loan</a>
 				<a role="button" href="/members/add">Register Member</a>
+				if staff.Role == models.RoleAdmin {
+					<a role="button" href="/staff/add">Add New Staff</a>
+				}
 			</div>
 		</section>
 	</div>

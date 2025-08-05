@@ -8,7 +8,11 @@ package views
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-func Home() templ.Component {
+import "lms/internal/utils"
+import "github.com/gin-contrib/sessions"
+import "lms/internal/models"
+
+func Home(session sessions.Session) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -29,7 +33,18 @@ func Home() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><section><form role=\"search\"><input name=\"search\" type=\"search\" placeholder=\"Book title, author, category, etc.\"> <input type=\"submit\" value=\"Search\"></form></section><section><div class=\"grid\"><article><header><h4>Total Books</h4></header><p>12,345</p></article><article><header><h4>Total Members</h4></header><p>500</p></article><article><header><h4>Total Active Loans</h4></header><strong>302</strong></article></div></section><section></section><section><div class=\"grid\"><a role=\"button\" href=\"/books/add\">Add New Book</a> <a role=\"button\" href=\"/loans/add\">Create New Loan</a> <a role=\"button\" href=\"/members/add\">Register Member</a></div></section></div>")
+		staff := utils.ExtractStaffFromSession(session)
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><section><form role=\"search\"><input name=\"search\" type=\"search\" placeholder=\"Book title, author, category, etc.\"> <input type=\"submit\" value=\"Search\"></form></section><section><div class=\"grid\"><article><header><h4>Total Books</h4></header><p>12,345</p></article><article><header><h4>Total Members</h4></header><p>500</p></article><article><header><h4>Total Active Loans</h4></header><strong>302</strong></article></div></section><section></section><section><div class=\"grid\"><a role=\"button\" href=\"/books/add\">Add New Book</a> <a role=\"button\" href=\"/loans/add\">Create New Loan</a> <a role=\"button\" href=\"/members/add\">Register Member</a> ")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if staff.Role == models.RoleAdmin {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a role=\"button\" href=\"/staff/add\">Add New Staff</a>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></section></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

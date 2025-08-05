@@ -80,7 +80,7 @@ func SetupRouter(
 	categories.POST("/:slug/delete", categoryHandler.Delete)
 
 	// staff
-	staff := r.Group("/staff")
+	staff := r.Group("/staff", AdminRequired())
 	staff.GET("", staffHandler.Index)
 	staff.GET("/add", staffHandler.AddPage)
 	staff.POST("/add", staffHandler.Add)

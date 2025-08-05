@@ -1,6 +1,10 @@
 package views
 
-templ Layout(children templ.Component, title string) {
+import "github.com/gin-contrib/sessions"
+import "lms/internal/utils"
+
+templ Layout(children templ.Component, title string, session sessions.Session) {
+	{{ staff := utils.ExtractStaffFromSession(session) }}
 	<html>
 		<head>
 			<title>{ title }</title>
@@ -16,7 +20,15 @@ templ Layout(children templ.Component, title string) {
 						<li><strong>Library Management System</strong></li>
 					</ul>
 					<ul>
-						<li><a href="#" class="contrast">Logout</a></li>
+						if staff != nil {
+							<li>{ staff.FullName }</li>
+							<li>
+								<form
+									method="POST"
+									action="/logout"
+								><input type="submit" value="Logout"/></form>
+							</li>
+						}
 					</ul>
 				</nav>
 			</header>
