@@ -14,6 +14,7 @@ import (
 	"github.com/a-h/templ"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func redirect(ctx *gin.Context, location string) {
@@ -141,4 +142,17 @@ func slugify(input string) string {
 	slug = regexp.MustCompile(`-+`).ReplaceAllString(slug, "-")
 
 	return strings.Trim(slug, "-")
+}
+
+func generateHash(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hash), err
+}
+
+func compareHashAndPassoword(hash string, password string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }

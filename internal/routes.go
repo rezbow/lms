@@ -3,6 +3,8 @@ package internal
 import (
 	"lms/internal/handlers"
 
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,12 +14,20 @@ func SetupRouter(
 	memberHandler *handlers.MemberHandler,
 	loanHandler *handlers.LoanHandler,
 	categoryHandler *handlers.CategoryHandler,
+	staffHandler *handlers.StaffHandler,
 ) *gin.Engine {
 	r := gin.Default()
 
-	r.HTMLRender = &TemplRender{}
+	//r.HTMLRender = &TemplRender{}
 
+	store := cookie.NewStore([]byte("cfaa7e52"))
+	r.Use(sessions.Sessions("session", store))
+	r.GET("/login", staffHandler.LoginPage)
+	r.POST("/login", staffHandler.Login)
+
+	r.Use(AuthRequired())
 	r.GET("/", handlers.Get)
+	r.POST("/logout", staffHandler.Logout)
 
 	// books resource
 	books := r.Group("/books")
@@ -68,5 +78,17 @@ func SetupRouter(
 	categories.GET("/:slug/edit", categoryHandler.EditPage)
 	categories.POST("/:slug/edit", categoryHandler.Edit)
 	categories.POST("/:slug/delete", categoryHandler.Delete)
+
+	// staff
+	staff := r.Group("/staff")
+	staff.GET("", staffHandler.Index)
+	staff.GET("/add", staffHandler.AddPage)
+	staff.POST("/add", staffHandler.Add)
+	staff.GET("/search", staffHandler.Search)
+
+	staff.GET("/:id", staffHandler.Get)
+	staff.POST("/:id/delete", staffHandler.Delete)
+	staff.GET("/:id/edit", staffHandler.EditPage)
+	staff.POST("/:id/edit", staffHandler.Edit)
 	return r
 }

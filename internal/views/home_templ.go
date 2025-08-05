@@ -29,7 +29,7 @@ func Home() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<h1>Welcome to the lms</h1><div class=\"grid\"><a href=\"/books\">Book managment </a> <a href=\"/members\">Member managment </a> <a href=\"/loans\">Loan managment </a></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><section><form role=\"search\"><input name=\"search\" type=\"search\" placeholder=\"Book title, author, category, etc.\"> <input type=\"submit\" value=\"Search\"></form></section><section><div class=\"grid\"><article><header><h4>Total Books</h4></header><p>12,345</p></article><article><header><h4>Total Members</h4></header><p>500</p></article><article><header><h4>Total Active Loans</h4></header><strong>302</strong></article></div></section><section></section><section><div class=\"grid\"><a role=\"button\" href=\"/books/add\">Add New Book</a> <a role=\"button\" href=\"/loans/add\">Create New Loan</a> <a role=\"button\" href=\"/members/add\">Register Member</a></div></section></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

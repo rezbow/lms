@@ -1,0 +1,25 @@
+package auth
+
+import "lms/internal/views"
+
+templ LoginForm(errors views.Errors) {
+	<div>
+		<form
+			method="POST"
+			action="/login"
+		>
+			<input name="email" type="email" placeholder="Enter Email" autocomplete="email"/>
+			<input name="password" type="password" placeholder="Enter Password"/>
+			<input
+				type="submit"
+				value="Log in"
+				if errors["login"] != "" {
+					aria-invalid="true"
+				}
+			/>
+			if errors["login"] != "" {
+				<small>{ errors["login"] }</small>
+			}
+		</form>
+	</div>
+}

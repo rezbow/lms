@@ -1,0 +1,36 @@
+package members
+
+import "lms/internal/models"
+import "fmt"
+
+templ Staff(staff *models.Staff) {
+	<div>
+		<div>
+			<div>
+				<p><strong>Full Name:</strong> { staff.FullName }</p>
+				<p><strong>Username :</strong> { staff.Username }</p>
+				<p><strong>Email:</strong> { staff.Email }</p>
+				<p><strong>Phone Number:</strong> { staff.PhoneNumber }</p>
+				<p><strong>Role :</strong> { staff.Role }</p>
+				<p><strong>Status:</strong> { staff.Status }</p>
+			</div>
+			<div>
+				<div class="grid">
+					<a href={ fmt.Sprintf("/staff/%d/edit", staff.ID) }>
+						<button>Edit Staff</button>
+					</a>
+					<form
+						method="POST"
+						action={ fmt.Sprintf("/staff/%d/delete", staff.ID) }
+					>
+						<button
+							type="submit"
+						>
+							Delete Staff 
+						</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+}

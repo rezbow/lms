@@ -1,0 +1,152 @@
+package members
+
+import "lms/internal/models"
+import "lms/internal/views"
+
+templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
+	<div>
+		<form
+			method="POST"
+			action={ endpoint }
+		>
+			<div>
+				<input
+					id="fullName"
+					name="fullName"
+					type="text"
+					required
+					placeholder="full name"
+					if errors["fullName"] != "" {
+						aria-invalid="true"
+					}
+					if staff != nil {
+						value={ staff.FullName }
+					}
+				/>
+				if errors["fullName"] != "" {
+					<small>{ errors["fullName"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="username"
+					name="username"
+					type="text"
+					required
+					placeholder="user name"
+					if errors["username"] != "" {
+						aria-invalid="true"
+					}
+					if staff != nil {
+						value={ staff.Username }
+					}
+				/>
+				if errors["username"] != "" {
+					<small>{ errors["username"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="phoneNumber"
+					name="phoneNumber"
+					type="text"
+					required
+					placeholder="phone number"
+					if errors["phoneNumber"] != "" {
+						aria-invalid="true"
+					}
+					if staff != nil {
+						value={ staff.PhoneNumber }
+					}
+				/>
+				if errors["phoneNumber"] != "" {
+					<small>{ errors["phoneNumber"] }</small>
+				}
+			</div>
+			<div>
+				<input
+					id="email"
+					name="email"
+					type="email"
+					required
+					placeholder="email"
+					if errors["email"] != "" {
+						aria-invalid="true"
+					}
+					if staff != nil {
+						value={ staff.Email }
+					}
+				/>
+				if errors["email"] != "" {
+					<small>{ errors["email"] }</small>
+				}
+			</div>
+			if staff == nil || staff.ID == 0 {
+				<div>
+					<input
+						id="password"
+						name="password"
+						type="password"
+						required
+						placeholder="enter password"
+						if errors["password"] != "" {
+							aria-invalid="true"
+						}
+					/>
+					if errors["password"] != "" {
+						<small>{ errors["password"] }</small>
+					}
+				</div>
+			}
+			<div>
+				<select name="role" aria-label="Select role" required>
+					<option
+						value="librarian"
+						if staff != nil && staff.Role == models.RoleLibrarian {
+							selected
+						}
+					>Librarian</option>
+					<option
+						value="admin"
+						if staff != nil && staff.Role == models.RoleAdmin {
+							selected
+						}
+					>Admin</option>
+				</select>
+				if errors["role"] != "" {
+					<small>{ errors["role"] }</small>
+				}
+			</div>
+			<div>
+				<select name="status" aria-label="Select status" required>
+					<option
+						value="active"
+						if staff != nil && staff.Status == models.StatusActive {
+							selected
+						}
+					>Active</option>
+					<option
+						value="suspended"
+						if staff != nil && staff.Status == models.StatusSuspended {
+							selected
+						}
+					>Suspended</option>
+				</select>
+				if errors["status"] != "" {
+					<small>{ errors["status"] }</small>
+				}
+			</div>
+			<button type="submit">
+				if staff != nil && staff.ID > 0 {
+					Confirm 	
+				} else {
+					Add
+				}
+			</button>
+			if errors["_"] != "" {
+				<article style="color: #D93526;">{ errors["_"] }</article>
+			}
+		</form>
+		<div id="results"></div>
+	</div>
+}

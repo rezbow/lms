@@ -12,6 +12,7 @@ var (
 type Staff struct {
 	ID           uint
 	FullName     string
+	Username     string
 	PhoneNumber  string
 	Email        string
 	Role         string
@@ -21,4 +22,15 @@ type Staff struct {
 	UpdatedAt    time.Time
 	LastLogin    *time.Time
 	version      uint
+}
+
+type StaffFilter struct {
+	FullName string
+	Username string
+	Role     string
+	Status   string
+}
+
+func (Staff) TableName() string {
+	return "staff"
 }

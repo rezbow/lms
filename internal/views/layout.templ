@@ -9,8 +9,18 @@ templ Layout(children templ.Component, title string) {
 				href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
 			/>
 		</head>
-		<body>
-			<main class="container">
+		<body class="container">
+			<header>
+				<nav>
+					<ul>
+						<li><strong>Library Management System</strong></li>
+					</ul>
+					<ul>
+						<li><a href="#" class="contrast">Logout</a></li>
+					</ul>
+				</nav>
+			</header>
+			<main>
 				@children
 			</main>
 		</body>

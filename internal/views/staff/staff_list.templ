@@ -1,0 +1,20 @@
+package members
+
+import "lms/internal/models"
+import "fmt"
+
+templ StaffList(staff []models.Staff) {
+	<div>
+		if len(staff) == 0 {
+			<li>No staff found :((</li>
+		} else {
+			for _, s:= range staff {
+				<div>
+					<a href={ fmt.Sprintf("/staff/%d", s.ID) }>
+						<article>{ s.FullName }</article>
+					</a>
+				</div>
+			}
+		}
+	</div>
+}
