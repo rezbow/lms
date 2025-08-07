@@ -36,7 +36,7 @@ func (mr *MemberRepo) Insert(member *models.Member) error {
 	return nil
 }
 
-func (mr *MemberRepo) DeleteById(id string) error {
+func (mr *MemberRepo) DeleteById(id uint) error {
 	result := mr.DB.Delete(&models.Member{}, id)
 	if result.Error != nil {
 		if isInternalError(result.Error) {
@@ -121,13 +121,13 @@ func (mr *MemberRepo) ConvertErrorsToFormErrors(err error) views.Errors {
 	errors := make(views.Errors)
 	pgErr := extractPQError(err)
 	switch pgErr.ConstraintName {
-	case "members_phone_validation_check":
+	case "phone_number_check":
 		errors["phoneNumber"] = "invalid phone number"
 	case "members_phone_key":
 		errors["phoneNumber"] = "a member with this phone number already exists"
 	case "members_email_key":
 		errors["email"] = "a member with this email already exists"
-	case "members_email_validation_check":
+	case "email_check":
 		errors["email"] = "invalid email"
 	case "members_status_check":
 		errors["status"] = "invalid status"

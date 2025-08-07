@@ -63,7 +63,6 @@ func (ch *CategoryHandler) Get(ctx *gin.Context) {
 		}
 		return
 	}
-	fmt.Println(category)
 	render(ctx, categoryViews.Category(category), category.Name)
 }
 

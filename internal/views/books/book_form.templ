@@ -4,7 +4,7 @@ import "lms/internal/models"
 
 import "lms/internal/views"
 
-templ BookForm(book *models.Book, errors views.Errors, endpoint string) {
+templ BookForm(book *models.Book, errors views.Errors, endpoint string, categories []models.Category) {
 	<div id="editForm">
 		<form
 			method="POST"
@@ -151,12 +151,15 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string) {
 				}
 			</div>
 			<div>
-				<input list="categories" name="category" id="category"/>
-				<datalist id="categories">
-					<option value="تاریخی"></option>
-					<option value="علمی"></option>
-					<option value="کودک"></option>
-				</datalist>
+				<label for="categories">Select categories</label>
+				<select aria-label="Select categories..." multiple size="6" name="categories">
+					<option disabled>
+						Select categories...
+					</option>
+					for _, category := range categories {
+						<option value={ category.ID }>{ category.Name }</option>
+					}
+				</select>
 			</div>
 			<div>
 				<input type="file"/>

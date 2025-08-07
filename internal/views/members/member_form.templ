@@ -81,7 +81,7 @@ templ MemberForm(member *models.Member, errors views.Errors, endpoint string) {
 					<small>{ errors["email"] }</small>
 				}
 			</div>
-			if member != nil {
+			if member != nil && member.ID > 0 {
 				<div>
 					<fieldset>
 						<legend>
@@ -91,6 +91,7 @@ templ MemberForm(member *models.Member, errors views.Errors, endpoint string) {
 							<input
 								type="radio"
 								name="status"
+								value="active"
 								if member.Status == "active" {
 									checked
 								}
@@ -101,6 +102,7 @@ templ MemberForm(member *models.Member, errors views.Errors, endpoint string) {
 							<input
 								type="radio"
 								name="status"
+								value="suspended"
 								if member.Status == "suspended" {
 									checked
 								}

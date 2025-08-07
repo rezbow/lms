@@ -80,3 +80,13 @@ func (cr *CategoryRepo) ConvertErrorsToFormErrors(err error) views.Errors {
 	return errors
 }
 */
+
+func (cr *CategoryRepo) All() ([]models.Category, error) {
+	var categories []models.Category
+	result := cr.DB.Model(&models.Category{}).Find(&categories)
+
+	if result.Error != nil {
+		return nil, ErrInternal
+	}
+	return categories, nil
+}

@@ -1,20 +1,25 @@
 package handlers
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"lms/internal/models"
 	"lms/internal/repositories"
+	"lms/internal/utils"
 	"lms/internal/views"
 	commonViews "lms/internal/views/common"
 	loanViews "lms/internal/views/loans"
 	memberViews "lms/internal/views/members"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
 
 type MemberHandler struct {
 	Repo      *repositories.MemberRepo
+	LogRepo   *repositories.ActivityRepo
 	Validator *validator.Validate
 }
 
@@ -52,7 +57,12 @@ func (mh *MemberHandler) GetById(ctx *gin.Context) {
 }
 
 func (mh *MemberHandler) DeleteById(ctx *gin.Context) {
-	memberId := ctx.Param("id")
+
+	memberId, err := readID(ctx)
+	if err != nil {
+		notfound(ctx)
+		return
+	}
 	if err := mh.Repo.DeleteById(memberId); err != nil {
 		if err == repositories.ErrNotFound {
 			render(ctx, commonViews.NotFound(), "404 :((")
@@ -61,7 +71,45 @@ func (mh *MemberHandler) DeleteById(ctx *gin.Context) {
 		render(ctx, commonViews.ServerError(err.Error()), "internal server error")
 		return
 	}
+
+	err = mh.LogStaffActivity(ctx, memberId, models.ActivityTypeDeleteMember)
+	if err != nil {
+		serverError(ctx)
+		return
+	}
+
 	redirect(ctx, "/members")
+}
+
+func (mh *MemberHandler) LogStaffActivity(ctx *gin.Context, memberId uint, activity string) error {
+	session := sessions.Default(ctx)
+	staff := utils.ExtractStaffFromSession(session)
+	if staff == nil {
+		return errors.New("authentication required")
+	}
+	var description string
+	switch activity {
+	case models.ActivityTypeAddMember:
+		description = fmt.Sprintf("%s added member with id %d", staff.FullName, memberId)
+	case models.ActivityTypeDeleteMember:
+		description = fmt.Sprintf("%s deleted member with id %d", staff.FullName, memberId)
+	case models.ActivityTypeUpdateMember:
+		description = fmt.Sprintf("%s updated member with id %d", staff.FullName, memberId)
+
+	}
+
+	err := mh.LogRepo.Add(&models.ActivityLog{
+		ActivityType: activity,
+		ActorId:      sql.NullInt32{Int32: int32(staff.ID), Valid: true},
+		ActorType:    models.ActorTypeStaff,
+		Description:  description,
+		EntityId:     sql.NullInt32{Int32: int32(memberId), Valid: true},
+		EntityType:   sql.NullString{String: models.EntityTypeMember, Valid: true},
+	})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (mh *MemberHandler) AddPage(ctx *gin.Context) {
@@ -101,6 +149,13 @@ func (mh *MemberHandler) Add(ctx *gin.Context) {
 		} else {
 			render(ctx, memberViews.MemberForm(nil, mh.Repo.ConvertErrorsToFormErrors(err), "/members/add"), member.FullName)
 		}
+		return
+	}
+
+	err := mh.LogStaffActivity(ctx, member.ID, models.ActivityTypeAddMember)
+
+	if err != nil {
+		serverError(ctx)
 		return
 	}
 
@@ -173,6 +228,10 @@ func (mh *MemberHandler) Update(ctx *gin.Context) {
 		member.PhoneNumber = *memberUpdateForm.PhoneNumber
 	}
 
+	if memberUpdateForm.Status != nil {
+		member.Status = *memberUpdateForm.Status
+	}
+
 	if memberUpdateForm.NationalId != nil {
 		member.NationalId = *memberUpdateForm.NationalId
 	}
@@ -185,6 +244,11 @@ func (mh *MemberHandler) Update(ctx *gin.Context) {
 		} else {
 			render(ctx, memberViews.MemberForm(member, mh.Repo.ConvertErrorsToFormErrors(err), endpoint), member.FullName)
 		}
+		return
+	}
+	err = mh.LogStaffActivity(ctx, memberId, models.ActivityTypeUpdateMember)
+	if err != nil {
+		serverError(ctx)
 		return
 	}
 	redirect(ctx, fmt.Sprintf("/members/%d", memberId))

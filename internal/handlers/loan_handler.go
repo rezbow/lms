@@ -15,6 +15,7 @@ import (
 
 type LoanHandler struct {
 	Repo      *repositories.LoanRepo
+	LogRepo   *repositories.ActivityRepo
 	Validator *validator.Validate
 }
 
@@ -67,6 +68,21 @@ func (lh *LoanHandler) DeleteById(ctx *gin.Context) {
 		}
 		return
 	}
+
+	err = LogStaffActivity(
+		lh.LogRepo,
+		ctx,
+		models.ActivityTypeDeleteLoan,
+		loanId,
+		models.EntityTypeLoan,
+		"deleted loan",
+	)
+
+	if err != nil {
+		serverError(ctx)
+		return
+	}
+
 	redirect(ctx, "/loans")
 }
 
@@ -107,6 +123,21 @@ func (lh *LoanHandler) Add(ctx *gin.Context) {
 		render(ctx, loanViews.LoanForm(nil, lh.Repo.ConvertErrorToFormError(err), "/loans/add"), "add loan")
 		return
 	}
+
+	err := LogStaffActivity(
+		lh.LogRepo,
+		ctx,
+		models.ActivityTypeAddLoan,
+		loan.ID,
+		models.EntityTypeLoan,
+		"added loan",
+	)
+
+	if err != nil {
+		serverError(ctx)
+		return
+	}
+
 	redirect(ctx, fmt.Sprintf("/loans/%d", loan.ID))
 }
 
@@ -163,8 +194,6 @@ func (lh *LoanHandler) Update(ctx *gin.Context) {
 		DueDate:    userInput.DueDate,
 	}
 
-	fmt.Println(updatedLoan)
-
 	if err := lh.Repo.Update(&updatedLoan); err != nil {
 		if err == repositories.ErrInternal {
 			serverError(ctx)
@@ -174,6 +203,20 @@ func (lh *LoanHandler) Update(ctx *gin.Context) {
 			return
 		}
 		formError(ctx, err)
+		return
+	}
+
+	err = LogStaffActivity(
+		lh.LogRepo,
+		ctx,
+		models.ActivityTypeUpdateLoan,
+		loanId,
+		models.EntityTypeLoan,
+		"updated loan",
+	)
+
+	if err != nil {
+		serverError(ctx)
 		return
 	}
 
@@ -232,6 +275,20 @@ func (lh *LoanHandler) ReturnLoan(ctx *gin.Context) {
 		return
 	}
 
+	err = LogStaffActivity(
+		lh.LogRepo,
+		ctx,
+		models.ActivityTypeReturnLoan,
+		loanId,
+		models.EntityTypeLoan,
+		"marked loan as returned",
+	)
+
+	if err != nil {
+		serverError(ctx)
+		return
+	}
+
 	redirect(ctx, fmt.Sprintf("/loans/%d", loanId))
 }
 
@@ -251,7 +308,6 @@ func (lh *LoanHandler) Search(ctx *gin.Context) {
 	}
 	pagination, err := readPagination(ctx)
 	if err != nil {
-		fmt.Println(pagination, err.Error())
 		notfound(ctx)
 		return
 	}
@@ -269,8 +325,6 @@ func (lh *LoanHandler) Search(ctx *gin.Context) {
 		serverError(ctx)
 		return
 	}
-
-	fmt.Println(loans)
 
 	render(ctx, loanViews.LoanSearch(loans), "loans")
 }

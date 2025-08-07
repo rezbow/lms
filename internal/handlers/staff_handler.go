@@ -312,7 +312,6 @@ func (sh *StaffHandler) Search(ctx *gin.Context) {
 }
 
 func (sh *StaffHandler) LoginPage(ctx *gin.Context) {
-	fmt.Println("lololo")
 	render(ctx, authViews.LoginForm(views.Errors{}), "login")
 }
 

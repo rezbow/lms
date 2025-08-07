@@ -15,6 +15,7 @@ func SetupRouter(
 	loanHandler *handlers.LoanHandler,
 	categoryHandler *handlers.CategoryHandler,
 	staffHandler *handlers.StaffHandler,
+	dashboradHandler *handlers.DashboardHanlder,
 ) *gin.Engine {
 	r := gin.Default()
 
@@ -26,7 +27,7 @@ func SetupRouter(
 	r.POST("/login", staffHandler.Login)
 
 	r.Use(AuthRequired())
-	r.GET("/", handlers.Get)
+	r.GET("/", dashboradHandler.Dashboard)
 	r.POST("/logout", staffHandler.Logout)
 
 	// books resource

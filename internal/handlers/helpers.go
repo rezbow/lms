@@ -1,7 +1,10 @@
 package handlers
 
 import (
+	"database/sql"
 	"errors"
+	"lms/internal/models"
+	"lms/internal/repositories"
 	"lms/internal/utils"
 	"lms/internal/views"
 	commonViews "lms/internal/views/common"
@@ -159,4 +162,33 @@ func generateHash(password string) (string, error) {
 func compareHashAndPassoword(hash string, password string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+func LogStaffActivity(
+	logRepo *repositories.ActivityRepo,
+	ctx *gin.Context,
+	activityType string,
+	entityId uint,
+	entityType string,
+	description string,
+) error {
+	session := sessions.Default(ctx)
+	staff := utils.ExtractStaffFromSession(session)
+	if staff == nil {
+		return errors.New("authentication required")
+	}
+
+	err := logRepo.Add(&models.ActivityLog{
+		ActivityType: activityType,
+		ActorId:      sql.NullInt32{Int32: int32(staff.ID), Valid: true},
+		ActorType:    models.ActorTypeStaff,
+		Description:  description,
+		EntityId:     sql.NullInt32{Int32: int32(entityId), Valid: true},
+		EntityType:   sql.NullString{String: entityType, Valid: true},
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+
 }

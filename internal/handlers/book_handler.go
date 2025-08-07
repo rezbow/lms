@@ -13,8 +13,10 @@ import (
 )
 
 type BookHandler struct {
-	BookRepo  *repositories.BookRepo
-	Validator *validator.Validate
+	BookRepo     *repositories.BookRepo
+	CategoryRepo *repositories.CategoryRepo
+	LogRepo      *repositories.ActivityRepo
+	Validator    *validator.Validate
 }
 
 func (bh *BookHandler) Get(ctx *gin.Context) {
@@ -60,6 +62,21 @@ func (bh *BookHandler) Delete(ctx *gin.Context) {
 
 		}
 	}
+
+	err = LogStaffActivity(
+		bh.LogRepo,
+		ctx,
+		models.ActivityTypeDeleteBook,
+		bookId,
+		models.EntityTypeBook,
+		"deleted Book",
+	)
+
+	if err != nil {
+		serverError(ctx)
+		return
+	}
+
 	redirect(ctx, "/books")
 }
 
@@ -85,13 +102,18 @@ func (bh *BookHandler) AddLoanPage(ctx *gin.Context) {
 }
 
 func (bh *BookHandler) AddPage(ctx *gin.Context) {
-	render(ctx, bookViews.BookForm(nil, views.Errors{}, "/books/add"), "add book")
+	categories, err := bh.CategoryRepo.All()
+	if err != nil {
+		serverError(ctx)
+		return
+	}
+	render(ctx, bookViews.BookForm(nil, views.Errors{}, "/books/add", categories), "add book")
 }
 
 func (bh *BookHandler) Add(ctx *gin.Context) {
 	var bookForm struct {
 		Title       string `form:"title" binding:"required" validate:"required,min=1,max=100"`
-		ISBN        string `form:"isbn" binding:"required" validate:"required"`
+		ISBN        string `form:"isbn" binding:"required" validate:"required,max=20"`
 		TotalCopies int    `form:"totalCopies" binding:"required" validate:"required,min=1"`
 		AuthorId    uint   `form:"authorId" binding:"required" validate:"required,min=1"`
 		// optional
@@ -99,19 +121,18 @@ func (bh *BookHandler) Add(ctx *gin.Context) {
 		Language   *string `form:"language" binding:"omitempty" validate:"omitempty,max=30"`
 		Summary    *string `form:"summary" binding:"omitempty" validate:"omitempty,max=1000"`
 		Translator *string `form:"translator" binding:"omitempty" validate:"omitempty,max=50"`
+		Categories []uint  `form:"categories" binding:"required"`
 	}
 
 	if err := ctx.ShouldBind(&bookForm); err != nil {
-		render(ctx, bookViews.BookForm(nil, parseValidationErrors(err), "/books/add"), "add book")
+		render(ctx, bookViews.BookForm(nil, parseValidationErrors(err), "/books/add", nil), "add book")
 		return
 	}
 
 	if err := bh.Validator.Struct(bookForm); err != nil {
-		render(ctx, bookViews.BookForm(nil, parseValidationErrors(err), "/books/add"), "add book")
+		render(ctx, bookViews.BookForm(nil, parseValidationErrors(err), "/books/add", nil), "add book")
 		return
 	}
-
-	fmt.Println(bookForm, ctx.Request.Form)
 
 	book := models.Book{
 		Title:           bookForm.Title,
@@ -134,7 +155,13 @@ func (bh *BookHandler) Add(ctx *gin.Context) {
 	}
 
 	if bookForm.Language != nil {
-		book.Publisher = *bookForm.Language
+		book.Language = *bookForm.Language
+	}
+
+	if bookForm.Categories != nil {
+		for _, id := range bookForm.Categories {
+			book.Categories = append(book.Categories, &models.Category{ID: id})
+		}
 	}
 
 	if err := bh.BookRepo.Insert(&book); err != nil {
@@ -143,7 +170,21 @@ func (bh *BookHandler) Add(ctx *gin.Context) {
 			serverError(ctx)
 			return
 		}
-		render(ctx, bookViews.BookForm(nil, errors, "/books/add"), book.Title)
+		render(ctx, bookViews.BookForm(nil, errors, "/books/add", nil), book.Title)
+		return
+	}
+
+	err := LogStaffActivity(
+		bh.LogRepo,
+		ctx,
+		models.ActivityTypeAddBook,
+		book.ID,
+		models.EntityTypeBook,
+		"added Book",
+	)
+
+	if err != nil {
+		serverError(ctx)
 		return
 	}
 
@@ -217,7 +258,7 @@ func (bh *BookHandler) EditPage(ctx *gin.Context) {
 		serverError(ctx)
 		return
 	}
-	render(ctx, bookViews.BookForm(book, views.Errors{}, fmt.Sprintf("/books/%d/edit", book.ID)), book.Title)
+	render(ctx, bookViews.BookForm(book, views.Errors{}, fmt.Sprintf("/books/%d/edit", book.ID), nil), book.Title)
 }
 
 func (bh *BookHandler) Update(ctx *gin.Context) {
@@ -253,12 +294,12 @@ func (bh *BookHandler) Update(ctx *gin.Context) {
 	endpoint := fmt.Sprintf("/books/%d/edit", bookId)
 
 	if err := ctx.ShouldBind(&bookUpdateForm); err != nil {
-		render(ctx, bookViews.BookForm(book, parseValidationErrors(err), endpoint), book.Title)
+		render(ctx, bookViews.BookForm(book, parseValidationErrors(err), endpoint, nil), book.Title)
 		return
 	}
 
 	if err := bh.Validator.Struct(&bookUpdateForm); err != nil {
-		render(ctx, bookViews.BookForm(book, parseValidationErrors(err), endpoint), book.Title)
+		render(ctx, bookViews.BookForm(book, parseValidationErrors(err), endpoint, nil), book.Title)
 		return
 	}
 
@@ -294,15 +335,27 @@ func (bh *BookHandler) Update(ctx *gin.Context) {
 		book.Language = *bookUpdateForm.Language
 	}
 
-	fmt.Println(book)
-
 	if err := bh.BookRepo.Update(book); err != nil {
 		errors := bh.BookRepo.ConvertErrorsToFormErrors(err)
 		if errors["_"] != "" {
 			serverError(ctx)
 			return
 		}
-		render(ctx, bookViews.BookForm(book, errors, endpoint), book.Title)
+		render(ctx, bookViews.BookForm(book, errors, endpoint, nil), book.Title)
+		return
+	}
+
+	err = LogStaffActivity(
+		bh.LogRepo,
+		ctx,
+		models.ActivityTypeUpdateBook,
+		book.ID,
+		models.EntityTypeBook,
+		"updated book",
+	)
+
+	if err != nil {
+		serverError(ctx)
 		return
 	}
 

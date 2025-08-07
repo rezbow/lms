@@ -65,7 +65,7 @@ func LoanSearch(loans []models.Loan) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div><nav><ul><li><a href=\"#\" class=\"secondary\" role=\"button\" aria-disabled=\"true\">Previous</a></li><li><a href=\"#\" role=\"button\">1</a></li><li><a href=\"#\" role=\"button\">2</a></li><li>...</li><li><a href=\"#\" role=\"button\">10</a></li><li><a href=\"#\" class=\"secondary\" role=\"button\" aria-disabled=\"true\">Next</a></li></ul></nav></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
