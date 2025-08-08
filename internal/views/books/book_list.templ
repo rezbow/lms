@@ -1,20 +1,40 @@
 package books
 
-import "lms/internal/models"
-import "fmt"
+import (
+	"fmt"
+	"lms/internal/models"
+	"lms/internal/views"
+)
 
-templ BookList(books []models.Book) {
-	<ul>
-		if len(books) == 0 {
-			<li>No books found</li>
-		} else {
-			for _, b := range books {
-				<li>
-					<a href={ fmt.Sprintf("/books/%d", b.ID) }>
-						{ b.Title }
-					</a>
-				</li>
-			}
-		}
-	</ul>
+templ BookList(books []models.Book, data *views.SearchData) {
+	if len(books) == 0 {
+		<h4>No books found</h4>
+	} else {
+		<table>
+			<thead data-theme="dark">
+				<tr>
+					<th scope="col"><a href={ data.SortBy("id", "asc") }>ID </a></th>
+					<th scope="col"><a href={ data.SortBy("id", "asc") }>Title</a></th>
+					<th scope="col"><a href={ data.SortBy("ISBN", "asc") }>ISBN </a></th>
+					<th scope="col"><a href={ data.SortBy("author", "asc") }>Author</a></th>
+					<th scope="col"><a href={ data.SortBy("language", "asc") }>Language</a></th>
+					<th scope="col"><a href={ data.SortBy("totalCopies", "asc") }>Total Copies</a></th>
+					<th scope="col"><a href={ data.SortBy("availableCopies", "asc") }>Available Copies</a></th>
+				</tr>
+			</thead>
+			<tbody>
+				for _, b := range books {
+					<tr>
+						<th scope="row"><a href={ fmt.Sprintf("/books/%d", b.ID) }>{ b.ID }</a></th>
+						<td>{ b.Title }</td>
+						<td>{ b.ISBN }</td>
+						<td>{ b.AuthorId }</td>
+						<td>{ b.Language }</td>
+						<td>{ b.TotalCopies }</td>
+						<td>{ b.AvailableCopies }</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
 }

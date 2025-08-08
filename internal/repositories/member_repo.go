@@ -51,9 +51,13 @@ func (mr *MemberRepo) DeleteById(id uint) error {
 
 func (mr *MemberRepo) All(pagination *utils.Pagination) ([]models.Member, error) {
 	var members []models.Member
+	query := mr.DB.Model(&models.Member{})
+	query.Count(&pagination.Total)
+
 	if err := mr.DB.Limit(pagination.Limit).Offset(pagination.Offset).Find(&members).Error; err != nil {
 		return nil, ErrInternal
 	}
+	pagination.CalculateTotalPage()
 	return members, nil
 }
 
@@ -137,4 +141,27 @@ func (mr *MemberRepo) ConvertErrorsToFormErrors(err error) views.Errors {
 		errors["_"] = err.Error()
 	}
 	return errors
+}
+
+func (mr *MemberRepo) Search(
+	term string,
+	pagination *utils.Pagination,
+) ([]models.Member, error) {
+	var members []models.Member
+	query := mr.DB.Model(&models.Member{})
+	s := "%" + term + "%"
+
+	query.Where("CAST(id as TEXT) ILIKE ?", s).
+		Or("full_name ILIKE ?", s).
+		Or("email ILIKE ?", s).
+		Or("phone_number ILIKE ?", s).
+		Or("national_id ILIKE ?", s)
+
+	query.Count(&pagination.Total)
+
+	if err := query.Offset(pagination.Offset).Limit(pagination.Limit).Find(&members).Error; err != nil {
+		return nil, ErrInternal
+	}
+	pagination.CalculateTotalPage()
+	return members, nil
 }

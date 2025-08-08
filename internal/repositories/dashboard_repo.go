@@ -91,3 +91,14 @@ func (dp *DashboardRepo) UpcomingLoans() ([]models.UpcomingLoan, error) {
 	}
 	return loans, nil
 }
+
+/*
+func (dp *DashboardRepo) Search(term string, pagination *utils.Pagination) ([]any, error) {
+	result := models.DashboardSearchResult{}
+	s := "%" + term + "%"
+	tx := dp.DB.Model(&models.Book{}).
+		Where("title ILIKE ?", term).
+		Count(&pagination.Total)
+
+}
+*/

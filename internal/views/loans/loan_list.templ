@@ -2,19 +2,72 @@ package loans
 
 import "lms/internal/models"
 import "fmt"
+import "time"
+import "lms/internal/views"
 
-templ LoanList(loans []models.Loan) {
-	<ul>
-		if len(loans) == 0 {
-			<li>No Loans found</li>
-		} else {
-			for _, l := range loans {
-				<li>
-					<a href={ fmt.Sprintf("/loans/%d", l.ID) }>
-						{ fmt.Sprintf("'%s' borrowed by '%s'",l.Book.Title , l.Member.FullName) }
-					</a>
-				</li>
-			}
-		}
-	</ul>
+templ LoanList(loans []models.Loan, data *views.SearchData) {
+	if len(loans) == 0 {
+		<h4>No Loans found</h4>
+	} else {
+		<table>
+			<thead data-theme="dark">
+				<tr>
+					<th scope="col">
+						<a href={ data.SortBy("id", "asc") }>
+							ID
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("memberName", "asc") }>
+							Member Name
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("bookTitle", "asc") }>
+							Book Title
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("borrowDate", "asc") }>
+							Borrow Date
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("dueDate", "asc") }>
+							Due Date
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("status", "asc") }>
+							Status	
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("returnDate", "asc") }>
+							Return Date
+						</a>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				for _, l := range loans {
+					<tr>
+						<th scope="row"><a href={ fmt.Sprintf("/loans/%d", l.ID) }>{ l.ID }</a></th>
+						<td>{ l.Member.FullName }</td>
+						<td>{ l.Book.Title }</td>
+						<td>{ l.BorrowDate.Format(time.RFC3339) }</td>
+						<td>{ l.DueDate.Format(time.RFC3339) }</td>
+						<td>{ l.Status }</td>
+						<td>
+							if l.ReturnDate != nil {
+								{ l.ReturnDate.Format(time.RFC3339) }
+							} else {
+								-
+							}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
 }

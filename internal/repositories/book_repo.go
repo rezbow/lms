@@ -5,6 +5,7 @@ import (
 	"lms/internal/models"
 	"lms/internal/utils"
 	"lms/internal/views"
+	"math"
 
 	"github.com/jackc/pgerrcode"
 	"gorm.io/gorm"
@@ -99,9 +100,12 @@ func (bp *BookRepo) Total() int64 {
 
 func (bp *BookRepo) All(pagination *utils.Pagination) ([]models.Book, error) {
 	var books []models.Book
+	query := bp.DB.Model(&models.Book{})
+	query.Count(&pagination.Total)
 	if err := bp.DB.Preload("Loans").Limit(pagination.Limit).Offset(pagination.Offset).Find(&books).Error; err != nil {
 		return nil, err
 	}
+	pagination.TotalPage = int(math.Ceil(float64(pagination.Total) / float64(pagination.Limit)))
 	return books, nil
 }
 
@@ -135,4 +139,27 @@ func (bp *BookRepo) ConvertErrorsToFormErrors(err error) views.Errors {
 		errors["_"] = err.Error()
 	}
 	return errors
+}
+
+func (bp *BookRepo) Search(
+	term string,
+	pagination *utils.Pagination,
+) ([]models.Book, error) {
+	var books []models.Book
+	query := bp.DB.Model(&models.Book{})
+
+	s := "%" + term + "%"
+
+	query.Where("books.title ILIKE ?", s).
+		Or("CAST(books.author_id as TEXT) ILIKE ?", s).
+		Or("books.isbn ILIKE ?", s).
+		Or("books.publisher ILIKE ?", s)
+
+	query.Count(&pagination.Total)
+	if err := query.Offset(pagination.Offset).Limit(pagination.Limit).Find(&books).Error; err != nil {
+		return nil, ErrInternal
+	}
+
+	pagination.TotalPage = int(math.Ceil(float64(pagination.Total) / float64(pagination.Limit)))
+	return books, nil
 }

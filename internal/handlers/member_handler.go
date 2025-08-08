@@ -24,7 +24,7 @@ type MemberHandler struct {
 }
 
 func (mh *MemberHandler) Index(ctx *gin.Context) {
-	pagination, err := readPagination(ctx)
+	pagination, err := readPagination(ctx, "/members/search?q=")
 	if err != nil {
 		notfound(ctx)
 		return
@@ -34,7 +34,14 @@ func (mh *MemberHandler) Index(ctx *gin.Context) {
 		render(ctx, commonViews.ServerError(err.Error()), "server error")
 		return
 	}
-	render(ctx, memberViews.MemberSearch(members), "members")
+	data := views.SearchData{
+		BaseUrl:    "/members/search",
+		Term:       "",
+		Sort:       "",
+		Direction:  "",
+		Pagination: pagination,
+	}
+	render(ctx, memberViews.MemberSearch(members, &data), "members")
 }
 
 func (mh *MemberHandler) GetById(ctx *gin.Context) {
@@ -255,36 +262,33 @@ func (mh *MemberHandler) Update(ctx *gin.Context) {
 }
 
 func (mh *MemberHandler) Search(ctx *gin.Context) {
-	var total int64
+	term := ctx.Query("q")
 
-	name := ctx.Query("fullName")
-	phone := ctx.Query("phoneNumber")
-	email := ctx.Query("email")
-	nationalId := ctx.Query("nationalId")
-
-	pagination, err := readPagination(ctx)
+	pagination, err := readPagination(ctx, "/members/search?q="+term)
 
 	if err != nil {
 		notfound(ctx)
 		return
 	}
 
-	members, err := mh.Repo.Filter(
-		&models.MemberFilter{
-			FullName:    name,
-			PhoneNumber: phone,
-			Email:       email,
-			NationalId:  nationalId,
-		},
+	members, err := mh.Repo.Search(
+		term,
 		pagination,
-		&total,
 	)
 
 	if err != nil {
 		serverError(ctx)
 		return
 	}
-	render(ctx, memberViews.MemberSearch(members), "members")
+
+	data := views.SearchData{
+		BaseUrl:    "/members/search",
+		Term:       term,
+		Sort:       "",
+		Direction:  "",
+		Pagination: pagination,
+	}
+	render(ctx, memberViews.MemberSearch(members, &data), "members")
 }
 
 func (mh *MemberHandler) AddLoanPage(ctx *gin.Context) {

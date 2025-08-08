@@ -10,7 +10,10 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "lms/internal/models"
 
-func BookSearch(books []models.Book) templ.Component {
+import "lms/internal/views/common"
+import "lms/internal/views"
+
+func BookSearch(books []models.Book, data *views.SearchData) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,15 +34,23 @@ func BookSearch(books []models.Book) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><h1>Book Search</h1><a href=\"/books/add\">Add book </a><form method=\"GET\" action=\"/books/search\"><input type=\"text\" name=\"isbn\" placeholder=\"ISBN\"> <input type=\"text\" name=\"title\" placeholder=\"Title\"> <input type=\"text\" name=\"authorId\" placeholder=\"Author\"> <input type=\"text\" name=\"publisher\" placeholder=\"publisher\"> <input type=\"text\" name=\"language\" placeholder=\"language\"> <input type=\"text\" name=\"translator\" placeholder=\"translator\"> <button type=\"submit\">Search</button></form><div id=\"results\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><h1>Book Search</h1><form role=\"search\" method=\"GET\" action=\"/books/search\"><input name=\"q\" type=\"search\" placeholder=\"Search\"> <input type=\"submit\" value=\"Search\"></form><div id=\"results\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = BookList(books).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = BookList(books, data).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = common.Pagination(data).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

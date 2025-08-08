@@ -20,7 +20,7 @@ type StaffHandler struct {
 
 // get
 func (sh *StaffHandler) Index(ctx *gin.Context) {
-	pagination, err := readPagination(ctx)
+	pagination, err := readPagination(ctx, "/staff/search?q=")
 	if err != nil {
 		notfound(ctx)
 		return
@@ -284,12 +284,13 @@ func (sh *StaffHandler) Add(ctx *gin.Context) {
 
 // get
 func (sh *StaffHandler) Search(ctx *gin.Context) {
+	term := ctx.Query("q")
 	fullName := ctx.Query("fullName")
 	userName := ctx.Query("userName")
 	role := ctx.Query("role")
 	status := ctx.Query("status")
 
-	pagination, err := readPagination(ctx)
+	pagination, err := readPagination(ctx, "/staff/search?q="+term)
 	if err != nil {
 		notfound(ctx)
 		return

@@ -1,36 +1,19 @@
 package members
 
 import "lms/internal/models"
+import "lms/internal/views/common"
+import "lms/internal/views"
 
-templ MemberSearch(members []models.Member) {
+templ MemberSearch(members []models.Member, data *views.SearchData) {
 	<div>
 		<h1>Member Search</h1>
-		<a href="/members/add">Add Member</a>
-		<form method="GET" action="/members/search">
-			<input
-				type="search"
-				name="fullName"
-				placeholder="full name"
-			/>
-			<input
-				type="search"
-				name="email"
-				placeholder="email"
-			/>
-			<input
-				type="search"
-				name="phoneNumber"
-				placeholder="phone number"
-			/>
-			<input
-				type="search"
-				name="nationalId"
-				placeholder="national id"
-			/>
-			<button type="submit">Search</button>
+		<form method="GET" action="/members/search" role="search">
+			<input name="q" type="search" placeholder="Search"/>
+			<input type="submit" value="Search"/>
 		</form>
 		<div id="results">
-			@MemberList(members)
+			@MemberList(members, data)
 		</div>
+		@common.Pagination(data)
 	</div>
 }

@@ -20,7 +20,7 @@ type LoanHandler struct {
 }
 
 func (lh *LoanHandler) Index(ctx *gin.Context) {
-	pagination, err := readPagination(ctx)
+	pagination, err := readPagination(ctx, "/loans/?")
 	if err != nil {
 		notfound(ctx)
 		return
@@ -31,7 +31,14 @@ func (lh *LoanHandler) Index(ctx *gin.Context) {
 		render(ctx, commonViews.ServerError(err.Error()), "server error")
 		return
 	}
-	render(ctx, loanViews.LoanSearch(loans), "members")
+	data := views.SearchData{
+		BaseUrl:    "/loans/search",
+		Term:       "",
+		Sort:       "",
+		Direction:  "",
+		Pagination: pagination,
+	}
+	render(ctx, loanViews.LoanSearch(loans, &data), "members")
 }
 
 func (lh *LoanHandler) GetById(ctx *gin.Context) {
@@ -293,31 +300,16 @@ func (lh *LoanHandler) ReturnLoan(ctx *gin.Context) {
 }
 
 func (lh *LoanHandler) Search(ctx *gin.Context) {
-	status := ctx.Query("status")
+	term := ctx.Query("q")
 
-	bookId, err := readIntFromQuery(ctx.Query("book"))
+	pagination, err := readPagination(ctx, "/loans/search?q="+term)
 	if err != nil {
 		notfound(ctx)
 		return
 	}
 
-	memberId, err := readIntFromQuery(ctx.Query("member"))
-	if err != nil {
-		notfound(ctx)
-		return
-	}
-	pagination, err := readPagination(ctx)
-	if err != nil {
-		notfound(ctx)
-		return
-	}
-
-	loans, err := lh.Repo.Filter(
-		&models.LoanFilter{
-			BookId:   uint(bookId),
-			MemberId: uint(memberId),
-			Status:   status,
-		},
+	loans, err := lh.Repo.Search(
+		term,
 		pagination,
 	)
 
@@ -326,5 +318,13 @@ func (lh *LoanHandler) Search(ctx *gin.Context) {
 		return
 	}
 
-	render(ctx, loanViews.LoanSearch(loans), "loans")
+	data := views.SearchData{
+		BaseUrl:    "/loans/search",
+		Term:       term,
+		Sort:       "",
+		Direction:  "",
+		Pagination: pagination,
+	}
+
+	render(ctx, loanViews.LoanSearch(loans, &data), "loans")
 }

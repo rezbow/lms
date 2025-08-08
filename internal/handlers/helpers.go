@@ -60,36 +60,29 @@ func formError(ctx *gin.Context, err error) {
 	render(ctx, commonViews.FormErrors([]string{err.Error()}), "error")
 }
 
-func readPagination(ctx *gin.Context) (*utils.Pagination, error) {
+func readPagination(ctx *gin.Context, baseUrl string) (*utils.Pagination, error) {
 	var page int
 	var limit int
 	var err error
 
-	pageStr := ctx.Query("page")
-	limitStr := ctx.Query("limit")
+	pageStr := ctx.DefaultQuery("page", "1")
+	limitStr := ctx.DefaultQuery("limit", "10")
 
-	if pageStr == "" {
-		page = 1
-	} else {
-		page, err = strconv.Atoi(pageStr)
-		if err != nil {
-			return nil, err
-		}
+	page, err = strconv.Atoi(pageStr)
+	if err != nil {
+		return nil, err
 	}
 
-	if limitStr == "" {
-		limit = 10
-	} else {
-		limit, err = strconv.Atoi(limitStr)
-		if err != nil {
-			return nil, err
-		}
+	limit, err = strconv.Atoi(limitStr)
+	if err != nil {
+		return nil, err
 	}
 
 	if page <= 0 || limit <= 0 {
 		return nil, errors.New("needs positive integer")
 	}
-	return utils.NewPagination(page, limit), nil
+
+	return utils.NewPagination(page, limit, baseUrl), nil
 }
 
 func readIntFromQuery(str string) (int, error) {

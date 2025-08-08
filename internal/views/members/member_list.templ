@@ -1,20 +1,69 @@
 package members
 
-import "lms/internal/models"
-import "fmt"
+import (
+	"fmt"
+	"lms/internal/models"
+	"lms/internal/views"
+	"time"
+)
 
-templ MemberList(members []models.Member) {
-	<ul>
-		if len(members) == 0 {
-			<li>No Member found :((</li>
-		} else {
-			for _, m:= range members {
-				<li>
-					<a href={ fmt.Sprintf("/members/%d", m.ID) }>
-						{ m.FullName }
-					</a>
-				</li>
-			}
-		}
-	</ul>
+templ MemberList(members []models.Member, data *views.SearchData) {
+	if len(members) == 0 {
+		<h4>No Members found</h4>
+	} else {
+		<table>
+			<thead data-theme="dark">
+				<tr>
+					<th scope="col">
+						<a href={ data.SortBy("id", "asc") }>
+							ID
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("fullName", "asc") }>
+							Full Name
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("email", "asc") }>
+							Email
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("nationalId", "asc") }>
+							National Id
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("phoneNumber", "asc") }>
+							Phone Number
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("status", "asc") }>
+							Status
+						</a>
+					</th>
+					<th scope="col">
+						<a href={ data.SortBy("joinedAt", "asc") }>
+							Joined At	
+						</a>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				for _, m := range members {
+					<tr>
+						<th scope="row"><a href={ fmt.Sprintf("/members/%d", m.ID) }>{ m.ID }</a></th>
+						<td>{ m.FullName }</td>
+						<td>{ m.Email }</td>
+						<td>{ m.NationalId }</td>
+						<td>{ m.PhoneNumber }</td>
+						<td>{ m.Status }</td>
+						<td>{ m.JoinedAt.Format(time.RFC3339) }</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
 }

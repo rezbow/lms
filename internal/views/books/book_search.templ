@@ -2,48 +2,23 @@ package books
 
 import "lms/internal/models"
 
-templ BookSearch(books []models.Book) {
+import "lms/internal/views/common"
+import "lms/internal/views"
+
+templ BookSearch(books []models.Book, data *views.SearchData) {
 	<div>
 		<h1>Book Search</h1>
-		<a href="/books/add">Add book </a>
 		<form
+			role="search"
 			method="GET"
 			action="/books/search"
 		>
-			<input
-				type="text"
-				name="isbn"
-				placeholder="ISBN"
-			/>
-			<input
-				type="text"
-				name="title"
-				placeholder="Title"
-			/>
-			<input
-				type="text"
-				name="authorId"
-				placeholder="Author"
-			/>
-			<input
-				type="text"
-				name="publisher"
-				placeholder="publisher"
-			/>
-			<input
-				type="text"
-				name="language"
-				placeholder="language"
-			/>
-			<input
-				type="text"
-				name="translator"
-				placeholder="translator"
-			/>
-			<button type="submit">Search</button>
+			<input name="q" type="search" placeholder="Search"/>
+			<input type="submit" value="Search"/>
 		</form>
 		<div id="results">
-			@BookList(books)
+			@BookList(books, data)
 		</div>
+		@common.Pagination(data)
 	</div>
 }

@@ -192,54 +192,54 @@ func (bh *BookHandler) Add(ctx *gin.Context) {
 }
 
 func (bh *BookHandler) Search(ctx *gin.Context) {
-	var total int64
 
-	title := ctx.Query("title")
-	author, err := readIntFromQuery(ctx.Query("authorId"))
-	if err != nil {
-		notfound(ctx)
-		return
-	}
-	isbn := ctx.Query("isbn")
-	publisher := ctx.Query("publisher")
-	translator := ctx.Query("translator")
-	language := ctx.Query("language")
+	term := ctx.Query("q")
 
-	pagination, err := readPagination(ctx)
+	pagination, err := readPagination(ctx, "/books/search?q="+term)
 	if err != nil {
 		notfound(ctx)
 		return
 	}
 
-	books, err := bh.BookRepo.Filter(
-		&models.BookFilter{
-			Title:      title,
-			AuthorId:   uint(author),
-			ISBN:       isbn,
-			Publisher:  publisher,
-			Translator: translator,
-			Language:   language,
-		},
+	books, err := bh.BookRepo.Search(
+		term,
 		pagination,
-		&total,
 	)
 
 	if err != nil {
 		serverError(ctx)
 		return
 	}
-	render(ctx, bookViews.BookSearch(books), "search results")
+
+	data := views.SearchData{
+		Term:       term,
+		BaseUrl:    "/books/search",
+		Pagination: pagination,
+		Sort:       "",
+		Direction:  "",
+	}
+
+	render(ctx, bookViews.BookSearch(books, &data), "search results")
 }
 
 func (bh *BookHandler) Index(ctx *gin.Context) {
-	pagination, err := readPagination(ctx)
+	pagination, err := readPagination(ctx, "/books/?")
 
 	books, err := bh.BookRepo.All(pagination)
 	if err != nil {
 		serverError(ctx)
 		return
 	}
-	render(ctx, bookViews.BookSearch(books), "books")
+
+	data := views.SearchData{
+		Term:       "",
+		BaseUrl:    "/books/search",
+		Pagination: pagination,
+		Sort:       "",
+		Direction:  "",
+	}
+
+	render(ctx, bookViews.BookSearch(books, &data), "books")
 
 }
 

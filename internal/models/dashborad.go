@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type PopularBook struct {
 	ID        uint
@@ -25,6 +27,12 @@ type UpcomingLoan struct {
 	BookTitle  string
 	MemberName string
 	DueDate    time.Time
+}
+
+type DashboardSearchResult struct {
+	Books   []Book
+	Loans   []Loan
+	Members []Member
 }
 
 type Dashboard struct {

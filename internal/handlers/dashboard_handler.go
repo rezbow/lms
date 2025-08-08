@@ -46,3 +46,14 @@ func (dh *DashboardHanlder) Dashboard(ctx *gin.Context) {
 
 	render(ctx, views.Dashboard(&data, session), "dashboard")
 }
+
+/*
+func (dh *DashboardHanlder) Search(ctx *gin.Context) {
+	term := ctx.Query("q")
+	pagination, err := readPagination(ctx, "/search?q="+term)
+	if err != nil {
+		notfound(ctx)
+		return
+	}
+}
+*/
