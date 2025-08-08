@@ -4,6 +4,17 @@ import (
 	"time"
 )
 
+var BookSafeSortList = []string{
+	"id",
+	"title",
+	"isbn",
+	"publisher",
+	"language",
+	"total_copies",
+	"available_copies",
+	"author_id",
+}
+
 type Book struct {
 	ID              uint
 	Title           string
@@ -30,4 +41,12 @@ type BookFilter struct {
 	Language   string
 	Translator string
 	AuthorId   uint
+}
+
+func BookValidateSearchData(data *SearchData) bool {
+	if data.SortBy == "" {
+		return true
+	}
+	sortByMap := map[string]bool{}
+	return sortByMap[data.SortBy]
 }

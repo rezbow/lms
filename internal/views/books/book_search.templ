@@ -1,11 +1,11 @@
 package books
 
-import "lms/internal/models"
+import (
+	"lms/internal/models"
+	"lms/internal/views/common"
+)
 
-import "lms/internal/views/common"
-import "lms/internal/views"
-
-templ BookSearch(books []models.Book, data *views.SearchData) {
+templ BookSearch(books []models.Book, data *models.SearchData) {
 	<div>
 		<h1>Book Search</h1>
 		<form

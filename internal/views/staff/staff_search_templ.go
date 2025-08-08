@@ -8,9 +8,12 @@ package members
 import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
-import "lms/internal/models"
+import (
+	"lms/internal/models"
+	"lms/internal/views/common"
+)
 
-func StaffSearch(staff []models.Staff) templ.Component {
+func StaffSearch(staff []models.Staff, data *models.SearchData) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -31,15 +34,36 @@ func StaffSearch(staff []models.Staff) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><h1>Staff Search</h1><a href=\"/staff/add\">Add Staff</a><form method=\"GET\" action=\"/staff/search\"><input type=\"text\" name=\"fullName\" placeholder=\"name\"> <input type=\"text\" name=\"username\" placeholder=\"national id\"> <input type=\"text\" name=\"email\" placeholder=\"email\"> <select name=\"role\" aria-label=\"Select sole\"><option selected disabled value=\"\">Select role</option> <option value=\"librarian\">Librarian</option> <option value=\"admin\">Admin</option></select> <select name=\"status\" aria-label=\"Select status\"><option selected disabled value=\"\">Select status</option> <option value=\"active\">Active</option> <option value=\"suspended\">Suspended</option></select> <button type=\"submit\">Search</button></form><div id=\"results\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><h1>Staff Search</h1><form role=\"search\" method=\"GET\" action=\"/staff/search\"><input name=\"q\" type=\"search\" placeholder=\"Search staff\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = StaffList(staff).Render(ctx, templ_7745c5c3_Buffer)
+		var templ_7745c5c3_Var2 string
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(data.Term)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/staff/staff_search.templ`, Line: 16, Col: 77}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"> <input type=\"submit\" value=\"Search\"></form><div id=\"results\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = StaffList(staff, data).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = common.Pagination(data).Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

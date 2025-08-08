@@ -1,9 +1,10 @@
 package common
 
-import "lms/internal/views"
 import "fmt"
 
-templ Pagination(data *views.SearchData) {
+import "lms/internal/models"
+
+templ Pagination(data *models.SearchData) {
 	{{ pageInfo := fmt.Sprintf("Page %d of %d", data.Pagination.Page, data.Pagination.TotalPage) }}
 	<nav>
 		<ul>
@@ -12,7 +13,7 @@ templ Pagination(data *views.SearchData) {
 					if data.Pagination.Page <= 1 {
 						href="#"
 					} else {
-						href={ data.Prev() }
+						href={ data.PrevPageUrl() }
 					}
 					class="secondary"
 				>Previous</a>
@@ -27,7 +28,7 @@ templ Pagination(data *views.SearchData) {
 					if data.Pagination.Page >= data.Pagination.TotalPage {
 						href="#"
 					} else {
-						href={ data.Next() }
+						href={ data.NextPageUrl() }
 					}
 					class="secondary"
 				>Next</a>

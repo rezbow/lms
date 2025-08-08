@@ -3,11 +3,10 @@ package members
 import (
 	"fmt"
 	"lms/internal/models"
-	"lms/internal/views"
 	"time"
 )
 
-templ MemberList(members []models.Member, data *views.SearchData) {
+templ MemberList(members []models.Member, data *models.SearchData) {
 	if len(members) == 0 {
 		<h4>No Members found</h4>
 	} else {
@@ -15,37 +14,37 @@ templ MemberList(members []models.Member, data *views.SearchData) {
 			<thead data-theme="dark">
 				<tr>
 					<th scope="col">
-						<a href={ data.SortBy("id", "asc") }>
+						<a href={ data.SortWith("id") }>
 							ID
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("fullName", "asc") }>
+						<a href={ data.SortWith("full_name") }>
 							Full Name
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("email", "asc") }>
+						<a href={ data.SortWith("email") }>
 							Email
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("nationalId", "asc") }>
+						<a href={ data.SortWith("national_id") }>
 							National Id
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("phoneNumber", "asc") }>
+						<a href={ data.SortWith("phone_number") }>
 							Phone Number
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("status", "asc") }>
+						<a href={ data.SortWith("status") }>
 							Status
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("joinedAt", "asc") }>
+						<a href={ data.SortWith("joined_at") }>
 							Joined At	
 						</a>
 					</th>

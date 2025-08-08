@@ -1,41 +1,24 @@
 package members
 
-import "lms/internal/models"
+import (
+	"lms/internal/models"
+	"lms/internal/views/common"
+)
 
-templ StaffSearch(staff []models.Staff) {
+templ StaffSearch(staff []models.Staff, data *models.SearchData) {
 	<div>
 		<h1>Staff Search</h1>
-		<a href="/staff/add">Add Staff</a>
-		<form method="GET" action="/staff/search">
-			<input
-				type="text"
-				name="fullName"
-				placeholder="name"
-			/>
-			<input
-				type="text"
-				name="username"
-				placeholder="national id"
-			/>
-			<input
-				type="text"
-				name="email"
-				placeholder="email"
-			/>
-			<select name="role" aria-label="Select sole">
-				<option selected disabled value="">Select role</option>
-				<option value="librarian">Librarian</option>
-				<option value="admin">Admin</option>
-			</select>
-			<select name="status" aria-label="Select status">
-				<option selected disabled value="">Select status</option>
-				<option value="active">Active</option>
-				<option value="suspended">Suspended</option>
-			</select>
-			<button type="submit">Search</button>
+		<form
+			role="search"
+			method="GET"
+			action="/staff/search"
+		>
+			<input name="q" type="search" placeholder="Search staff" value={ data.Term }/>
+			<input type="submit" value="Search"/>
 		</form>
 		<div id="results">
-			@StaffList(staff)
+			@StaffList(staff, data)
 		</div>
+		@common.Pagination(data)
 	</div>
 }

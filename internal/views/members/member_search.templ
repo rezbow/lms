@@ -2,9 +2,8 @@ package members
 
 import "lms/internal/models"
 import "lms/internal/views/common"
-import "lms/internal/views"
 
-templ MemberSearch(members []models.Member, data *views.SearchData) {
+templ MemberSearch(members []models.Member, data *models.SearchData) {
 	<div>
 		<h1>Member Search</h1>
 		<form method="GET" action="/members/search" role="search">

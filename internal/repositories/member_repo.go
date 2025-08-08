@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"errors"
+	"fmt"
 	"lms/internal/models"
-	"lms/internal/utils"
 	"lms/internal/views"
 
 	"gorm.io/gorm"
@@ -49,15 +49,15 @@ func (mr *MemberRepo) DeleteById(id uint) error {
 	return nil
 }
 
-func (mr *MemberRepo) All(pagination *utils.Pagination) ([]models.Member, error) {
+func (mr *MemberRepo) All(data *models.SearchData) ([]models.Member, error) {
 	var members []models.Member
 	query := mr.DB.Model(&models.Member{})
-	query.Count(&pagination.Total)
+	query.Count(&data.Pagination.Total)
 
-	if err := mr.DB.Limit(pagination.Limit).Offset(pagination.Offset).Find(&members).Error; err != nil {
+	if err := mr.DB.Limit(data.Pagination.Limit).Offset(data.Pagination.Offset).Find(&members).Error; err != nil {
 		return nil, ErrInternal
 	}
-	pagination.CalculateTotalPage()
+	data.Pagination.CalculateTotalPage()
 	return members, nil
 }
 
@@ -72,38 +72,6 @@ func (mr *MemberRepo) Update(member *models.Member) error {
 		return ErrNotFound
 	}
 	return nil
-}
-
-func (mr *MemberRepo) Filter(
-	filter *models.MemberFilter,
-	pagination *utils.Pagination,
-	total *int64,
-) ([]models.Member, error) {
-	var members []models.Member
-	query := mr.DB.Model(&models.Member{})
-
-	if filter.FullName != "" {
-		query.Where("members.full_name ILIKE ?", "%"+filter.FullName+"%")
-	}
-
-	if filter.PhoneNumber != "" {
-		query.Where("members.phone_number ILIKE ?", "%"+filter.PhoneNumber+"%")
-	}
-
-	if filter.Email != "" {
-		query.Where("members.email ILIKE ?", "%"+filter.Email+"%")
-	}
-
-	if filter.NationalId != "" {
-		query.Where("members.national_id ILIKE ?", "%"+filter.NationalId+"%")
-	}
-
-	query.Count(total)
-
-	if err := query.Offset(pagination.Offset).Limit(pagination.Limit).Find(&members).Error; err != nil {
-		return nil, ErrInternal
-	}
-	return members, nil
 }
 
 func (mr *MemberRepo) Total() int64 {
@@ -144,12 +112,11 @@ func (mr *MemberRepo) ConvertErrorsToFormErrors(err error) views.Errors {
 }
 
 func (mr *MemberRepo) Search(
-	term string,
-	pagination *utils.Pagination,
+	data *models.SearchData,
 ) ([]models.Member, error) {
 	var members []models.Member
 	query := mr.DB.Model(&models.Member{})
-	s := "%" + term + "%"
+	s := "%" + data.Term + "%"
 
 	query.Where("CAST(id as TEXT) ILIKE ?", s).
 		Or("full_name ILIKE ?", s).
@@ -157,11 +124,14 @@ func (mr *MemberRepo) Search(
 		Or("phone_number ILIKE ?", s).
 		Or("national_id ILIKE ?", s)
 
-	query.Count(&pagination.Total)
+	query.Count(&data.Pagination.Total)
+	if data.SortBy != "" {
+		query.Order(fmt.Sprintf("%s %s", data.SortBy, data.Dir))
+	}
 
-	if err := query.Offset(pagination.Offset).Limit(pagination.Limit).Find(&members).Error; err != nil {
+	if err := query.Offset(data.Pagination.Offset).Limit(data.Pagination.Limit).Find(&members).Error; err != nil {
 		return nil, ErrInternal
 	}
-	pagination.CalculateTotalPage()
+	data.Pagination.CalculateTotalPage()
 	return members, nil
 }

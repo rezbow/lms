@@ -3,23 +3,22 @@ package books
 import (
 	"fmt"
 	"lms/internal/models"
-	"lms/internal/views"
 )
 
-templ BookList(books []models.Book, data *views.SearchData) {
+templ BookList(books []models.Book, data *models.SearchData) {
 	if len(books) == 0 {
 		<h4>No books found</h4>
 	} else {
 		<table>
 			<thead data-theme="dark">
 				<tr>
-					<th scope="col"><a href={ data.SortBy("id", "asc") }>ID </a></th>
-					<th scope="col"><a href={ data.SortBy("id", "asc") }>Title</a></th>
-					<th scope="col"><a href={ data.SortBy("ISBN", "asc") }>ISBN </a></th>
-					<th scope="col"><a href={ data.SortBy("author", "asc") }>Author</a></th>
-					<th scope="col"><a href={ data.SortBy("language", "asc") }>Language</a></th>
-					<th scope="col"><a href={ data.SortBy("totalCopies", "asc") }>Total Copies</a></th>
-					<th scope="col"><a href={ data.SortBy("availableCopies", "asc") }>Available Copies</a></th>
+					<th scope="col"><a href={ data.SortWith("id") }>ID </a></th>
+					<th scope="col"><a href={ data.SortWith("title") }>Title</a></th>
+					<th scope="col"><a href={ data.SortWith("isbn") }>ISBN </a></th>
+					<th scope="col"><a href={ data.SortWith("author_id") }>Author</a></th>
+					<th scope="col"><a href={ data.SortWith("language") }>Language</a></th>
+					<th scope="col"><a href={ data.SortWith("total_copies") }>Total Copies</a></th>
+					<th scope="col"><a href={ data.SortWith("available_copies") }>Available Copies</a></th>
 				</tr>
 			</thead>
 			<tbody>

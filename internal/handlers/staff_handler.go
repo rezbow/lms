@@ -20,17 +20,24 @@ type StaffHandler struct {
 
 // get
 func (sh *StaffHandler) Index(ctx *gin.Context) {
-	pagination, err := readPagination(ctx, "/staff/search?q=")
+	searchData, err := readSearchData(ctx, "/staff/search")
 	if err != nil {
 		notfound(ctx)
 		return
 	}
-	staff, err := sh.Repo.All(pagination)
+
+	if !searchData.Valid(models.StaffSafeSortList) {
+		notfound(ctx)
+		return
+	}
+
+	staff, err := sh.Repo.Search(searchData)
+
 	if err != nil {
 		serverError(ctx)
 		return
 	}
-	render(ctx, staffView.StaffSearch(staff), "staff")
+	render(ctx, staffView.StaffSearch(staff, searchData), "staff")
 }
 
 // get
@@ -284,32 +291,24 @@ func (sh *StaffHandler) Add(ctx *gin.Context) {
 
 // get
 func (sh *StaffHandler) Search(ctx *gin.Context) {
-	term := ctx.Query("q")
-	fullName := ctx.Query("fullName")
-	userName := ctx.Query("userName")
-	role := ctx.Query("role")
-	status := ctx.Query("status")
-
-	pagination, err := readPagination(ctx, "/staff/search?q="+term)
+	searchData, err := readSearchData(ctx, "/staff/search")
 	if err != nil {
 		notfound(ctx)
 		return
 	}
 
-	var total int64
-	staff, err := sh.Repo.Filter(&models.StaffFilter{
-		FullName: fullName,
-		Username: userName,
-		Role:     role,
-		Status:   status,
-	}, pagination, &total)
+	if !searchData.Valid(models.StaffSafeSortList) {
+		notfound(ctx)
+		return
+	}
 
+	staff, err := sh.Repo.Search(searchData)
 	if err != nil {
 		serverError(ctx)
 		return
 	}
 
-	render(ctx, staffView.StaffSearch(staff), "search staff")
+	render(ctx, staffView.StaffSearch(staff, searchData), "search staff")
 }
 
 func (sh *StaffHandler) LoginPage(ctx *gin.Context) {

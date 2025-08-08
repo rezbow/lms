@@ -72,7 +72,7 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 				}
 			</article>
 		</section>
-		<section>
+		<section class="grid">
 			<article>
 				<header>
 					<h4>Upcoming Loans</h4>
@@ -81,6 +81,11 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 					<a href={ fmt.Sprintf("/loans/%d", loan.ID) }><strong>{ loan.BookTitle }/{ loan.MemberName }</strong></a>
 					<hr/>
 				}
+			</article>
+			<article>
+				<header>
+					<h4>Overdue Loans</h4>
+				</header>
 			</article>
 		</section>
 		<section>

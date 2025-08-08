@@ -3,9 +3,8 @@ package loans
 import "lms/internal/models"
 import "fmt"
 import "time"
-import "lms/internal/views"
 
-templ LoanList(loans []models.Loan, data *views.SearchData) {
+templ LoanList(loans []models.Loan, data *models.SearchData) {
 	if len(loans) == 0 {
 		<h4>No Loans found</h4>
 	} else {
@@ -13,37 +12,37 @@ templ LoanList(loans []models.Loan, data *views.SearchData) {
 			<thead data-theme="dark">
 				<tr>
 					<th scope="col">
-						<a href={ data.SortBy("id", "asc") }>
+						<a href={ data.SortWith("id") }>
 							ID
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("memberName", "asc") }>
+						<a href={ data.SortWith("memberName") }>
 							Member Name
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("bookTitle", "asc") }>
+						<a href={ data.SortWith("bookTitle") }>
 							Book Title
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("borrowDate", "asc") }>
+						<a href={ data.SortWith("borrow_date") }>
 							Borrow Date
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("dueDate", "asc") }>
+						<a href={ data.SortWith("due_date") }>
 							Due Date
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("status", "asc") }>
+						<a href={ data.SortWith("status") }>
 							Status	
 						</a>
 					</th>
 					<th scope="col">
-						<a href={ data.SortBy("returnDate", "asc") }>
+						<a href={ data.SortWith("return_date") }>
 							Return Date
 						</a>
 					</th>

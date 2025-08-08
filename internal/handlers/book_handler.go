@@ -193,17 +193,19 @@ func (bh *BookHandler) Add(ctx *gin.Context) {
 
 func (bh *BookHandler) Search(ctx *gin.Context) {
 
-	term := ctx.Query("q")
-
-	pagination, err := readPagination(ctx, "/books/search?q="+term)
+	searchData, err := readSearchData(ctx, "/books/search")
 	if err != nil {
 		notfound(ctx)
 		return
 	}
 
+	if !searchData.Valid(models.BookSafeSortList) {
+		notfound(ctx)
+		return
+	}
+
 	books, err := bh.BookRepo.Search(
-		term,
-		pagination,
+		searchData,
 	)
 
 	if err != nil {
@@ -211,35 +213,27 @@ func (bh *BookHandler) Search(ctx *gin.Context) {
 		return
 	}
 
-	data := views.SearchData{
-		Term:       term,
-		BaseUrl:    "/books/search",
-		Pagination: pagination,
-		Sort:       "",
-		Direction:  "",
-	}
-
-	render(ctx, bookViews.BookSearch(books, &data), "search results")
+	render(ctx, bookViews.BookSearch(books, searchData), "search results")
 }
 
 func (bh *BookHandler) Index(ctx *gin.Context) {
-	pagination, err := readPagination(ctx, "/books/?")
+	searchData, err := readSearchData(ctx, "/books")
+	if err != nil {
+		notfound(ctx)
+		return
+	}
 
-	books, err := bh.BookRepo.All(pagination)
+	if !searchData.Valid(models.BookSafeSortList) {
+		notfound(ctx)
+		return
+	}
+
+	books, err := bh.BookRepo.Search(searchData)
 	if err != nil {
 		serverError(ctx)
 		return
 	}
-
-	data := views.SearchData{
-		Term:       "",
-		BaseUrl:    "/books/search",
-		Pagination: pagination,
-		Sort:       "",
-		Direction:  "",
-	}
-
-	render(ctx, bookViews.BookSearch(books, &data), "books")
+	render(ctx, bookViews.BookSearch(books, searchData), "books")
 
 }
 

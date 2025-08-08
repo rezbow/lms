@@ -9,6 +9,12 @@ var (
 	RoleLibrarian = "librarian"
 )
 
+var StaffSafeSortList = []string{
+	"id", "full_name", "username",
+	"phone_number", "email", "role",
+	"last_login", "status",
+}
+
 type Staff struct {
 	ID           uint
 	FullName     string

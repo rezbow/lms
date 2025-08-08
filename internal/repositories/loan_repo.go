@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"lms/internal/models"
-	"lms/internal/utils"
 	"lms/internal/views"
 
 	"gorm.io/gorm"
@@ -51,15 +50,15 @@ func (lp *LoanRepo) Insert(loan *models.Loan) error {
 	return nil
 }
 
-func (lp *LoanRepo) All(pagination *utils.Pagination) ([]models.Loan, error) {
+func (lp *LoanRepo) All(data *models.SearchData) ([]models.Loan, error) {
 	var loans []models.Loan
-	query := lp.DB.Model(&models.Loan{}).Count(&pagination.Total)
-	result := query.Preload("Book").Preload("Member").Limit(pagination.Limit).Offset(pagination.Offset).Find(&loans)
+	query := lp.DB.Model(&models.Loan{}).Count(&data.Pagination.Total)
+	result := query.Preload("Book").Preload("Member").Limit(data.Pagination.Limit).Offset(data.Pagination.Offset).Find(&loans)
 	if result.Error != nil {
 		return nil, ErrInternal
 	}
 
-	pagination.CalculateTotalPage()
+	data.Pagination.CalculateTotalPage()
 
 	return loans, nil
 }
@@ -96,48 +95,24 @@ func (lr *LoanRepo) ConvertErrorToFormError(err error) views.Errors {
 	return errors
 }
 
-func (lr *LoanRepo) Filter(filter *models.LoanFilter, pagination *utils.Pagination) ([]models.Loan, error) {
+func (lr *LoanRepo) Search(data *models.SearchData) ([]models.Loan, error) {
 	var loans []models.Loan
-	query := lr.DB.Model(&models.Loan{})
-
-	if filter.BookId > 0 {
-		query.Where("book_id = ? ", filter.BookId)
-	}
-
-	if filter.MemberId > 0 {
-		query.Where("member_id = ? ", filter.MemberId)
-	}
-
-	if filter.Status != "" {
-		query.Where("status = ? ", filter.Status)
-	}
-
-	err := query.Limit(pagination.Limit).Offset(pagination.Offset).Find(&loans).Error
-
-	if err != nil {
-		return nil, ErrInternal
-	}
-
-	return loans, nil
-
-}
-
-func (lr *LoanRepo) Search(term string, pagination *utils.Pagination) ([]models.Loan, error) {
-	var loans []models.Loan
+	s := "%" + data.Term + "%"
 	query := lr.DB.Model(&models.Loan{}).Preload("Member").Preload("Book")
-	s := "%" + term + "%"
 
 	query.Where("CAST(id as TEXT) ILIKE ?", s)
 
-	query.Count(&pagination.Total)
-	err := query.Limit(pagination.Limit).Offset(pagination.Offset).Find(&loans).Error
+	query.Count(&data.Pagination.Total)
+	if data.SortBy != "" {
+		query.Order(fmt.Sprintf("%s %s", data.SortBy, data.Dir))
+	}
+	err := query.Limit(data.Pagination.Limit).Offset(data.Pagination.Offset).Find(&loans).Error
 
 	if err != nil {
 		return nil, ErrInternal
 	}
 
-	pagination.CalculateTotalPage()
-	fmt.Println(loans, pagination)
+	data.Pagination.CalculateTotalPage()
 
 	return loans, nil
 

@@ -2,10 +2,9 @@ package repositories
 
 import (
 	"errors"
+	"fmt"
 	"lms/internal/models"
-	"lms/internal/utils"
 	"lms/internal/views"
-	"math"
 
 	"github.com/jackc/pgerrcode"
 	"gorm.io/gorm"
@@ -52,61 +51,10 @@ func (bp *BookRepo) Insert(book *models.Book) error {
 	return nil
 }
 
-func (bp *BookRepo) Filter(
-	filter *models.BookFilter,
-	pagination *utils.Pagination,
-	total *int64,
-) ([]models.Book, error) {
-	var books []models.Book
-	query := bp.DB.Model(&models.Book{})
-
-	if filter.Title != "" {
-		query.Where("books.title ILIKE ?", "%"+filter.Title+"%")
-	}
-
-	if filter.AuthorId > 0 {
-		query.Where("books.author_id = ?", filter.AuthorId)
-	}
-
-	if filter.ISBN != "" {
-		query.Where("books.isbn = ?", filter.ISBN)
-	}
-
-	if filter.Publisher != "" {
-		query.Where("books.publisher ILIKE ?", "%"+filter.Publisher+"%")
-	}
-
-	if filter.Language != "" {
-		query.Where("books.language ILIKE ? ", "%"+filter.Language+"%")
-	}
-
-	if filter.Translator != "" {
-		query.Where("books.translator ILIKE ? ", "%"+filter.Translator+"%")
-	}
-
-	query.Count(total)
-
-	if err := query.Offset(pagination.Offset).Limit(pagination.Limit).Find(&books).Error; err != nil {
-		return nil, err
-	}
-	return books, nil
-}
-
 func (bp *BookRepo) Total() int64 {
 	var total int64
 	bp.DB.Model(&models.Book{}).Count(&total)
 	return total
-}
-
-func (bp *BookRepo) All(pagination *utils.Pagination) ([]models.Book, error) {
-	var books []models.Book
-	query := bp.DB.Model(&models.Book{})
-	query.Count(&pagination.Total)
-	if err := bp.DB.Preload("Loans").Limit(pagination.Limit).Offset(pagination.Offset).Find(&books).Error; err != nil {
-		return nil, err
-	}
-	pagination.TotalPage = int(math.Ceil(float64(pagination.Total) / float64(pagination.Limit)))
-	return books, nil
 }
 
 func (bp *BookRepo) Update(book *models.Book) error {
@@ -142,24 +90,34 @@ func (bp *BookRepo) ConvertErrorsToFormErrors(err error) views.Errors {
 }
 
 func (bp *BookRepo) Search(
-	term string,
-	pagination *utils.Pagination,
+	data *models.SearchData,
 ) ([]models.Book, error) {
 	var books []models.Book
 	query := bp.DB.Model(&models.Book{})
 
-	s := "%" + term + "%"
+	s := "%" + data.Term + "%"
 
 	query.Where("books.title ILIKE ?", s).
 		Or("CAST(books.author_id as TEXT) ILIKE ?", s).
 		Or("books.isbn ILIKE ?", s).
 		Or("books.publisher ILIKE ?", s)
 
-	query.Count(&pagination.Total)
-	if err := query.Offset(pagination.Offset).Limit(pagination.Limit).Find(&books).Error; err != nil {
+	query.Count(&data.Pagination.Total)
+
+	if data.SortBy != "" {
+		query.Order(fmt.Sprintf("%s %s", data.SortBy, data.Dir))
+	}
+
+	result := query.
+		Offset(data.Pagination.Offset).
+		Limit(data.Pagination.Limit).
+		Find(&books)
+
+	if result.Error != nil {
 		return nil, ErrInternal
 	}
 
-	pagination.TotalPage = int(math.Ceil(float64(pagination.Total) / float64(pagination.Limit)))
+	data.Pagination.CalculateTotalPage()
+
 	return books, nil
 }

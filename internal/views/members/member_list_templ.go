@@ -11,11 +11,10 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"fmt"
 	"lms/internal/models"
-	"lms/internal/views"
 	"time"
 )
 
-func MemberList(members []models.Member, data *views.SearchData) templ.Component {
+func MemberList(members []models.Member, data *models.SearchData) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -47,9 +46,9 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var2 templ.SafeURL
-			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortBy("id", "asc"))
+			templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortWith("id"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 18, Col: 40}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 17, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 			if templ_7745c5c3_Err != nil {
@@ -60,9 +59,9 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var3 templ.SafeURL
-			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortBy("fullName", "asc"))
+			templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortWith("full_name"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 23, Col: 46}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 22, Col: 42}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 			if templ_7745c5c3_Err != nil {
@@ -73,9 +72,9 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var4 templ.SafeURL
-			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortBy("email", "asc"))
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortWith("email"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 28, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 27, Col: 38}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -86,9 +85,9 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 templ.SafeURL
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortBy("nationalId", "asc"))
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortWith("national_id"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 33, Col: 48}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 32, Col: 44}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -99,9 +98,9 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 templ.SafeURL
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortBy("phoneNumber", "asc"))
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortWith("phone_number"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 38, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 37, Col: 45}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -112,9 +111,9 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var7 templ.SafeURL
-			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortBy("status", "asc"))
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortWith("status"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 43, Col: 44}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 42, Col: 39}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -125,9 +124,9 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var8 templ.SafeURL
-			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortBy("joinedAt", "asc"))
+			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinURLErrs(data.SortWith("joined_at"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 48, Col: 46}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 47, Col: 42}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
@@ -145,7 +144,7 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				var templ_7745c5c3_Var9 templ.SafeURL
 				templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinURLErrs(fmt.Sprintf("/members/%d", m.ID))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 57, Col: 64}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 56, Col: 64}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 				if templ_7745c5c3_Err != nil {
@@ -158,7 +157,7 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(m.ID)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 57, Col: 73}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 56, Col: 73}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -171,7 +170,7 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				var templ_7745c5c3_Var11 string
 				templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(m.FullName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 58, Col: 22}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 57, Col: 22}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 				if templ_7745c5c3_Err != nil {
@@ -184,7 +183,7 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				var templ_7745c5c3_Var12 string
 				templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(m.Email)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 59, Col: 19}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 58, Col: 19}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 				if templ_7745c5c3_Err != nil {
@@ -197,7 +196,7 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				var templ_7745c5c3_Var13 string
 				templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(m.NationalId)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 60, Col: 24}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 59, Col: 24}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 				if templ_7745c5c3_Err != nil {
@@ -210,7 +209,7 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				var templ_7745c5c3_Var14 string
 				templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(m.PhoneNumber)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 61, Col: 25}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 60, Col: 25}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 				if templ_7745c5c3_Err != nil {
@@ -223,7 +222,7 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				var templ_7745c5c3_Var15 string
 				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(m.Status)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 62, Col: 20}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 61, Col: 20}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 				if templ_7745c5c3_Err != nil {
@@ -236,7 +235,7 @@ func MemberList(members []models.Member, data *views.SearchData) templ.Component
 				var templ_7745c5c3_Var16 string
 				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(m.JoinedAt.Format(time.RFC3339))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `members/member_list.templ`, Line: 63, Col: 43}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/views/members/member_list.templ`, Line: 62, Col: 43}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 				if templ_7745c5c3_Err != nil {

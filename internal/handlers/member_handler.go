@@ -24,24 +24,21 @@ type MemberHandler struct {
 }
 
 func (mh *MemberHandler) Index(ctx *gin.Context) {
-	pagination, err := readPagination(ctx, "/members/search?q=")
+	searchData, err := readSearchData(ctx, "/members/search")
 	if err != nil {
 		notfound(ctx)
 		return
 	}
-	members, err := mh.Repo.All(pagination)
+	if !searchData.Valid(models.MemberSafeSortList) {
+		notfound(ctx)
+		return
+	}
+	members, err := mh.Repo.All(searchData)
 	if err != nil {
 		render(ctx, commonViews.ServerError(err.Error()), "server error")
 		return
 	}
-	data := views.SearchData{
-		BaseUrl:    "/members/search",
-		Term:       "",
-		Sort:       "",
-		Direction:  "",
-		Pagination: pagination,
-	}
-	render(ctx, memberViews.MemberSearch(members, &data), "members")
+	render(ctx, memberViews.MemberSearch(members, searchData), "members")
 }
 
 func (mh *MemberHandler) GetById(ctx *gin.Context) {
@@ -262,33 +259,27 @@ func (mh *MemberHandler) Update(ctx *gin.Context) {
 }
 
 func (mh *MemberHandler) Search(ctx *gin.Context) {
-	term := ctx.Query("q")
 
-	pagination, err := readPagination(ctx, "/members/search?q="+term)
+	searchData, err := readSearchData(ctx, "/members/search")
 
 	if err != nil {
 		notfound(ctx)
 		return
 	}
 
-	members, err := mh.Repo.Search(
-		term,
-		pagination,
-	)
+	if !searchData.Valid(models.MemberSafeSortList) {
+		notfound(ctx)
+		return
+	}
+
+	members, err := mh.Repo.Search(searchData)
 
 	if err != nil {
 		serverError(ctx)
 		return
 	}
 
-	data := views.SearchData{
-		BaseUrl:    "/members/search",
-		Term:       term,
-		Sort:       "",
-		Direction:  "",
-		Pagination: pagination,
-	}
-	render(ctx, memberViews.MemberSearch(members, &data), "members")
+	render(ctx, memberViews.MemberSearch(members, searchData), "members")
 }
 
 func (mh *MemberHandler) AddLoanPage(ctx *gin.Context) {

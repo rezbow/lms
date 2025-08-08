@@ -2,9 +2,8 @@ package loans
 
 import "lms/internal/models"
 import "lms/internal/views/common"
-import "lms/internal/views"
 
-templ LoanSearch(loans []models.Loan, data *views.SearchData) {
+templ LoanSearch(loans []models.Loan, data *models.SearchData) {
 	<div>
 		<form
 			role="search"

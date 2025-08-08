@@ -1,9 +1,8 @@
 package utils
 
 import (
-	"lms/internal/models"
-
 	"github.com/gin-contrib/sessions"
+	"lms/internal/models"
 )
 
 func DefaultString(value string, defaultValue string) string {

@@ -2,8 +2,8 @@ package repositories
 
 import (
 	"errors"
+	"fmt"
 	"lms/internal/models"
-	"lms/internal/utils"
 	"lms/internal/views"
 
 	"gorm.io/gorm"
@@ -61,7 +61,7 @@ func (sr *StaffRepo) DeleteById(id uint) error {
 	return nil
 }
 
-func (sr *StaffRepo) All(pagination *utils.Pagination) ([]models.Staff, error) {
+func (sr *StaffRepo) All(pagination *models.Pagination) ([]models.Staff, error) {
 	var staff []models.Staff
 	if err := sr.DB.Limit(pagination.Limit).Offset(pagination.Offset).Find(&staff).Error; err != nil {
 		return nil, ErrInternal
@@ -84,7 +84,7 @@ func (sr *StaffRepo) Update(staff *models.Staff) error {
 
 func (sr *StaffRepo) Filter(
 	filter *models.StaffFilter,
-	pagination *utils.Pagination,
+	pagination *models.Pagination,
 	total *int64,
 ) ([]models.Staff, error) {
 	var staff []models.Staff
@@ -140,4 +140,40 @@ func (sr *StaffRepo) ConvertErrorsToFormErrors(err error) views.Errors {
 		errors["_"] = err.Error()
 	}
 	return errors
+}
+
+func (sr *StaffRepo) Search(
+	data *models.SearchData,
+) ([]models.Staff, error) {
+	var staff []models.Staff
+	query := sr.DB.Model(&models.Staff{})
+
+	s := "%" + data.Term + "%"
+
+	query.Where("full_name ILIKE ?", s).
+		Or("CAST(id as TEXT) ILIKE ?", s).
+		Or("username ILIKE ?", s).
+		Or("phone_number ILIKE ?", s).
+		Or("email ILIKE ?", s).
+		Or("role ILIKE ?", s).
+		Or("status ILIKE ?", s)
+
+	query.Count(&data.Pagination.Total)
+
+	if data.SortBy != "" {
+		query.Order(fmt.Sprintf("%s %s", data.SortBy, data.Dir))
+	}
+
+	result := query.
+		Offset(data.Pagination.Offset).
+		Limit(data.Pagination.Limit).
+		Find(&staff)
+
+	if result.Error != nil {
+		return nil, ErrInternal
+	}
+
+	data.Pagination.CalculateTotalPage()
+
+	return staff, nil
 }

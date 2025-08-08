@@ -7,6 +7,14 @@ var (
 	StatusBorrowed = "borrowed"
 )
 
+var LoanSafeSortList = []string{
+	"id",
+	"borrow_date",
+	"return_date",
+	"due_date",
+	"status",
+}
+
 type Loan struct {
 	ID         uint
 	BookId     uint

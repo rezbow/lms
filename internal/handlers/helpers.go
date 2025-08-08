@@ -60,7 +60,7 @@ func formError(ctx *gin.Context, err error) {
 	render(ctx, commonViews.FormErrors([]string{err.Error()}), "error")
 }
 
-func readPagination(ctx *gin.Context, baseUrl string) (*utils.Pagination, error) {
+func readPagination(ctx *gin.Context) (*models.Pagination, error) {
 	var page int
 	var limit int
 	var err error
@@ -82,7 +82,7 @@ func readPagination(ctx *gin.Context, baseUrl string) (*utils.Pagination, error)
 		return nil, errors.New("needs positive integer")
 	}
 
-	return utils.NewPagination(page, limit, baseUrl), nil
+	return models.NewPagination(page, limit), nil
 }
 
 func readIntFromQuery(str string) (int, error) {
@@ -183,5 +183,24 @@ func LogStaffActivity(
 		return err
 	}
 	return nil
+
+}
+
+func readSearchData(ctx *gin.Context, baseUrl string) (*models.SearchData, error) {
+	term := ctx.Query("q")
+	sortBy := ctx.Query("sortBy")
+	dir := ctx.Query("dir")
+	pagination, err := readPagination(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return &models.SearchData{
+		Term:       term,
+		SortBy:     sortBy,
+		Dir:        dir,
+		Pagination: pagination,
+		BaseUrl:    baseUrl,
+	}, nil
 
 }

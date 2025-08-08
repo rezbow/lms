@@ -9,6 +9,16 @@ var (
 	StatusSuspended = "suspended"
 )
 
+var MemberSafeSortList = []string{
+	"id",
+	"full_name",
+	"email",
+	"phone_number",
+	"national_id",
+	"joined_at",
+	"status",
+}
+
 type Member struct {
 	ID          uint
 	FullName    string
