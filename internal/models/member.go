@@ -33,10 +33,9 @@ type Member struct {
 	Loans       []*Loan
 }
 
-type MemberFilter struct {
-	FullName    string
-	Email       string
-	PhoneNumber string
-	NationalId  string
-	JoinedAt    time.Time
+type MemberDashboard struct {
+	TotalMembers         int64
+	TotalActiveMembers   int64
+	TotalSuspendedMember int64
+	ActiveMembers        []Member
 }

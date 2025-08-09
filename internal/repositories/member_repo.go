@@ -74,10 +74,40 @@ func (mr *MemberRepo) Update(member *models.Member) error {
 	return nil
 }
 
-func (mr *MemberRepo) Total() int64 {
+func (mr *MemberRepo) TotalActiveMembers() (int64, error) {
 	var total int64
-	mr.DB.Model(&models.Book{}).Count(&total)
-	return total
+	err := mr.DB.Model(&models.Member{}).Where("status = 'active'").Count(&total).Error
+	if err != nil {
+		return 0, ErrInternal
+	}
+	return total, nil
+}
+
+func (mr *MemberRepo) TotalSuspendedMembers() (int64, error) {
+	var total int64
+	err := mr.DB.Model(&models.Member{}).Where("status = 'suspended'").Count(&total).Error
+	if err != nil {
+		return 0, ErrInternal
+	}
+	return total, nil
+}
+
+func (mr *MemberRepo) ActiveMembers(limit int) ([]models.Member, error) {
+	var members []models.Member
+	err := mr.DB.Table("active_members_view").Limit(limit).Scan(&members).Error
+	if err != nil {
+		return nil, ErrInternal
+	}
+	return members, nil
+}
+
+func (mr *MemberRepo) Total() (int64, error) {
+	var total int64
+	err := mr.DB.Model(&models.Book{}).Count(&total).Error
+	if err != nil {
+		return 0, ErrInternal
+	}
+	return total, nil
 }
 
 func (mr *MemberRepo) HasActiveLoans(memberId uint) (bool, error) {

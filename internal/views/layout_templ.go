@@ -10,6 +10,7 @@ import templruntime "github.com/a-h/templ/runtime"
 
 import "github.com/gin-contrib/sessions"
 import "lms/internal/utils"
+import "lms/internal/models"
 
 func Layout(children templ.Component, title string, session sessions.Session) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
@@ -40,7 +41,7 @@ func Layout(children templ.Component, title string, session sessions.Session) te
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layout.templ`, Line: 11, Col: 17}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layout.templ`, Line: 12, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
@@ -51,12 +52,22 @@ func Layout(children templ.Component, title string, session sessions.Session) te
 			return templ_7745c5c3_Err
 		}
 		if staff != nil {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li><a href=\"/\">Dashboard</a></li><li><a href=\"/books\">Books</a></li><li><a href=\"/members\">Members</a></li><li><a href=\"/loans\">Loans</a></li><li><a href=\"/staff\">Staff</a></li><li><form method=\"POST\" action=\"/logout\"><input type=\"submit\" value=\"Logout\"></form></li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li><a href=\"/\">Dashboard</a></li><li><a href=\"/books\">Books</a></li><li><a href=\"/members\">Members</a></li><li><a href=\"/loans\">Loans</a></li>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if staff.Role == models.RoleAdmin {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<li><a href=\"/staff\">Staff</a></li>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " <li><form method=\"POST\" action=\"/logout\"><input type=\"submit\" value=\"Logout\"></form></li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</ul></nav></header><main>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</ul></nav></header><main>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -64,7 +75,7 @@ func Layout(children templ.Component, title string, session sessions.Session) te
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</main></body><script> \n\t\t\tfunction toggleModal(id) {\n\t\t\t\tlet modal = document.getElementById(id);\n\t\t\t\tif (!modal) return;\n\t\t\t\tmodal && (modal.open ? modal.close() : modal.showModal());\n\t\t\t}\n\t\t</script></html>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</main></body><script> \n\t\t\tfunction toggleModal(id) {\n\t\t\t\tlet modal = document.getElementById(id);\n\t\t\t\tif (!modal) return;\n\t\t\t\tmodal && (modal.open ? modal.close() : modal.showModal());\n\t\t\t}\n\t\t</script></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

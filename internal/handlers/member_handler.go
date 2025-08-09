@@ -24,21 +24,23 @@ type MemberHandler struct {
 }
 
 func (mh *MemberHandler) Index(ctx *gin.Context) {
-	searchData, err := readSearchData(ctx, "/members/search")
+	totalMembers, err := mh.Repo.Total()
+	totalActiveMembers, err := mh.Repo.TotalActiveMembers()
+	totalSuspendedMembers, err := mh.Repo.TotalSuspendedMembers()
+	activeMembers, err := mh.Repo.ActiveMembers(5)
+
 	if err != nil {
-		notfound(ctx)
+		serverError(ctx)
 		return
 	}
-	if !searchData.Valid(models.MemberSafeSortList) {
-		notfound(ctx)
-		return
+
+	data := models.MemberDashboard{
+		TotalMembers:         totalMembers,
+		TotalActiveMembers:   totalActiveMembers,
+		TotalSuspendedMember: totalSuspendedMembers,
+		ActiveMembers:        activeMembers,
 	}
-	members, err := mh.Repo.All(searchData)
-	if err != nil {
-		render(ctx, commonViews.ServerError(err.Error()), "server error")
-		return
-	}
-	render(ctx, memberViews.MemberSearch(members, searchData), "members")
+	render(ctx, memberViews.MembersDashboard(&data), "members")
 }
 
 func (mh *MemberHandler) GetById(ctx *gin.Context) {

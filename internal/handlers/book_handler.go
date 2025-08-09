@@ -217,23 +217,26 @@ func (bh *BookHandler) Search(ctx *gin.Context) {
 }
 
 func (bh *BookHandler) Index(ctx *gin.Context) {
-	searchData, err := readSearchData(ctx, "/books")
-	if err != nil {
-		notfound(ctx)
-		return
-	}
-
-	if !searchData.Valid(models.BookSafeSortList) {
-		notfound(ctx)
-		return
-	}
-
-	books, err := bh.BookRepo.Search(searchData)
+	totalBooks, err := bh.BookRepo.Total()
+	totalCopies, err := bh.BookRepo.TotalCopies()
+	totalAvailableCopies, err := bh.BookRepo.TotalAvailableCopies()
+	recentBooks, err := bh.BookRepo.RecentBooks(5)
+	poularBooks, err := bh.BookRepo.PopularBooks(5)
+	lowStockBooks, err := bh.BookRepo.LowStockBooks(5)
 	if err != nil {
 		serverError(ctx)
 		return
 	}
-	render(ctx, bookViews.BookSearch(books, searchData), "books")
+	data := models.BookDashboard{
+		TotalBooks:           totalBooks,
+		TotalCopies:          totalCopies,
+		TotalAvailableCopies: totalAvailableCopies,
+		RecentBooks:          recentBooks,
+		PopularBooks:         poularBooks,
+		LowStockBooks:        lowStockBooks,
+	}
+
+	render(ctx, bookViews.BookDashboard(&data), "books")
 
 }
 

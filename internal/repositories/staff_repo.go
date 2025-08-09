@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"lms/internal/models"
 	"lms/internal/views"
+	"log"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -49,12 +51,11 @@ func (sr *StaffRepo) Insert(staff *models.Staff) error {
 }
 
 func (sr *StaffRepo) DeleteById(id uint) error {
-	result := sr.DB.Delete(&models.Staff{}, id)
+	result := sr.DB.Where("role != 'admin'").
+		Where("id = ?", id).
+		Delete(&models.Staff{})
 	if result.Error != nil {
-		if isInternalError(result.Error) {
-			return ErrInternal
-		}
-		return result.Error
+		return ErrInternal
 	} else if result.RowsAffected == 0 {
 		return ErrNotFound
 	}
@@ -82,42 +83,36 @@ func (sr *StaffRepo) Update(staff *models.Staff) error {
 	return nil
 }
 
-func (sr *StaffRepo) Filter(
-	filter *models.StaffFilter,
-	pagination *models.Pagination,
-	total *int64,
-) ([]models.Staff, error) {
+func (sr *StaffRepo) GetByRole(role string) ([]models.Staff, error) {
 	var staff []models.Staff
-	query := sr.DB.Model(&models.Staff{})
-
-	if filter.FullName != "" {
-		query.Where("full_name ILIKE ?", "%"+filter.FullName+"%")
-	}
-
-	if filter.Username != "" {
-		query.Where("username ILIKE ?", "%"+filter.Username+"%")
-	}
-
-	if filter.Role != "" {
-		query.Where("role = ?", filter.Role)
-	}
-
-	if filter.Status != "" {
-		query.Where("status = ?", filter.Status)
-	}
-
-	query.Count(total)
-
-	if err := query.Offset(pagination.Offset).Limit(pagination.Limit).Find(&staff).Error; err != nil {
+	err := sr.DB.Model(&models.Staff{}).Where("role = ?", role).Find(&staff).Error
+	if err != nil {
+		log.Println(err.Error())
 		return nil, ErrInternal
 	}
 	return staff, nil
 }
 
-func (sr *StaffRepo) Total() int64 {
+func (sr *StaffRepo) RecordLogin(id uint) error {
+	result := sr.DB.Model(&models.Staff{}).
+		Where("id = ?", id).
+		Update("last_login", time.Now())
+	if result.Error != nil {
+		return ErrInternal
+	} else if result.RowsAffected == 0 {
+		return ErrNotFound
+	}
+	return nil
+}
+
+func (sr *StaffRepo) Total() (int64, error) {
 	var total int64
-	sr.DB.Model(&models.Staff{}).Count(&total)
-	return total
+	err := sr.DB.Model(&models.Staff{}).Count(&total).Error
+	if err != nil {
+		log.Println(err.Error())
+		return 0, ErrInternal
+	}
+	return total, nil
 }
 
 func (sr *StaffRepo) ConvertErrorsToFormErrors(err error) views.Errors {

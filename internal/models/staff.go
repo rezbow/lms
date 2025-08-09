@@ -30,11 +30,10 @@ type Staff struct {
 	version      uint
 }
 
-type StaffFilter struct {
-	FullName string
-	Username string
-	Role     string
-	Status   string
+type StaffDashboard struct {
+	TotalStaff int64
+	Admin      Staff
+	Librarians []Staff
 }
 
 func (Staff) TableName() string {

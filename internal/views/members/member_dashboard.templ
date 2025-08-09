@@ -1,0 +1,53 @@
+package members
+
+import "lms/internal/models"
+import "fmt"
+
+templ MembersDashboard(data *models.MemberDashboard) {
+	<div>
+		<section class="grid">
+			<a role="button" href="/members/add">Add a new member</a>
+			<a role="button" href="/members/search">Search</a>
+		</section>
+		<section class="grid">
+			<article>
+				<header>
+					Total Members
+				</header>
+				<strong>
+					{ data.TotalMembers }
+				</strong>
+			</article>
+			<article>
+				<header>
+					Total Active Members
+				</header>
+				<strong>
+					{ data.TotalActiveMembers }
+				</strong>
+			</article>
+			<article>
+				<header>
+					Total Suspended Members	
+				</header>
+				<strong>
+					{ data.TotalSuspendedMember }
+				</strong>
+			</article>
+		</section>
+		<section>
+			<article>
+				<header>
+					Most Active Members	
+				</header>
+				<ul>
+					for _, m := range data.ActiveMembers {
+						<li>
+							<a href={ fmt.Sprintf("/members/%d", m.ID) }>{ m.FullName }</a>
+						</li>
+					}
+				</ul>
+			</article>
+		</section>
+	</div>
+}

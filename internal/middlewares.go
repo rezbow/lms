@@ -1,8 +1,10 @@
 package internal
 
 import (
+	"lms/internal/handlers"
 	"lms/internal/models"
 	"lms/internal/utils"
+	"lms/internal/views/common"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -32,7 +34,7 @@ func AdminRequired() gin.HandlerFunc {
 			return
 		}
 		if staff.Role != models.RoleAdmin {
-			ctx.Redirect(http.StatusSeeOther, "/")
+			handlers.Render(ctx, common.Forbidden(), "Forbidden")
 			ctx.Abort()
 			return
 		}

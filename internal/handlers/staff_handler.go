@@ -7,6 +7,7 @@ import (
 	"lms/internal/views"
 	authViews "lms/internal/views/auth"
 	staffView "lms/internal/views/staff"
+	"log"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -18,26 +19,25 @@ type StaffHandler struct {
 	Validator *validator.Validate
 }
 
-// get
 func (sh *StaffHandler) Index(ctx *gin.Context) {
-	searchData, err := readSearchData(ctx, "/staff/search")
-	if err != nil {
-		notfound(ctx)
-		return
-	}
-
-	if !searchData.Valid(models.StaffSafeSortList) {
-		notfound(ctx)
-		return
-	}
-
-	staff, err := sh.Repo.Search(searchData)
-
+	totalStaff, err := sh.Repo.Total()
+	admin, err := sh.Repo.GetByRole(models.RoleAdmin)
+	librarians, err := sh.Repo.GetByRole(models.RoleLibrarian)
 	if err != nil {
 		serverError(ctx)
 		return
 	}
-	render(ctx, staffView.StaffSearch(staff, searchData), "staff")
+	if len(admin) == 0 {
+		log.Println("system must have one admin")
+		serverError(ctx)
+		return
+	}
+	data := models.StaffDashboard{
+		TotalStaff: totalStaff,
+		Admin:      admin[0],
+		Librarians: librarians,
+	}
+	render(ctx, staffView.StaffDashboard(&data), "staff")
 }
 
 // get
@@ -293,6 +293,7 @@ func (sh *StaffHandler) Add(ctx *gin.Context) {
 func (sh *StaffHandler) Search(ctx *gin.Context) {
 	searchData, err := readSearchData(ctx, "/staff/search")
 	if err != nil {
+		log.Println(err.Error())
 		notfound(ctx)
 		return
 	}
@@ -344,6 +345,11 @@ func (sh *StaffHandler) Login(ctx *gin.Context) {
 	session := sessions.Default(ctx)
 	session.Set("staff", *staff)
 	session.Save()
+
+	err = sh.Repo.RecordLogin(staff.ID)
+	if err != nil {
+		log.Println(err.Error())
+	}
 
 	redirect(ctx, "/")
 

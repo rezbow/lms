@@ -1,0 +1,41 @@
+package members
+
+import "lms/internal/models"
+import "fmt"
+
+templ StaffDashboard(data *models.StaffDashboard) {
+	<div>
+		<section class="grid">
+			<a role="button" href="/staff/add">Add a new staff</a>
+			<a role="button" href="/staff/search">Search</a>
+		</section>
+		<section class="grid">
+			<article>
+				<header>Total Staff</header>
+				<strong>{ data.TotalStaff }</strong>
+			</article>
+			<article>
+				<header>Admin</header>
+				<strong>
+					<a href={ fmt.Sprintf("/staff/%d", data.Admin.ID) }>
+						{ data.Admin.FullName }
+					</a>
+				</strong>
+			</article>
+		</section>
+		<section class="grid">
+			<article>
+				<header>Librarians</header>
+				<ul>
+					for _, l := range data.Librarians {
+						<li>
+							<a href={ fmt.Sprintf("/staff/%d", l.ID) }>
+								{ l.FullName }
+							</a>
+						</li>
+					}
+				</ul>
+			</article>
+		</section>
+	</div>
+}

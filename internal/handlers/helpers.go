@@ -25,6 +25,17 @@ func redirect(ctx *gin.Context, location string) {
 	ctx.Redirect(http.StatusSeeOther, location)
 }
 
+func Render(ctx *gin.Context, html templ.Component, title string) {
+	session := sessions.Default(ctx)
+
+	views.Layout(
+		html,
+		title,
+		session,
+	).Render(ctx.Request.Context(), ctx.Writer)
+	ctx.Status(http.StatusOK)
+}
+
 func render(ctx *gin.Context, html templ.Component, title string) {
 	session := sessions.Default(ctx)
 

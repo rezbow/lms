@@ -50,6 +50,86 @@ func (lp *LoanRepo) Insert(loan *models.Loan) error {
 	return nil
 }
 
+func (lp *LoanRepo) TotalOverdueLoans() (int64, error) {
+	var total int64
+	err := lp.DB.Model(&models.Loan{}).
+		Where("due_date < CURRENT_DATE").
+		Count(&total).Error
+	if err != nil {
+		return 0, err
+	}
+	return total, nil
+}
+
+func (lp *LoanRepo) OverdueLoans(limit int) ([]models.Loan, error) {
+	var loans []models.Loan
+	err := lp.DB.
+		Model(&models.Loan{}).
+		Preload("Member").
+		Preload("Book").
+		Where("return_date is NULL").
+		Where("status = 'borrowed'").
+		Where("due_date < CURRENT_TIMESTAMP").
+		Order("due_date DESC").
+		Limit(limit).
+		Find(&loans).Error
+	if err != nil {
+		return nil, ErrInternal
+	}
+	return loans, nil
+}
+
+func (lp *LoanRepo) UpcomingLoans(limit int) ([]models.Loan, error) {
+	var loans []models.Loan
+	err := lp.DB.
+		Model(&models.Loan{}).
+		Preload("Member").
+		Preload("Book").
+		Where("return_date is NULL").
+		Where("status = 'borrowed'").
+		Where("due_date >= CURRENT_TIMESTAMP").
+		Where("due_date <= CURRENT_DATE + INTERVAL '5 days' ").
+		Order("due_date DESC").
+		Limit(limit).
+		Find(&loans).Error
+	if err != nil {
+		return nil, ErrInternal
+	}
+	return loans, nil
+}
+
+func (lp *LoanRepo) RecentLoans(limit int) ([]models.Loan, error) {
+	var loans []models.Loan
+	err := lp.DB.Model(&models.Loan{}).
+		Preload("Member").
+		Preload("Book").
+		Order("borrow_date DESC").
+		Limit(limit).
+		Find(&loans).Error
+	if err != nil {
+		return nil, ErrInternal
+	}
+	return loans, nil
+}
+
+func (lp *LoanRepo) TotalWhereStatus(is string) (int64, error) {
+	var total int64
+	err := lp.DB.Model(&models.Loan{}).Where("status = ?", is).Count(&total).Error
+	if err != nil {
+		return 0, err
+	}
+	return total, nil
+}
+
+func (lp *LoanRepo) Total() (int64, error) {
+	var total int64
+	err := lp.DB.Model(&models.Loan{}).Count(&total).Error
+	if err != nil {
+		return 0, err
+	}
+	return total, nil
+}
+
 func (lp *LoanRepo) All(data *models.SearchData) ([]models.Loan, error) {
 	var loans []models.Loan
 	query := lp.DB.Model(&models.Loan{}).Count(&data.Pagination.Total)

@@ -4,38 +4,45 @@ import "lms/internal/utils"
 import "github.com/gin-contrib/sessions"
 import "lms/internal/models"
 import "fmt"
-import "time"
+
+import "github.com/dustin/go-humanize"
 
 templ Dashboard(data *models.Dashboard, session sessions.Session) {
 	{{ staff := utils.ExtractStaffFromSession(session) }}
 	<div>
-		<section>
-			<div class="grid">
-				<article>
-					<header>
-						<h4>Total Books</h4>
-					</header>
-					<p>{ data.TotalBooks }</p>
-				</article>
-				<article>
-					<header>
-						<h4>Total Members</h4>
-					</header>
-					<p>{ data.TotalMembers }</p>
-				</article>
-				<article>
-					<header>
-						<h4>Total Active Loans</h4>
-					</header>
-					<strong>{ data.TotalActiveLoans }</strong>
-				</article>
-				<article>
-					<header>
-						<h4>Total Overdue Loans</h4>
-					</header>
-					<strong>{ data.TotalOverdueLoans }</strong>
-				</article>
-			</div>
+		<section class="grid">
+			<a role="button" href="/books/add">Add New Book</a>
+			<a role="button" href="/loans/add">Create New Loan</a>
+			<a role="button" href="/members/add">Register Member</a>
+			if staff.Role == models.RoleAdmin {
+				<a role="button" href="/staff/add">Add New Staff</a>
+			}
+		</section>
+		<section class="grid">
+			<article>
+				<header>
+					<h4>Total Books</h4>
+				</header>
+				<p>{ data.TotalBooks }</p>
+			</article>
+			<article>
+				<header>
+					<h4>Total Members</h4>
+				</header>
+				<p>{ data.TotalMembers }</p>
+			</article>
+			<article>
+				<header>
+					<h4>Total Active Loans</h4>
+				</header>
+				<strong>{ data.TotalActiveLoans }</strong>
+			</article>
+			<article>
+				<header>
+					<h4>Total Overdue Loans</h4>
+				</header>
+				<strong>{ data.TotalOverdueLoans }</strong>
+			</article>
 		</section>
 		<section class="grid">
 			<article>
@@ -110,22 +117,12 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 								<th scope="row">{ log.Description }</th>
 								<th scope="row">{ log.EntityId.Int32 }</th>
 								<th scope="row">{ log.EntityType.String }</th>
-								<th scope="row">{ log.CreatedAt.Format(time.RFC3339) }</th>
+								<th scope="row">{ humanize.Time(log.CreatedAt) }</th>
 							</tr>
 						}
 					</tbody>
 				</table>
 			</article>
-		</section>
-		<section>
-			<div class="grid">
-				<a role="button" href="/books/add">Add New Book</a>
-				<a role="button" href="/loans/add">Create New Loan</a>
-				<a role="button" href="/members/add">Register Member</a>
-				if staff.Role == models.RoleAdmin {
-					<a role="button" href="/staff/add">Add New Staff</a>
-				}
-			</div>
 		</section>
 	</div>
 }

@@ -30,8 +30,12 @@ type Loan struct {
 	Member     *Member
 }
 
-type LoanFilter struct {
-	BookId   uint
-	MemberId uint
-	Status   string
+type LoanDashboard struct {
+	TotalLoans         int64
+	TotalReturnedLoans int64
+	TotalOverdueLoans  int64
+	TotalActiveLoans   int64
+	RecentLoans        []Loan
+	OverdueLoans       []Loan
+	UpcomingLoan       []Loan
 }

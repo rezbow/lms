@@ -35,13 +35,13 @@ type Book struct {
 	Author          *Author
 }
 
-type BookFilter struct {
-	Title      string
-	ISBN       string
-	Publisher  string
-	Language   string
-	Translator string
-	AuthorId   uint
+type BookDashboard struct {
+	TotalBooks           int64
+	TotalCopies          int64
+	TotalAvailableCopies int64
+	RecentBooks          []Book
+	PopularBooks         []Book
+	LowStockBooks        []Book
 }
 
 func BookValidateSearchData(data *SearchData) bool {

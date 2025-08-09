@@ -51,10 +51,58 @@ func (bp *BookRepo) Insert(book *models.Book) error {
 	return nil
 }
 
-func (bp *BookRepo) Total() int64 {
+func (bp *BookRepo) Total() (int64, error) {
 	var total int64
-	bp.DB.Model(&models.Book{}).Count(&total)
-	return total
+	err := bp.DB.Model(&models.Book{}).Count(&total).Error
+	if err != nil {
+		return 0, ErrInternal
+	}
+	return total, nil
+}
+
+func (bp *BookRepo) PopularBooks(limit int) ([]models.Book, error) {
+	var books []models.Book
+	err := bp.DB.Table("popular_books_view").Limit(limit).Scan(&books).Error
+	if err != nil {
+		return nil, ErrInternal
+	}
+	return books, nil
+}
+
+func (bp *BookRepo) LowStockBooks(limit int) ([]models.Book, error) {
+	var books []models.Book
+	result := bp.DB.Model(&models.Book{}).Where("available_copies <= 2").Order("available_copies ASC").Limit(limit).Find(&books)
+	if result.Error != nil {
+		return nil, ErrInternal
+	}
+	return books, nil
+}
+
+func (bp *BookRepo) RecentBooks(limit int) ([]models.Book, error) {
+	var recent []models.Book
+	result := bp.DB.Model(&models.Book{}).Order("created_at DESC").Limit(limit).Find(&recent)
+	if result.Error != nil {
+		return nil, ErrInternal
+	}
+	return recent, nil
+}
+
+func (bp *BookRepo) TotalAvailableCopies() (int64, error) {
+	var total int64
+	err := bp.DB.Model(&models.Book{}).Select("SUM(available_copies)").Scan(&total).Error
+	if err != nil {
+		return 0, ErrInternal
+	}
+	return total, nil
+}
+
+func (bp *BookRepo) TotalCopies() (int64, error) {
+	var total int64
+	err := bp.DB.Model(&models.Book{}).Select("SUM(total_copies)").Scan(&total).Error
+	if err != nil {
+		return 0, ErrInternal
+	}
+	return total, nil
 }
 
 func (bp *BookRepo) Update(book *models.Book) error {

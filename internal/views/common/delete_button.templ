@@ -17,9 +17,9 @@ templ DeleteButton(title, action string) {
 				</header>
 				<p><strong>This action cannot be undone</strong></p>
 				<footer>
-					<button autofocus>
-						Confirm
-					</button>
+					<form method="POST" action={ action }>
+						<input type="submit" autofocus value="Confirm"/>
+					</form>
 				</footer>
 			</article>
 		</dialog>

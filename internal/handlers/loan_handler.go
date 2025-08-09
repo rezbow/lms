@@ -20,21 +20,28 @@ type LoanHandler struct {
 }
 
 func (lh *LoanHandler) Index(ctx *gin.Context) {
-	searchData, err := readSearchData(ctx, "/loans/search")
+	totalLoans, err := lh.Repo.Total()
+	totalActiveLoan, err := lh.Repo.TotalWhereStatus("borrowed")
+	totalReturnedLoan, err := lh.Repo.TotalWhereStatus("returned")
+	totalOverdueLoans, err := lh.Repo.TotalOverdueLoans()
+	recentLoans, err := lh.Repo.RecentLoans(5)
+	overdueLoans, err := lh.Repo.OverdueLoans(5)
+	upcomingLoans, err := lh.Repo.UpcomingLoans(5)
 	if err != nil {
-		notfound(ctx)
+		serverError(ctx)
 		return
 	}
-	if !searchData.Valid(models.LoanSafeSortList) {
-		notfound(ctx)
-		return
+	data := models.LoanDashboard{
+		TotalLoans:         totalLoans,
+		TotalActiveLoans:   totalActiveLoan,
+		TotalReturnedLoans: totalReturnedLoan,
+		TotalOverdueLoans:  totalOverdueLoans,
+		RecentLoans:        recentLoans,
+		OverdueLoans:       overdueLoans,
+		UpcomingLoan:       upcomingLoans,
 	}
-	loans, err := lh.Repo.All(searchData)
-	if err != nil {
-		render(ctx, commonViews.ServerError(err.Error()), "server error")
-		return
-	}
-	render(ctx, loanViews.LoanSearch(loans, searchData), "members")
+
+	render(ctx, loanViews.LoanDashboard(&data), "members")
 }
 
 func (lh *LoanHandler) GetById(ctx *gin.Context) {

@@ -2,6 +2,7 @@ package views
 
 import "github.com/gin-contrib/sessions"
 import "lms/internal/utils"
+import "lms/internal/models"
 
 templ Layout(children templ.Component, title string, session sessions.Session) {
 	{{ staff := utils.ExtractStaffFromSession(session) }}
@@ -26,7 +27,9 @@ templ Layout(children templ.Component, title string, session sessions.Session) {
 							<li><a href="/books">Books</a></li>
 							<li><a href="/members">Members</a></li>
 							<li><a href="/loans">Loans</a></li>
-							<li><a href="/staff">Staff</a></li>
+							if staff.Role == models.RoleAdmin {
+								<li><a href="/staff">Staff</a></li>
+							}
 							<li>
 								<form
 									method="POST"

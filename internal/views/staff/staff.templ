@@ -3,6 +3,7 @@ package members
 import "lms/internal/models"
 import "fmt"
 import "lms/internal/views/common"
+import "time"
 
 templ Staff(staff *models.Staff) {
 	<div>
@@ -17,9 +18,11 @@ templ Staff(staff *models.Staff) {
 							Edit
 						</a>
 					</li>
-					<li>
-						@common.PostButton("Delete", fmt.Sprintf("/staff/%d/delete", staff.ID))
-					</li>
+					if staff.Role != models.RoleAdmin {
+						<li>
+							@common.DeleteButton("Delete", fmt.Sprintf("/staff/%d/delete", staff.ID))
+						</li>
+					}
 				</ul>
 			</nav>
 		</section>
@@ -35,7 +38,7 @@ templ Staff(staff *models.Staff) {
 			</section>
 			<section>
 				<h6>Phone Number</h6>
-				<p>{ staff.Email }</p>
+				<p>{ staff.PhoneNumber }</p>
 			</section>
 			<section>
 				<h6>Role</h6>
@@ -44,6 +47,13 @@ templ Staff(staff *models.Staff) {
 			<section>
 				<h6>Status</h6>
 				<p>{ staff.Status }</p>
+			</section>
+			<section>
+				<h6>Last Login</h6>
+				if staff.LastLogin != nil {
+					<p>{ staff.LastLogin.Format(time.RFC3339) }</p>
+				}
+				<p>-</p>
 			</section>
 		</section>
 		<hr/>

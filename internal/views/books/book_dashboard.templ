@@ -1,0 +1,77 @@
+package books
+
+import "lms/internal/models"
+import "fmt"
+
+templ BookDashboard(data *models.BookDashboard) {
+	<div>
+		<section class="grid">
+			<a role="button" href="/books/add">Add a new book</a>
+			<a role="button" href="/books/search">Search</a>
+		</section>
+		<div class="grid">
+			<article>
+				<header>
+					Total Books
+				</header>
+				<strong>
+					{ data.TotalBooks }
+				</strong>
+			</article>
+			<article>
+				<header>
+					Total Copies 
+				</header>
+				<strong>
+					{ data.TotalCopies }
+				</strong>
+			</article>
+			<article>
+				<header>
+					Total Available Copies 
+				</header>
+				<strong>
+					{ data.TotalAvailableCopies }
+				</strong>
+			</article>
+		</div>
+		<div class="grid">
+			<article>
+				<header>
+					Recent Books
+				</header>
+				<ul>
+					for _, b := range data.RecentBooks {
+						<li>
+							<a href={ fmt.Sprintf("/books/%d", b.ID) }>{ b.Title } </a>
+						</li>
+					}
+				</ul>
+			</article>
+			<article>
+				<header>
+					Popular Books 
+				</header>
+				<ul>
+					for _, b := range data.PopularBooks {
+						<li>
+							<a href={ fmt.Sprintf("/books/%d", b.ID) }>{ b.Title } </a>
+						</li>
+					}
+				</ul>
+			</article>
+			<article>
+				<header>
+					Low Stock Books
+				</header>
+				<ul>
+					for _, b := range data.LowStockBooks {
+						<li>
+							<a href={ fmt.Sprintf("/books/%d", b.ID) }>{ b.Title } </a>
+						</li>
+					}
+				</ul>
+			</article>
+		</div>
+	</div>
+}

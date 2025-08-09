@@ -1,0 +1,89 @@
+package loans
+
+import (
+	"fmt"
+	"github.com/dustin/go-humanize"
+	"lms/internal/models"
+)
+
+templ LoanDashboard(data *models.LoanDashboard) {
+	<div>
+		<section class="grid">
+			<a role="button" href="/loans/add">Add a new Loan</a>
+			<a role="button" href="/loans/search">Search</a>
+		</section>
+		<section class="grid">
+			<article>
+				<header>
+					<h6>Total Loans</h6>
+				</header>
+				<strong>{ data.TotalLoans }</strong>
+			</article>
+			<article>
+				<header>
+					<h6>Total Active Loans</h6>
+				</header>
+				<strong>{ data.TotalActiveLoans }</strong>
+			</article>
+			<article>
+				<header>
+					<h6>Total Retunred Loans</h6>
+				</header>
+				<strong>{ data.TotalReturnedLoans }</strong>
+			</article>
+			<article>
+				<header>
+					<h6>Total Overdue Loans</h6>
+				</header>
+				<strong>{ data.TotalOverdueLoans }</strong>
+			</article>
+		</section>
+		<section class="grid">
+			<article>
+				<header>
+					<h6>Recent Loans</h6>
+				</header>
+				<ul>
+					for _, l := range data.RecentLoans {
+						<li>
+							<a href={ fmt.Sprintf("/loans/%d", l.ID) }>
+								'{ l.Book.Title }' borrowed by '{ l.Member.FullName }'
+							</a>
+						</li>
+					}
+				</ul>
+			</article>
+			<article>
+				<header>
+					<h6>Upcoming Loans</h6>
+				</header>
+				<ul>
+					for _, l := range data.UpcomingLoan {
+						<li>
+							<a href={ fmt.Sprintf("/loans/%d", l.ID) }>
+								'{ l.Book.Title }' borrowed by '{ l.Member.FullName }'
+							</a>
+							is due in { humanize.Time(l.DueDate) }
+						</li>
+					}
+				</ul>
+			</article>
+			<article>
+				<header>
+					<h6>Overdue Loans</h6>
+				</header>
+				<ul>
+					for _, l := range data.OverdueLoans {
+						<li>
+							<a href={ fmt.Sprintf("/loans/%d", l.ID) }>
+								'{ l.Book.Title }' borrowed by '{ l.Member.FullName }'
+							</a>
+							was due at { humanize.Time(l.DueDate) }
+						</li>
+					}
+				</ul>
+			</article>
+		</section>
+		<section class="grid"></section>
+	</div>
+}
