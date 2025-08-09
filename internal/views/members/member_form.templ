@@ -9,7 +9,7 @@ templ MemberForm(member *models.Member, errors views.Errors, endpoint string) {
 			method="POST"
 			action={ endpoint }
 		>
-			<div>
+			<div class="grid">
 				<input
 					id="fullName"
 					name="fullName"
@@ -26,8 +26,6 @@ templ MemberForm(member *models.Member, errors views.Errors, endpoint string) {
 				if errors["fullName"] != "" {
 					<small>{ errors["fullName"] }</small>
 				}
-			</div>
-			<div>
 				<input
 					id="phoneNumber"
 					name="phoneNumber"
@@ -45,7 +43,7 @@ templ MemberForm(member *models.Member, errors views.Errors, endpoint string) {
 					<small>{ errors["phoneNumber"] }</small>
 				}
 			</div>
-			<div>
+			<div class="grid">
 				<input
 					id="nationalId"
 					name="nationalId"
@@ -62,8 +60,6 @@ templ MemberForm(member *models.Member, errors views.Errors, endpoint string) {
 				if errors["nationalId"] != "" {
 					<small>{ errors["nationalId"] }</small>
 				}
-			</div>
-			<div>
 				<input
 					id="email"
 					name="email"
@@ -81,47 +77,46 @@ templ MemberForm(member *models.Member, errors views.Errors, endpoint string) {
 					<small>{ errors["email"] }</small>
 				}
 			</div>
-			if member != nil && member.ID > 0 {
-				<div>
-					<fieldset>
-						<legend>
-							Member Status
-						</legend>
-						<label>
-							<input
-								type="radio"
-								name="status"
-								value="active"
-								if member.Status == "active" {
-									checked
-								}
-							/>
-							Active
-						</label>
-						<label>
-							<input
-								type="radio"
-								name="status"
-								value="suspended"
-								if member.Status == "suspended" {
-									checked
-								}
-							/>
-							Suspended
-						</label>
-					</fieldset>
-					if errors["status"] != "" {
-						<small>{ errors["status"] }</small>
-					}
-				</div>
-			}
-			<button type="submit">
-				if member != nil {
-					Update
-				} else {
-					Add
+			<div>
+				if member != nil && member.ID > 0 {
+					<div>
+						<fieldset>
+							<legend>
+								Member Status
+							</legend>
+							<label>
+								<input
+									type="radio"
+									name="status"
+									value="active"
+									if member.Status == "active" {
+										checked
+									}
+								/>
+								Active
+							</label>
+							<label>
+								<input
+									type="radio"
+									name="status"
+									value="suspended"
+									if member.Status == "suspended" {
+										checked
+									}
+								/>
+								Suspended
+							</label>
+						</fieldset>
+						if errors["status"] != "" {
+							<small>{ errors["status"] }</small>
+						}
+					</div>
 				}
-			</button>
+			</div>
+			<div class="grid">
+				<input type="submit"/>
+				<input type="reset"/>
+			</div>
 		</form>
 		<div id="results"></div>
 	</div>

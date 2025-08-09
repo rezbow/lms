@@ -32,6 +32,7 @@ type Book struct {
 	version         uint
 	Loans           []*Loan
 	Categories      []*Category `gorm:"many2many:category_books"`
+	Author          *Author
 }
 
 type BookFilter struct {

@@ -10,12 +10,6 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 	{{ staff := utils.ExtractStaffFromSession(session) }}
 	<div>
 		<section>
-			<form role="search">
-				<input name="search" type="search" placeholder="Book title, author, category, etc."/>
-				<input type="submit" value="Search"/>
-			</form>
-		</section>
-		<section>
 			<div class="grid">
 				<article>
 					<header>

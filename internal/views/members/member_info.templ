@@ -2,44 +2,55 @@ package members
 
 import "lms/internal/models"
 import "fmt"
+import "lms/internal/views/common"
 
 templ MemberInfo(member *models.Member) {
 	<div>
-		<div>
-			<div>
-				<p><strong>Full Name:</strong> { member.FullName }</p>
-				<p><strong>Email:</strong> { member.Email }</p>
-				<p><strong>Phone Number:</strong> { member.PhoneNumber }</p>
-				<p><strong>National id:</strong> { member.NationalId }</p>
-				<p><strong>Status:</strong> { member.Status }</p>
-				<p><strong>Join date:</strong> { member.JoinedAt.Format("2006-01-02") }</p>
-			</div>
-			<div>
-				<a href={ fmt.Sprintf("/members/%d/addloan", member.ID) }>
-					<button>Add Loan</button>
-				</a>
-				<a href={ fmt.Sprintf("/members/%d/edit", member.ID) }>
-					<button>Edit</button>
-				</a>
-				<div>
-					<form
-						method="POST"
-						action={ fmt.Sprintf("/members/%d/delete", member.ID) }
-					>
-						<button
-							type="submit"
-							if len(member.Loans) > 0 {
-								disabled
-							}
-						>
-							Delete Book
-						</button>
-						if len(member.Loans) > 0 {
-							<small class="pico-color-red-500">this member has active loans and it can't be deleted</small>
-						}
-					</form>
-				</div>
-			</div>
-		</div>
+		<section>
+			<nav>
+				<ul>
+					<h1>{ member.FullName }</h1>
+				</ul>
+				<ul>
+					<li>
+						<a role="button" href={ fmt.Sprintf("/members/%d/addloan", member.ID) }>
+							Add Loan
+						</a>
+					</li>
+					<li>
+						<a role="button" href={ fmt.Sprintf("/members/%d/edit", member.ID) }>
+							Edit Member
+						</a>
+					</li>
+					<li>
+						@common.PostButton("Delete", fmt.Sprintf("/members/%d/delete", member.ID))
+					</li>
+				</ul>
+			</nav>
+		</section>
+		<hr/>
+		<section class="grid">
+			<section>
+				<h6>Phone Number</h6>
+				<p>{ member.PhoneNumber }</p>
+			</section>
+			<section>
+				<h6>Email</h6>
+				<p>{ member.Email }</p>
+			</section>
+			<section>
+				<h6>National Id</h6>
+				<p>{ member.NationalId }</p>
+			</section>
+			<section>
+				<h6>Status</h6>
+				<p>{ member.Status }</p>
+			</section>
+			<section>
+				<h6>Join Date</h6>
+				<p>{ member.JoinedAt.Format("2006-01-02") } </p>
+			</section>
+		</section>
+		<hr/>
 	</div>
 }

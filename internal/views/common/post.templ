@@ -1,0 +1,10 @@
+package common
+
+templ PostButton(title, action string) {
+	<form
+		method="POST"
+		action={ action }
+	>
+		<input type="submit" value={ title }/>
+	</form>
+}

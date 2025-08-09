@@ -16,7 +16,7 @@ type BookRepo struct {
 
 func (bp *BookRepo) GetById(id uint) (*models.Book, error) {
 	var book models.Book
-	result := bp.DB.Preload("Loans").First(&book, id)
+	result := bp.DB.Preload("Loans").Preload("Author").Preload("Categories").First(&book, id)
 
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {

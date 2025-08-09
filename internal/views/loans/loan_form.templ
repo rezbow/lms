@@ -9,7 +9,7 @@ templ LoanForm(loan *models.Loan, errors views.Errors, endpoint string) {
 			method="POST"
 			action={ endpoint }
 		>
-			<div>
+			<div class="grid">
 				<input
 					id="bookId"
 					name="bookId"
@@ -26,8 +26,6 @@ templ LoanForm(loan *models.Loan, errors views.Errors, endpoint string) {
 				if errors["bookId"] != "" {
 					<small>{ errors["bookId"] }</small>
 				}
-			</div>
-			<div>
 				<input
 					id="memberId"
 					name="memberId"
@@ -45,49 +43,50 @@ templ LoanForm(loan *models.Loan, errors views.Errors, endpoint string) {
 					<small>{ errors["memberId"] }</small>
 				}
 			</div>
-			<div>
-				<input
-					id="borrowDate"
-					name="borrowDate"
-					type="date"
-					required
-					placeholder="borrow date"
+			<div class="grid">
+				<div>
+					<label for="borrowDate">Borrow Date</label>
+					<input
+						id="borrowDate"
+						name="borrowDate"
+						type="date"
+						required
+						placeholder="borrow date"
+						if errors["borrowDate"] != "" {
+							aria-invalid="true"
+						}
+						if loan != nil {
+							value={ loan.BorrowDate.Format("2006-01-02") }
+						}
+					/>
 					if errors["borrowDate"] != "" {
-						aria-invalid="true"
+						<small>{ errors["borrowDate"] }</small>
 					}
-					if loan != nil {
-						value={ loan.BorrowDate.Format("2006-01-02") }
-					}
-				/>
-				if errors["borrowDate"] != "" {
-					<small>{ errors["borrowDate"] }</small>
-				}
-			</div>
-			<div>
-				<input
-					id="dueDate"
-					name="dueDate"
-					type="date"
-					required
-					placeholder="borrow date"
+				</div>
+				<div>
+					<label for="dueDate">Due Date</label>
+					<input
+						id="dueDate"
+						name="dueDate"
+						type="date"
+						required
+						placeholder="borrow date"
+						if errors["dueDate"] != "" {
+							aria-invalid="true"
+						}
+						if loan != nil {
+							value={ loan.DueDate.Format("2006-01-02") }
+						}
+					/>
 					if errors["dueDate"] != "" {
-						aria-invalid="true"
+						<small>{ errors["dueDate"] }</small>
 					}
-					if loan != nil {
-						value={ loan.DueDate.Format("2006-01-02") }
-					}
-				/>
-				if errors["dueDate"] != "" {
-					<small>{ errors["dueDate"] }</small>
-				}
+				</div>
 			</div>
-			<button type="submit">
-				if loan != nil {
-					Update
-				} else {
-					Add
-				}
-			</button>
+			<div class="grid">
+				<input type="submit"/>
+				<input type="reset"/>
+			</div>
 		</form>
 	</div>
 }

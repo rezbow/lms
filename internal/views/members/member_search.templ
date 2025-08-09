@@ -5,7 +5,6 @@ import "lms/internal/views/common"
 
 templ MemberSearch(members []models.Member, data *models.SearchData) {
 	<div>
-		<h1>Member Search</h1>
 		<form method="GET" action="/members/search" role="search">
 			<input name="q" type="search" placeholder="Search"/>
 			<input type="submit" value="Search"/>

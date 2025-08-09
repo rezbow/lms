@@ -9,7 +9,7 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 			method="POST"
 			action={ endpoint }
 		>
-			<div>
+			<div class="grid">
 				<input
 					id="fullName"
 					name="fullName"
@@ -26,8 +26,6 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 				if errors["fullName"] != "" {
 					<small>{ errors["fullName"] }</small>
 				}
-			</div>
-			<div>
 				<input
 					id="username"
 					name="username"
@@ -45,7 +43,7 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 					<small>{ errors["username"] }</small>
 				}
 			</div>
-			<div>
+			<div class="grid">
 				<input
 					id="phoneNumber"
 					name="phoneNumber"
@@ -62,8 +60,6 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 				if errors["phoneNumber"] != "" {
 					<small>{ errors["phoneNumber"] }</small>
 				}
-			</div>
-			<div>
 				<input
 					id="email"
 					name="email"
@@ -136,13 +132,10 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 					<small>{ errors["status"] }</small>
 				}
 			</div>
-			<button type="submit">
-				if staff != nil && staff.ID > 0 {
-					Confirm 	
-				} else {
-					Add
-				}
-			</button>
+			<div class="grid">
+				<input type="submit"/>
+				<input type="reset"/>
+			</div>
 			if errors["_"] != "" {
 				<article style="color: #D93526;">{ errors["_"] }</article>
 			}

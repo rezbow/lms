@@ -3,48 +3,62 @@ package books
 import (
 	"fmt"
 	"lms/internal/models"
+	"lms/internal/views/common"
 )
 
 templ Book(book *models.Book) {
 	<div>
-		<div>
-			<div>
-				<p><strong>English Title: </strong> { book.Title }</p>
-				<p><strong>Author:</strong> <a href={ fmt.Sprintf("/authors/%d", book.AuthorId) }>{ book.AuthorId }</a></p>
-				<p><strong>ISBN:</strong> { book.ISBN }</p>
-				<p><strong>Publisher:</strong> { book.Publisher }</p>
-				<p><strong>Language:</strong> { book.Language }</p>
-				<p><strong>Summary:</strong> { book.Summary }</p>
-				<p><strong>Translator:</strong> { book.Translator }</p>
-			</div>
-			<div>
-				<div>
-					<a href={ fmt.Sprintf("/books/%d/addloan", book.ID) }>
-						<button type="button">Add Loan</button>
-					</a>
-				</div>
-				<a href={ fmt.Sprintf("/books/%d/edit", book.ID) }>
-					<button type="button">Edit</button>
-				</a>
-				<div>
-					<form
-						method="POST"
-						action={ fmt.Sprintf("/books/%d/delete", book.ID) }
-					>
-						<button
-							type="submit"
-							if len(book.Loans) > 0 {
-								disabled
-							}
-						>
-							Delete Book
-						</button>
-						if len(book.Loans) > 0 {
-							<small class="pico-color-red-500">this member has active loans and it can't be deleted</small>
-						}
-					</form>
-				</div>
-			</div>
-		</div>
+		<section>
+			<nav>
+				<ul>
+					<hgroup>
+						<h1>{ book.Title }</h1>
+						<p>by { book.Author.FullName }</p>
+					</hgroup>
+				</ul>
+				<ul>
+					<li><a href={ fmt.Sprintf("/books/%d/edit", book.ID) } role="button">Edit</a> </li>
+					<li><a href={ fmt.Sprintf("/books/%d/addloan", book.ID) } role="button">Add Loan</a> </li>
+					if len(book.Loans) == 0 {
+						<li>
+							@common.DeleteButton("Delete", fmt.Sprintf("/books/%d/delete", book.ID))
+						</li>
+					}
+				</ul>
+			</nav>
+		</section>
+		<hr/>
+		<section class="grid">
+			<section>
+				<h6>ISBN</h6>
+				<p>{ book.ISBN }</p>
+			</section>
+			<section>
+				<h6>Language</h6>
+				<p>{ book.Language }</p>
+			</section>
+			<section>
+				<h6>Publisher</h6>
+				<p>{ book.Publisher }</p>
+			</section>
+			<section>
+				<h6>Total Copies</h6>
+				<p>{ book.TotalCopies }</p>
+			</section>
+			<section>
+				<h6>Available Copies</h6>
+				<p>{ book.AvailableCopies }</p>
+			</section>
+			<section>
+				<h6>Categories</h6>
+				for _, c := range book.Categories {
+					<span>{ c.Name },</span>
+				}
+			</section>
+		</section>
+		<hr/>
+		<section>
+			<p>{ book.Summary }</p>
+		</section>
 	</div>
 }

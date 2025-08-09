@@ -5,6 +5,7 @@ import "lms/internal/utils"
 
 templ Layout(children templ.Component, title string, session sessions.Session) {
 	{{ staff := utils.ExtractStaffFromSession(session) }}
+	// <html dir="rtl" lang="fa">
 	<html>
 		<head>
 			<title>{ title }</title>
@@ -21,7 +22,11 @@ templ Layout(children templ.Component, title string, session sessions.Session) {
 					</ul>
 					<ul>
 						if staff != nil {
-							<li>{ staff.FullName }</li>
+							<li><a href="/">Dashboard</a></li>
+							<li><a href="/books">Books</a></li>
+							<li><a href="/members">Members</a></li>
+							<li><a href="/loans">Loans</a></li>
+							<li><a href="/staff">Staff</a></li>
 							<li>
 								<form
 									method="POST"
@@ -36,5 +41,12 @@ templ Layout(children templ.Component, title string, session sessions.Session) {
 				@children
 			</main>
 		</body>
+		<script> 
+			function toggleModal(id) {
+				let modal = document.getElementById(id);
+				if (!modal) return;
+				modal && (modal.open ? modal.close() : modal.showModal());
+			}
+		</script>
 	</html>
 }

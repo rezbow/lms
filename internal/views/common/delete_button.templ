@@ -1,0 +1,27 @@
+package common
+
+templ DeleteButton(title, action string) {
+	<div>
+		<button onclick="toggleModal('delete-dialog')">
+			{ title }
+		</button>
+		<dialog id="delete-dialog">
+			<article>
+				<header>
+					<button
+						aria-label="Close"
+						rel="prev"
+						onclick="toggleModal('delete-dialog')"
+					></button>
+					<h3>Are you sure you want to delete this item?</h3>
+				</header>
+				<p><strong>This action cannot be undone</strong></p>
+				<footer>
+					<button autofocus>
+						Confirm
+					</button>
+				</footer>
+			</article>
+		</dialog>
+	</div>
+}
