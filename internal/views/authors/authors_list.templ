@@ -1,0 +1,31 @@
+package authors 
+
+import (
+	"fmt"
+	"lms/internal/models"
+)
+
+templ AuthorList(authors []models.Author, data *models.SearchData) {
+	if len(authors) == 0 {
+		<h4>No Authors found</h4>
+	} else {
+		<table>
+			<thead data-theme="dark">
+				<tr>
+					<th scope="col"><a href={ data.SortWith("id") }>ID </a></th>
+					<th scope="col"><a href={ data.SortWith("full_name") }>Title</a></th>
+					<th scope="col"><a href={ data.SortWith("nationality") }>Nationality</a></th>
+				</tr>
+			</thead>
+			<tbody>
+				for _, a := range authors {
+					<tr>
+						<th scope="row"><a href={ fmt.Sprintf("/authors/%d", a.ID) }>{ a.ID }</a></th>
+						<td>{ a.FullName }</td>
+						<td>{ a.Nationality }</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	}
+}

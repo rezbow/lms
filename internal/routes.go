@@ -72,6 +72,7 @@ func SetupRouter(
 
 	// categories
 	categories := r.Group("/categories")
+	categories.GET("/", categoryHandler.Index)
 	categories.GET("/add", categoryHandler.AddPage)
 	categories.POST("/add", categoryHandler.Add)
 

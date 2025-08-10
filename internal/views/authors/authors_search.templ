@@ -1,0 +1,23 @@
+package authors
+
+import (
+	"lms/internal/models"
+	"lms/internal/views/common"
+)
+
+templ AuthorsSearch(authors []models.Author, data *models.SearchData) {
+	<div>
+		<form
+			role="search"
+			method="GET"
+			action="/authors/search"
+		>
+			<input name="q" type="search" placeholder="Search"/>
+			<input type="submit" value="Search"/>
+		</form>
+		<div id="results">
+			@AuthorList(authors, data)
+		</div>
+		@common.Pagination(data)
+	</div>
+}

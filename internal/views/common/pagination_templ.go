@@ -33,7 +33,7 @@ func Pagination(data *models.SearchData) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		pageInfo := fmt.Sprintf("Page %d of %d", data.Pagination.Page, data.Pagination.TotalPage)
+		pageInfo := fmt.Sprintf("Page %d of %d", data.Pagination.Page, data.Pagination.TotalPage())
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<nav><ul><li><a")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -79,7 +79,7 @@ func Pagination(data *models.SearchData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if data.Pagination.Page >= data.Pagination.TotalPage {
+		if data.Pagination.Page >= data.Pagination.TotalPage() {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, " href=\"#\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

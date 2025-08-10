@@ -83,12 +83,10 @@ func (s *SearchData) Valid(safeSort []string) bool {
 }
 
 type Pagination struct {
-	Page      int
-	Limit     int
-	Total     int64
-	TotalPage int
-	Offset    int
-	BaseUrl   string
+	Page   int
+	Limit  int
+	Total  int64
+	Offset int
 }
 
 func NewPagination(page, limit int) *Pagination {
@@ -103,5 +101,8 @@ func NewPagination(page, limit int) *Pagination {
 }
 
 func (p *Pagination) CalculateTotalPage() {
-	p.TotalPage = int(math.Ceil(float64(p.Total) / float64(p.Limit)))
+}
+
+func (p *Pagination) TotalPage() int {
+	return int(math.Ceil(float64(p.Total) / float64(p.Limit)))
 }

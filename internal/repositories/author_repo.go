@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"errors"
+	"fmt"
 	"lms/internal/models"
 	"lms/internal/views"
 	"log"
@@ -70,6 +71,27 @@ func (ar *AuthorRepo) Total() (int64, error) {
 		return 0, ErrInternal
 	}
 	return total, nil
+}
+
+func (ar *AuthorRepo) Search(data *models.SearchData) ([]models.Author, error) {
+	var authors []models.Author
+	query := ar.DB.Model(&models.Author{})
+	s := "%" + data.Term + "%"
+
+	query.Where("full_name ILIKE ?", s)
+
+	query.Count(&data.Pagination.Total)
+	if data.SortBy != "" {
+		query.Order(fmt.Sprintf("%s %s", data.SortBy, data.Dir))
+	}
+
+	result := query.Offset(data.Pagination.Offset).Limit(data.Pagination.Limit).Find(&authors)
+
+	if result.Error != nil {
+		log.Println(result.Error.Error())
+		return nil, ErrInternal
+	}
+	return authors, nil
 }
 
 func (ar *AuthorRepo) RecentAuthors(limit int) ([]models.Author, error) {

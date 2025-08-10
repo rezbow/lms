@@ -16,6 +16,16 @@ type CategoryHandler struct {
 	Validator *validator.Validate
 }
 
+func (ch *CategoryHandler) Index(ctx *gin.Context) {
+	categories, err := ch.Repo.All()
+	if err != nil {
+		serverError(ctx)
+		return
+	}
+
+	render(ctx, categoryViews.CategoryDashboard(categories), "categories")
+}
+
 func (ch *CategoryHandler) AddPage(ctx *gin.Context) {
 	render(ctx, categoryViews.CategoryForm(nil, nil, "/categories/add"), "add category")
 }
@@ -96,23 +106,25 @@ func (ch *CategoryHandler) Edit(ctx *gin.Context) {
 	endpoint := fmt.Sprintf("/categories/%s/edit", oldSlug)
 
 	var userInput struct {
-		Name string `form:"name" binding:"required"`
+		Name *string `form:"name" binding:"omitempty"`
 	}
 
 	if err := ctx.ShouldBind(&userInput); err != nil {
-		render(ctx, categoryViews.CategoryForm(&models.Category{Name: userInput.Name}, views.Errors{"name": err.Error()}, endpoint), "")
+		render(ctx, categoryViews.CategoryForm(oldCategory, views.Errors{"name": err.Error()}, endpoint), "")
 		return
 	}
 
-	slug := slugify(userInput.Name)
-
-	category := &models.Category{
-		ID:   oldCategory.ID,
-		Name: userInput.Name,
-		Slug: slug,
+	category := models.Category{
+		ID: oldCategory.ID,
 	}
 
-	err = ch.Repo.Update(category)
+	if userInput.Name != nil {
+		slug := slugify(*userInput.Name)
+		category.Name = *userInput.Name
+		category.Slug = slug
+	}
+
+	err = ch.Repo.Update(&category)
 
 	if err != nil {
 		switch err {
@@ -121,10 +133,8 @@ func (ch *CategoryHandler) Edit(ctx *gin.Context) {
 		case repositories.ErrNotFound:
 			notfound(ctx)
 		default:
-			if err := ctx.ShouldBind(&userInput); err != nil {
-				render(ctx, categoryViews.CategoryForm(&models.Category{Name: userInput.Name}, views.Errors{"name": err.Error()}, endpoint), "add category")
-				return
-			}
+			render(ctx, categoryViews.CategoryForm(oldCategory, views.Errors{"name": err.Error()}, endpoint), "add category")
+			return
 		}
 		return
 	}

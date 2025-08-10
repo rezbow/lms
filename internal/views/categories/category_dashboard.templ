@@ -1,0 +1,26 @@
+package categories
+
+import "lms/internal/models"
+import "fmt"
+
+templ CategoryDashboard(categories []models.Category) {
+	<div>
+		<section>
+			<a role="button" href="/authors/add">
+				Add a new category
+			</a>
+		</section>
+		<section>
+			<article>
+				for _ , c := range categories {
+					<strong>
+						<a href={ fmt.Sprintf("/categories/%s", c.Slug) }>
+							{ c.Name }
+						</a>
+					</strong>
+					<hr/>
+				}
+			</article>
+		</section>
+	</div>
+}

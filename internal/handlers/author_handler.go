@@ -188,3 +188,25 @@ func (ah *AuthorHandler) Edit(ctx *gin.Context) {
 
 	redirect(ctx, fmt.Sprintf("/authors/%d", author.ID))
 }
+
+func (ah *AuthorHandler) Search(ctx *gin.Context) {
+	searchData, err := readSearchData(ctx, "/authors/search")
+	if err != nil {
+		notfound(ctx)
+		return
+	}
+
+	if !searchData.Valid([]string{"id", "full_name", "nationality"}) {
+		notfound(ctx)
+		return
+	}
+
+	authors, err := ah.Repo.Search(searchData)
+	if err != nil {
+		serverError(ctx)
+		return
+	}
+
+	render(ctx, authorViews.AuthorsSearch(authors, searchData), "author search")
+
+}

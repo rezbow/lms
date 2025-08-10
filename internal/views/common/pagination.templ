@@ -5,7 +5,7 @@ import "fmt"
 import "lms/internal/models"
 
 templ Pagination(data *models.SearchData) {
-	{{ pageInfo := fmt.Sprintf("Page %d of %d", data.Pagination.Page, data.Pagination.TotalPage) }}
+	{{ pageInfo := fmt.Sprintf("Page %d of %d", data.Pagination.Page, data.Pagination.TotalPage()) }}
 	<nav>
 		<ul>
 			<li>
@@ -25,7 +25,7 @@ templ Pagination(data *models.SearchData) {
 		<ul>
 			<li>
 				<a
-					if data.Pagination.Page >= data.Pagination.TotalPage {
+					if data.Pagination.Page >= data.Pagination.TotalPage() {
 						href="#"
 					} else {
 						href={ data.NextPageUrl() }
