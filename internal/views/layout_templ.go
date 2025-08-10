@@ -62,7 +62,7 @@ func Layout(children templ.Component, title string, session sessions.Session) te
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " <li><form method=\"POST\" action=\"/logout\"><input type=\"submit\" value=\"Logout\"></form></li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " <li><a href=\"/authors\">Authors</a></li><li><form method=\"POST\" action=\"/logout\"><input type=\"submit\" value=\"Logout\"></form></li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

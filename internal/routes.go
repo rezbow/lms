@@ -91,5 +91,17 @@ func SetupRouter(
 	staff.POST("/:id/delete", staffHandler.Delete)
 	staff.GET("/:id/edit", staffHandler.EditPage)
 	staff.POST("/:id/edit", staffHandler.Edit)
+
+	// staff
+	authors := r.Group("/authors")
+	authors.GET("", authorHandler.Index)
+	authors.GET("/add", authorHandler.AddPage)
+	authors.POST("/add", authorHandler.Add)
+	authors.GET("/search", authorHandler.Search)
+
+	authors.GET("/:id", authorHandler.Get)
+	authors.POST("/:id/delete", authorHandler.Delete)
+	authors.GET("/:id/edit", authorHandler.EditPage)
+	authors.POST("/:id/edit", authorHandler.Edit)
 	return r
 }

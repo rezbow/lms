@@ -1,0 +1,78 @@
+package authors
+
+import (
+	"lms/internal/models"
+	"lms/internal/views"
+)
+
+templ AuthorsForm(data *models.AuthorFormData, errors views.Errors, action string) {
+	<div>
+		<form
+			method="POST"
+			action={ action }
+		>
+			<section class="grid">
+				<div>
+					<input
+						name="fullName"
+						placeholder="enter the full name"
+						type="text"
+						required
+						if data != nil {
+							value={ data.FullName }
+						}
+						if errors["fullName"] != "" {
+							aria-invalid="true"
+						}
+					/>
+					if errors["fullName"] != "" {
+						<small>{ errors["fullName"] }</small>
+					}
+				</div>
+				<div>
+					<input
+						name="nationality"
+						placeholder="enter the nationality"
+						type="text"
+						required
+						if data != nil {
+							value={ data.Nationality }
+						}
+						if errors["nationality"] != "" {
+							aria-invalid="true"
+						}
+					/>
+					if errors["nationality"] != "" {
+						<small>{ errors["nationality"] }</small>
+					}
+				</div>
+			</section>
+			<section class="grid">
+				<textarea
+					name="bio"
+					placeholder="a short bio..."
+					aria-label="short bio"
+					if errors["bio"] != "" {
+						aria-invalid="true"
+					}
+				>
+					if data != nil {
+						{ data.Bio }
+					}
+				</textarea>
+				if errors["bio"] != "" {
+					<small>{ errors["bio"] }</small>
+				}
+			</section>
+			<section class="grid">
+				<input type="submit"/>
+				<input type="reset"/>
+			</section>
+			<section>
+				for k,v := range errors {
+					<p>{ k } : { v }</p>
+				}
+			</section>
+		</form>
+	</div>
+}

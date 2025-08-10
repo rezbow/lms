@@ -30,6 +30,7 @@ templ Layout(children templ.Component, title string, session sessions.Session) {
 							if staff.Role == models.RoleAdmin {
 								<li><a href="/staff">Staff</a></li>
 							}
+							<li><a href="/authors">Authors</a></li>
 							<li>
 								<form
 									method="POST"

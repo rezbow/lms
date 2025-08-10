@@ -1,0 +1,45 @@
+package authors
+
+import "lms/internal/models"
+import "fmt"
+
+templ AuthorsDashboard(data *models.AuthorDashboard) {
+	<div>
+		<section class="grid">
+			<a role="button" href="/authors/add">Add a new author</a>
+			<a role="button" href="/authors/search">Search</a>
+		</section>
+		<section class="grid">
+			<article>
+				<header>Total Authors</header>
+				<strong>{ data.TotalAuthors }</strong>
+			</article>
+			<article>
+				<header>Recent Authors</header>
+				<ol>
+					for _, a := range data.RecentAuthors {
+						<li>
+							<a href={ fmt.Sprintf("/authors/%d", a.ID) }>
+								{ a.FullName }
+							</a>
+						</li>
+						<hr/>
+					}
+				</ol>
+			</article>
+			<article>
+				<header>Popular Authors</header>
+				<ol>
+					for _, a := range data.PopularAuthors {
+						<li>
+							<a href={ fmt.Sprintf("/authors/%d", a.ID) }>
+								{ a.FullName }
+							</a>
+						</li>
+						<hr/>
+					}
+				</ol>
+			</article>
+		</section>
+	</div>
+}

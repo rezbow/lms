@@ -1,0 +1,41 @@
+package authors
+
+import "lms/internal/models"
+import "lms/internal/views/common"
+import "fmt"
+
+templ AuthorInfo(author *models.Author) {
+	<div>
+		<section class="grid">
+			<nav>
+				<ul>
+					<hgroup>
+						<h1>{ author.FullName }</h1>
+					</hgroup>
+				</ul>
+				<ul>
+					<li>
+						<a
+							role="button"
+							href={ fmt.Sprintf("/authors/%d/edit", author.ID) }
+						>Edit</a>
+					</li>
+					<li>
+						@common.DeleteButton("Delete", fmt.Sprintf("/authors/%d/delete", author.ID))
+					</li>
+				</ul>
+			</nav>
+		</section>
+		<hr/>
+		<section class="grid">
+			<section>
+				<h6>Nationality</h6>
+				<strong>{ author.Nationality }</strong>
+			</section>
+		</section>
+		<hr/>
+		<section>
+			<p>{ author.Bio }</p>
+		</section>
+	</div>
+}
