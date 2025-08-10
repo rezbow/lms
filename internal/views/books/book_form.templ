@@ -9,8 +9,9 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 		<form
 			method="POST"
 			action={ endpoint }
+			enctype="multipart/form-data"
 		>
-			<div class="grid">
+			<section class="grid">
 				<input
 					id="title"
 					type="text"
@@ -75,8 +76,8 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 				if errors["authorId"] != "" {
 					<small>{ errors["authorId"] }</small>
 				}
-			</div>
-			<div class="grid">
+			</section>
+			<section class="grid">
 				<input
 					id="publisher"
 					type="text"
@@ -137,8 +138,8 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 				if errors["summary"] != "" {
 					<small>{ errors["summary"] }</small>
 				}
-			</div>
-			<div>
+			</section>
+			<section>
 				<select aria-label="Select categories..." multiple size="6" name="categories">
 					<option disabled>
 						Select categories...
@@ -147,14 +148,19 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 						<option value={ category.ID }>{ category.Name }</option>
 					}
 				</select>
-			</div>
-			<div>
-				<input type="file"/>
-			</div>
-			<div class="grid">
+			</section>
+			<section>
+				<input type="file" name="coverImage"/>
+			</section>
+			<section>
+				if book != nil {
+					<img src={ book.CoverImageUrl }/>
+				}
+			</section>
+			<section class="grid">
 				<input type="submit"/>
 				<input type="reset"/>
-			</div>
+			</section>
 		</form>
 	</div>
 }

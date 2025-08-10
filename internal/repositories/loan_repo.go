@@ -53,7 +53,9 @@ func (lp *LoanRepo) Insert(loan *models.Loan) error {
 func (lp *LoanRepo) TotalOverdueLoans() (int64, error) {
 	var total int64
 	err := lp.DB.Model(&models.Loan{}).
-		Where("due_date < CURRENT_DATE").
+		Where("due_date < CURRENT_TIMESTAMP").
+		Where("return_date IS NULL").
+		Where("status = 'borrowed'").
 		Count(&total).Error
 	if err != nil {
 		return 0, err

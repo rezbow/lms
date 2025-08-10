@@ -19,6 +19,8 @@ func SetupRouter(
 ) *gin.Engine {
 	r := gin.Default()
 
+	r.Static("/static", "./static")
+
 	//r.HTMLRender = &TemplRender{}
 
 	store := cookie.NewStore([]byte("cfaa7e52"))

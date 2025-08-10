@@ -3,12 +3,19 @@ package handlers
 import (
 	"database/sql"
 	"errors"
+	"fmt"
+	"image"
+	"image/jpeg"
+	"image/png"
 	"lms/internal/models"
 	"lms/internal/repositories"
 	"lms/internal/utils"
 	"lms/internal/views"
 	commonViews "lms/internal/views/common"
+	"log"
+	"mime/multipart"
 	"net/http"
+	"os"
 	"regexp"
 	"strconv"
 	"strings"
@@ -18,6 +25,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/nfnt/resize"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -214,4 +222,42 @@ func readSearchData(ctx *gin.Context, baseUrl string) (*models.SearchData, error
 		BaseUrl:    baseUrl,
 	}, nil
 
+}
+
+func resizeAndSaveImage(fileHeader *multipart.FileHeader) (string, error) {
+	file, err := fileHeader.Open()
+	if err != nil {
+		log.Println(err.Error())
+		return "", err
+	}
+	defer file.Close()
+
+	img, format, err := image.Decode(file)
+	if err != nil {
+		log.Println(err.Error())
+		return "", err
+	}
+
+	resizedImg := resize.Thumbnail(500, 500, img, resize.Lanczos3)
+	path := "/static/covers/" + fileHeader.Filename
+
+	out, err := os.Create("." + path)
+
+	if err != nil {
+		log.Println(err.Error())
+		return "", err
+	}
+
+	defer out.Close()
+
+	switch strings.ToLower(format) {
+	case "jpg", "jpeg":
+		err = jpeg.Encode(out, resizedImg, &jpeg.Options{Quality: 85})
+	case "png":
+		err = png.Encode(out, resizedImg)
+	default:
+		log.Println("unknown image format: " + format)
+		return "", fmt.Errorf("unknown image format: %s", format)
+	}
+	return path, nil
 }

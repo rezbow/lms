@@ -7,6 +7,8 @@ import (
 	"lms/internal/views"
 	bookViews "lms/internal/views/books"
 	loanViews "lms/internal/views/loans"
+	"log"
+	"mime/multipart"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -117,11 +119,12 @@ func (bh *BookHandler) Add(ctx *gin.Context) {
 		TotalCopies int    `form:"totalCopies" binding:"required" validate:"required,min=1"`
 		AuthorId    uint   `form:"authorId" binding:"required" validate:"required,min=1"`
 		// optional
-		Publisher  *string `form:"publisher" binding:"omitempty" validate:"omitempty,max=30"`
-		Language   *string `form:"language" binding:"omitempty" validate:"omitempty,max=30"`
-		Summary    *string `form:"summary" binding:"omitempty" validate:"omitempty,max=1000"`
-		Translator *string `form:"translator" binding:"omitempty" validate:"omitempty,max=50"`
-		Categories []uint  `form:"categories" binding:"required"`
+		Publisher  *string               `form:"publisher" binding:"omitempty" validate:"omitempty,max=30"`
+		Language   *string               `form:"language" binding:"omitempty" validate:"omitempty,max=30"`
+		Summary    *string               `form:"summary" binding:"omitempty" validate:"omitempty,max=1000"`
+		Translator *string               `form:"translator" binding:"omitempty" validate:"omitempty,max=50"`
+		Categories []uint                `form:"categories" binding:"required"`
+		CoverImage *multipart.FileHeader `form:"coverImage" binding:"required"`
 	}
 
 	if err := ctx.ShouldBind(&bookForm); err != nil {
@@ -134,12 +137,19 @@ func (bh *BookHandler) Add(ctx *gin.Context) {
 		return
 	}
 
+	url, err := resizeAndSaveImage(bookForm.CoverImage)
+	if err != nil {
+		serverError(ctx)
+		return
+	}
+
 	book := models.Book{
 		Title:           bookForm.Title,
 		ISBN:            bookForm.ISBN,
 		TotalCopies:     bookForm.TotalCopies,
 		AvailableCopies: bookForm.TotalCopies,
 		AuthorId:        bookForm.AuthorId,
+		CoverImageUrl:   url,
 	}
 
 	if bookForm.Publisher != nil {
@@ -174,7 +184,7 @@ func (bh *BookHandler) Add(ctx *gin.Context) {
 		return
 	}
 
-	err := LogStaffActivity(
+	err = LogStaffActivity(
 		bh.LogRepo,
 		ctx,
 		models.ActivityTypeAddBook,
@@ -272,10 +282,11 @@ func (bh *BookHandler) Update(ctx *gin.Context) {
 		TotalCopies *int    `form:"totalCopies" binding:"omitempty" validate:"omitempty,min=1"`
 		AuthorId    *uint   `form:"authorId" binding:"omitempty" validate:"omitempty,min=1"`
 		// optional
-		Publisher  *string `form:"publisher" binding:"omitempty" validate:"omitempty,max=30"`
-		Language   *string `form:"language" binding:"omitempty" validate:"omitempty,max=30"`
-		Summary    *string `form:"summary" binding:"omitempty" validate:"omitempty,max=1000"`
-		Translator *string `form:"translator" binding:"omitempty" validate:"omitempty,max=50"`
+		Publisher  *string               `form:"publisher" binding:"omitempty" validate:"omitempty,max=30"`
+		Language   *string               `form:"language" binding:"omitempty" validate:"omitempty,max=30"`
+		Summary    *string               `form:"summary" binding:"omitempty" validate:"omitempty,max=1000"`
+		Translator *string               `form:"translator" binding:"omitempty" validate:"omitempty,max=50"`
+		CoverImage *multipart.FileHeader `form:"coverImage" binding:"omitempty"`
 	}
 
 	book, err := bh.BookRepo.GetById(bookId)
@@ -298,6 +309,16 @@ func (bh *BookHandler) Update(ctx *gin.Context) {
 	if err := bh.Validator.Struct(&bookUpdateForm); err != nil {
 		render(ctx, bookViews.BookForm(book, parseValidationErrors(err), endpoint, nil), book.Title)
 		return
+	}
+
+	if bookUpdateForm.CoverImage != nil {
+		log.Println("user updading cover image")
+		url, err := resizeAndSaveImage(bookUpdateForm.CoverImage)
+		if err != nil {
+			serverError(ctx)
+			return
+		}
+		book.CoverImageUrl = url
 	}
 
 	if bookUpdateForm.Title != nil {

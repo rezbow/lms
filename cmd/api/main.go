@@ -12,6 +12,7 @@ import (
 )
 
 func main() {
+
 	dsn := "host=localhost user=admin password=cfaa7e52 dbname=lms_db port=5432 sslmode=disable TimeZone=UTC"
 	validate := validator.New()
 	db := database.SetupDataBase(dsn)

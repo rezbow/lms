@@ -57,7 +57,8 @@ templ Book(book *models.Book) {
 			</section>
 		</section>
 		<hr/>
-		<section>
+		<section class="grid">
+			<img src={ book.CoverImageUrl }/>
 			<p>{ book.Summary }</p>
 		</section>
 	</div>
