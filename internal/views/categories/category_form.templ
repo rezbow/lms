@@ -9,9 +9,9 @@ templ CategoryForm(category *models.Category, errors views.Errors, endpoint stri
 			method="POST"
 			action={ endpoint }
 		>
-			<div>
+			<section>
 				<input
-					placeholder="category name"
+					placeholder="نام"
 					id="name"
 					name="name"
 					type="text"
@@ -25,14 +25,11 @@ templ CategoryForm(category *models.Category, errors views.Errors, endpoint stri
 				if errors != nil && errors["name"] != "" {
 					<small>{ errors["name"] }</small>
 				}
-			</div>
-			<button type="submit">
-				if category != nil && category.ID  > 0 {
-					Edit Category
-				} else {
-					Add Category
-				}
-			</button>
+			</section>
+			<section class="grid">
+				<input type="submit" value="ثبت"/>
+				<input type="reset" value="بازنشانی"/>
+			</section>
 		</form>
 	</div>
 }

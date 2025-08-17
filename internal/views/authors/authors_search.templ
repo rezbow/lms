@@ -12,8 +12,8 @@ templ AuthorsSearch(authors []models.Author, data *models.SearchData) {
 			method="GET"
 			action="/authors/search"
 		>
-			<input name="q" type="search" placeholder="Search"/>
-			<input type="submit" value="Search"/>
+			<input name="q" type="search" placeholder="جستوجو"/>
+			<input type="submit" value="جستوجو"/>
 		</form>
 		<div id="results">
 			@AuthorList(authors, data)

@@ -15,7 +15,7 @@ templ AuthorsForm(data *models.AuthorFormData, errors views.Errors, action strin
 				<div>
 					<input
 						name="fullName"
-						placeholder="enter the full name"
+						placeholder="نام کامل"
 						type="text"
 						required
 						if data != nil {
@@ -32,7 +32,7 @@ templ AuthorsForm(data *models.AuthorFormData, errors views.Errors, action strin
 				<div>
 					<input
 						name="nationality"
-						placeholder="enter the nationality"
+						placeholder="ملیت"
 						type="text"
 						required
 						if data != nil {
@@ -50,7 +50,7 @@ templ AuthorsForm(data *models.AuthorFormData, errors views.Errors, action strin
 			<section class="grid">
 				<textarea
 					name="bio"
-					placeholder="a short bio..."
+					placeholder="بیوگرافی کوتاه"
 					aria-label="short bio"
 					if errors["bio"] != "" {
 						aria-invalid="true"
@@ -65,8 +65,8 @@ templ AuthorsForm(data *models.AuthorFormData, errors views.Errors, action strin
 				}
 			</section>
 			<section class="grid">
-				<input type="submit"/>
-				<input type="reset"/>
+				<input type="submit" value="ثبت"/>
+				<input type="reset" value="بازنشانی"/>
 			</section>
 			<section>
 				for k,v := range errors {

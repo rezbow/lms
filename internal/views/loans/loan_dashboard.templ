@@ -9,31 +9,31 @@ import (
 templ LoanDashboard(data *models.LoanDashboard) {
 	<div>
 		<section class="grid">
-			<a role="button" href="/loans/add">Add a new Loan</a>
-			<a role="button" href="/loans/search">Search</a>
+			<a role="button" href="/loans/add">امانت جدید</a>
+			<a role="button" href="/loans/search">جستوجو</a>
 		</section>
 		<section class="grid">
 			<article>
 				<header>
-					<h6>Total Loans</h6>
+					<h6>تعداد کل امانت‌ها</h6>
 				</header>
 				<strong>{ data.TotalLoans }</strong>
 			</article>
 			<article>
 				<header>
-					<h6>Total Active Loans</h6>
+					<h6>تعداد امانت فعال</h6>
 				</header>
 				<strong>{ data.TotalActiveLoans }</strong>
 			</article>
 			<article>
 				<header>
-					<h6>Total Retunred Loans</h6>
+					<h6>تعداد کل امانت‌های بازگشته شده</h6>
 				</header>
 				<strong>{ data.TotalReturnedLoans }</strong>
 			</article>
 			<article>
 				<header>
-					<h6>Total Overdue Loans</h6>
+					<h6>تعداد کل امانت‌‌های معوق</h6>
 				</header>
 				<strong>{ data.TotalOverdueLoans }</strong>
 			</article>
@@ -41,13 +41,13 @@ templ LoanDashboard(data *models.LoanDashboard) {
 		<section class="grid">
 			<article>
 				<header>
-					<h6>Recent Loans</h6>
+					<h6>امانت‌های اخیر</h6>
 				</header>
 				<ul>
 					for _, l := range data.RecentLoans {
 						<li>
 							<a href={ fmt.Sprintf("/loans/%d", l.ID) }>
-								'{ l.Book.Title }' borrowed by '{ l.Member.FullName }'
+								'{ l.Book.Title }' توسط '{ l.Member.FullName }' امانت گرفته شد.
 							</a>
 						</li>
 					}
@@ -55,13 +55,13 @@ templ LoanDashboard(data *models.LoanDashboard) {
 			</article>
 			<article>
 				<header>
-					<h6>Upcoming Loans</h6>
+					<h6>امانت‌های نزدیک بازگشت</h6>
 				</header>
 				<ul>
 					for _, l := range data.UpcomingLoan {
 						<li>
 							<a href={ fmt.Sprintf("/loans/%d", l.ID) }>
-								'{ l.Book.Title }' borrowed by '{ l.Member.FullName }'
+								#{ l.ID }
 							</a>
 							is due in { humanize.Time(l.DueDate) }
 						</li>
@@ -70,13 +70,13 @@ templ LoanDashboard(data *models.LoanDashboard) {
 			</article>
 			<article>
 				<header>
-					<h6>Overdue Loans</h6>
+					<h6>امانت‌های معوق</h6>
 				</header>
 				<ul>
 					for _, l := range data.OverdueLoans {
 						<li>
 							<a href={ fmt.Sprintf("/loans/%d", l.ID) }>
-								'{ l.Book.Title }' borrowed by '{ l.Member.FullName }'
+								#{ l.ID }
 							</a>
 							was due at { humanize.Time(l.DueDate) }
 						</li>

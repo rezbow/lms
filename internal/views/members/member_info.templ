@@ -14,12 +14,12 @@ templ MemberInfo(member *models.Member) {
 				<ul>
 					<li>
 						<a role="button" href={ fmt.Sprintf("/members/%d/addloan", member.ID) }>
-							Add Loan
+							امانت جدید
 						</a>
 					</li>
 					<li>
 						<a role="button" href={ fmt.Sprintf("/members/%d/edit", member.ID) }>
-							Edit Member
+							ویرایش
 						</a>
 					</li>
 					<li>
@@ -31,23 +31,23 @@ templ MemberInfo(member *models.Member) {
 		<hr/>
 		<section class="grid">
 			<section>
-				<h6>Phone Number</h6>
+				<h6>شماره تلفن</h6>
 				<p>{ member.PhoneNumber }</p>
 			</section>
 			<section>
-				<h6>Email</h6>
+				<h6>ایمیل</h6>
 				<p>{ member.Email }</p>
 			</section>
 			<section>
-				<h6>National Id</h6>
+				<h6>کد ملی</h6>
 				<p>{ member.NationalId }</p>
 			</section>
 			<section>
-				<h6>Status</h6>
+				<h6>وضعیت</h6>
 				<p>{ member.Status }</p>
 			</section>
 			<section>
-				<h6>Join Date</h6>
+				<h6>تاریخ عضویت</h6>
 				<p>{ member.JoinedAt.Format("2006-01-02") } </p>
 			</section>
 		</section>

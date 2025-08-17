@@ -45,7 +45,7 @@ func MemberForm(member *models.Member, errors views.Errors, endpoint string) tem
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><div class=\"grid\"><input id=\"fullName\" name=\"fullName\" type=\"text\" required placeholder=\"full name\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><div class=\"grid\"><input id=\"fullName\" name=\"fullName\" type=\"text\" required placeholder=\"نام کامل\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -97,7 +97,7 @@ func MemberForm(member *models.Member, errors views.Errors, endpoint string) tem
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<input id=\"phoneNumber\" name=\"phoneNumber\" type=\"text\" required placeholder=\"phone number\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<input id=\"phoneNumber\" name=\"phoneNumber\" type=\"text\" required placeholder=\"شماره همراه\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -149,7 +149,7 @@ func MemberForm(member *models.Member, errors views.Errors, endpoint string) tem
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div><div class=\"grid\"><input id=\"nationalId\" name=\"nationalId\" type=\"text\" required placeholder=\"national id\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div><div class=\"grid\"><input id=\"nationalId\" name=\"nationalId\" type=\"text\" required placeholder=\"کد ملی\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -201,7 +201,7 @@ func MemberForm(member *models.Member, errors views.Errors, endpoint string) tem
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<input id=\"email\" name=\"email\" type=\"email\" required placeholder=\"email\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<input id=\"email\" name=\"email\" type=\"email\" required placeholder=\"ایمیل\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -258,7 +258,7 @@ func MemberForm(member *models.Member, errors views.Errors, endpoint string) tem
 			return templ_7745c5c3_Err
 		}
 		if member != nil && member.ID > 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<div><fieldset><legend>Member Status</legend> <label><input type=\"radio\" name=\"status\" value=\"active\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "<div><fieldset><legend>وضعیت عضو\t</legend> <label><input type=\"radio\" name=\"status\" value=\"active\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -268,7 +268,7 @@ func MemberForm(member *models.Member, errors views.Errors, endpoint string) tem
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "> Active</label> <label><input type=\"radio\" name=\"status\" value=\"suspended\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "> فعال\t</label> <label><input type=\"radio\" name=\"status\" value=\"suspended\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -278,7 +278,7 @@ func MemberForm(member *models.Member, errors views.Errors, endpoint string) tem
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "> Suspended</label></fieldset>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "> معلق\t</label></fieldset>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -306,7 +306,7 @@ func MemberForm(member *models.Member, errors views.Errors, endpoint string) tem
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</div><div class=\"grid\"><input type=\"submit\"> <input type=\"reset\"></div></form><div id=\"results\"></div></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</div><div class=\"grid\"><input type=\"submit\" value=\"ثبت\"> <input type=\"reset\" value=\"بازنشانی\"></div></form><div id=\"results\"></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

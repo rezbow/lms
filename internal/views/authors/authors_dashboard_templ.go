@@ -32,7 +32,7 @@ func AuthorsDashboard(data *models.AuthorDashboard) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><section class=\"grid\"><a role=\"button\" href=\"/authors/add\">Add a new author</a> <a role=\"button\" href=\"/authors/search\">Search</a></section><section class=\"grid\"><article><header>Total Authors</header><strong>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><section class=\"grid\"><a role=\"button\" href=\"/authors/add\">نویسنده جدید</a> <a role=\"button\" href=\"/authors/search\">جستوجو</a></section><section class=\"grid\"><article><header>تعداد نویسنده\u200cها</header><strong>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -45,7 +45,7 @@ func AuthorsDashboard(data *models.AuthorDashboard) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</strong></article><article><header>Recent Authors</header><ol>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</strong></article><article><header>اخرین نویسنده\u200cها</header><ol>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -81,7 +81,7 @@ func AuthorsDashboard(data *models.AuthorDashboard) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</ol></article><article><header>Popular Authors</header><ol>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</ol></article><article><header>نویسنده\u200cهای محبوب</header><ol>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

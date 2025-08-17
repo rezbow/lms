@@ -17,7 +17,7 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 					type="text"
 					name="title"
 					required
-					placeholder="title"
+					placeholder="عنوان"
 					if errors["title"] != "" {
 						aria-invalid="true"
 					}
@@ -32,7 +32,7 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 					id="isbn"
 					type="text"
 					name="isbn"
-					placeholder="book's isbn"
+					placeholder="شابک"
 					required
 					if errors["isbn"] != "" {
 						aria-invalid="true"
@@ -48,7 +48,7 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 					id="totalCopies"
 					type="number"
 					name="totalCopies"
-					placeholder="book's total copies"
+					placeholder="تعداد نسخه‌ها"
 					required
 					if errors["totalCopies"] != "" {
 						aria-invalid="true"
@@ -64,7 +64,7 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 					id="authorId"
 					type="number"
 					name="authorId"
-					placeholder="author id"
+					placeholder="ایدی نویسنده"
 					required
 					if errors["authorId"] != "" {
 						aria-invalid="true"
@@ -82,7 +82,7 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 					id="publisher"
 					type="text"
 					name="publisher"
-					placeholder="publisher name"
+					placeholder="ناشر"
 					if errors["publisher"] != "" {
 						aria-invalid="true"
 					}
@@ -97,7 +97,7 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 					id="language"
 					type="text"
 					name="language"
-					placeholder="book's language"
+					placeholder="زبان کتاب"
 					if errors["language"] != "" {
 						aria-invalid="true"
 					}
@@ -112,7 +112,7 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 					id="translator"
 					type="text"
 					name="translator"
-					placeholder="translator name"
+					placeholder="نام مترجم"
 					if errors["translator"] != "" {
 						aria-invalid="true"
 					}
@@ -126,7 +126,7 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 				<textarea
 					id="summary"
 					name="summary"
-					placeholder="book's summary"
+					placeholder="خلاصه کتاب"
 					if errors["summary"] != "" {
 						aria-invalid="true"
 					}
@@ -142,7 +142,7 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 			<section>
 				<select aria-label="Select categories..." multiple size="6" name="categories">
 					<option disabled>
-						Select categories...
+						انتخاب دسته‌بندی‌ها
 					</option>
 					for _, category := range categories {
 						<option value={ category.ID }>{ category.Name }</option>
@@ -150,6 +150,9 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 				</select>
 			</section>
 			<section>
+				<label for="coverImage">
+					جلد کتاب
+				</label>
 				<input type="file" name="coverImage"/>
 			</section>
 			<section>
@@ -158,8 +161,8 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 				}
 			</section>
 			<section class="grid">
-				<input type="submit"/>
-				<input type="reset"/>
+				<input type="submit" value="ثبت"/>
+				<input type="reset" value="بازنشانی"/>
 			</section>
 		</form>
 	</div>

@@ -6,13 +6,13 @@ import "fmt"
 templ BookDashboard(data *models.BookDashboard) {
 	<div>
 		<section class="grid">
-			<a role="button" href="/books/add">Add a new book</a>
-			<a role="button" href="/books/search">Search</a>
+			<a role="button" href="/books/add">کتاب جدید</a>
+			<a role="button" href="/books/search">جستوجو</a>
 		</section>
 		<div class="grid">
 			<article>
 				<header>
-					Total Books
+					تعداد کل کتاب‌ها
 				</header>
 				<strong>
 					{ data.TotalBooks }
@@ -20,7 +20,7 @@ templ BookDashboard(data *models.BookDashboard) {
 			</article>
 			<article>
 				<header>
-					Total Copies 
+					تعداد کل نسخه‌ها
 				</header>
 				<strong>
 					{ data.TotalCopies }
@@ -28,7 +28,7 @@ templ BookDashboard(data *models.BookDashboard) {
 			</article>
 			<article>
 				<header>
-					Total Available Copies 
+					تعداد نسخه‌های موجود
 				</header>
 				<strong>
 					{ data.TotalAvailableCopies }
@@ -38,7 +38,7 @@ templ BookDashboard(data *models.BookDashboard) {
 		<div class="grid">
 			<article>
 				<header>
-					Recent Books
+					کتاب‌های اخیر
 				</header>
 				<ul>
 					for _, b := range data.RecentBooks {
@@ -50,7 +50,7 @@ templ BookDashboard(data *models.BookDashboard) {
 			</article>
 			<article>
 				<header>
-					Popular Books 
+					کتاب‌های محبوب
 				</header>
 				<ul>
 					for _, b := range data.PopularBooks {
@@ -62,7 +62,7 @@ templ BookDashboard(data *models.BookDashboard) {
 			</article>
 			<article>
 				<header>
-					Low Stock Books
+					کتاب‌های کم‌موجود
 				</header>
 				<ul>
 					for _, b := range data.LowStockBooks {

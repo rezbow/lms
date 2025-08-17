@@ -5,7 +5,7 @@ import "fmt"
 import "lms/internal/models"
 
 templ Pagination(data *models.SearchData) {
-	{{ pageInfo := fmt.Sprintf("Page %d of %d", data.Pagination.Page, data.Pagination.TotalPage()) }}
+	{{ pageInfo := fmt.Sprintf("صفحه %d از %d", data.Pagination.Page, data.Pagination.TotalPage()) }}
 	<nav>
 		<ul>
 			<li>
@@ -16,7 +16,7 @@ templ Pagination(data *models.SearchData) {
 						href={ data.PrevPageUrl() }
 					}
 					class="secondary"
-				>Previous</a>
+				>قبلی</a>
 			</li>
 		</ul>
 		<ul>
@@ -31,7 +31,7 @@ templ Pagination(data *models.SearchData) {
 						href={ data.NextPageUrl() }
 					}
 					class="secondary"
-				>Next</a>
+				>بعدی</a>
 			</li>
 		</ul>
 	</nav>

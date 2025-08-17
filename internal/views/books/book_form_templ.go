@@ -46,7 +46,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" enctype=\"multipart/form-data\"><section class=\"grid\"><input id=\"title\" type=\"text\" name=\"title\" required placeholder=\"title\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" enctype=\"multipart/form-data\"><section class=\"grid\"><input id=\"title\" type=\"text\" name=\"title\" required placeholder=\"عنوان\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -98,7 +98,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<input id=\"isbn\" type=\"text\" name=\"isbn\" placeholder=\"book's isbn\" required")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<input id=\"isbn\" type=\"text\" name=\"isbn\" placeholder=\"شابک\" required")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -150,7 +150,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<input id=\"totalCopies\" type=\"number\" name=\"totalCopies\" placeholder=\"book's total copies\" required")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<input id=\"totalCopies\" type=\"number\" name=\"totalCopies\" placeholder=\"تعداد نسخه\u200cها\" required")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -202,7 +202,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<input id=\"authorId\" type=\"number\" name=\"authorId\" placeholder=\"author id\" required")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "<input id=\"authorId\" type=\"number\" name=\"authorId\" placeholder=\"ایدی نویسنده\" required")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -254,7 +254,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</section><section class=\"grid\"><input id=\"publisher\" type=\"text\" name=\"publisher\" placeholder=\"publisher name\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</section><section class=\"grid\"><input id=\"publisher\" type=\"text\" name=\"publisher\" placeholder=\"ناشر\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -306,7 +306,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<input id=\"language\" type=\"text\" name=\"language\" placeholder=\"book's language\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<input id=\"language\" type=\"text\" name=\"language\" placeholder=\"زبان کتاب\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -358,7 +358,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<input id=\"translator\" type=\"text\" name=\"translator\" placeholder=\"translator name\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<input id=\"translator\" type=\"text\" name=\"translator\" placeholder=\"نام مترجم\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -410,7 +410,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<textarea id=\"summary\" name=\"summary\" placeholder=\"book's summary\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "<textarea id=\"summary\" name=\"summary\" placeholder=\"خلاصه کتاب\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -458,7 +458,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</section><section><select aria-label=\"Select categories...\" multiple size=\"6\" name=\"categories\"><option disabled>Select categories...</option> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</section><section><select aria-label=\"Select categories...\" multiple size=\"6\" name=\"categories\"><option disabled>انتخاب دسته\u200cبندی\u200cها</option> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -494,7 +494,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "</select></section><section><input type=\"file\" name=\"coverImage\"></section><section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "</select></section><section><label for=\"coverImage\">جلد کتاب</label> <input type=\"file\" name=\"coverImage\"></section><section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -506,7 +506,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 			var templ_7745c5c3_Var21 string
 			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(book.CoverImageUrl)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/book_form.templ`, Line: 157, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `books/book_form.templ`, Line: 160, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 			if templ_7745c5c3_Err != nil {
@@ -517,7 +517,7 @@ func BookForm(book *models.Book, errors views.Errors, endpoint string, categorie
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "</section><section class=\"grid\"><input type=\"submit\"> <input type=\"reset\"></section></form></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "</section><section class=\"grid\"><input type=\"submit\" value=\"ثبت\"> <input type=\"reset\" value=\"بازنشانی\"></section></form></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

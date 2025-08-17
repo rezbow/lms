@@ -15,7 +15,7 @@ templ LoanForm(loan *models.Loan, errors views.Errors, endpoint string) {
 					name="bookId"
 					type="number"
 					required
-					placeholder="book id"
+					placeholder="ایدی کتاب"
 					if errors["bookId"] != "" {
 						aria-invalid="true"
 					}
@@ -31,7 +31,7 @@ templ LoanForm(loan *models.Loan, errors views.Errors, endpoint string) {
 					name="memberId"
 					type="number"
 					required
-					placeholder="member id"
+					placeholder="ایدی عضو"
 					if errors["memberId"] != "" {
 						aria-invalid="true"
 					}
@@ -45,13 +45,12 @@ templ LoanForm(loan *models.Loan, errors views.Errors, endpoint string) {
 			</div>
 			<div class="grid">
 				<div>
-					<label for="borrowDate">Borrow Date</label>
+					<label for="borrowDate">تاریخ امانت</label>
 					<input
 						id="borrowDate"
 						name="borrowDate"
 						type="date"
 						required
-						placeholder="borrow date"
 						if errors["borrowDate"] != "" {
 							aria-invalid="true"
 						}
@@ -64,13 +63,12 @@ templ LoanForm(loan *models.Loan, errors views.Errors, endpoint string) {
 					}
 				</div>
 				<div>
-					<label for="dueDate">Due Date</label>
+					<label for="dueDate">تاریخ پس‌دادن</label>
 					<input
 						id="dueDate"
 						name="dueDate"
 						type="date"
 						required
-						placeholder="borrow date"
 						if errors["dueDate"] != "" {
 							aria-invalid="true"
 						}
@@ -84,8 +82,8 @@ templ LoanForm(loan *models.Loan, errors views.Errors, endpoint string) {
 				</div>
 			</div>
 			<div class="grid">
-				<input type="submit"/>
-				<input type="reset"/>
+				<input type="submit" value="ثبت"/>
+				<input type="reset" value="بازنشانی"/>
 			</div>
 		</form>
 	</div>

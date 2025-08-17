@@ -37,17 +37,17 @@ func Dashboard(data *models.Dashboard, session sessions.Session) templ.Component
 		}
 		ctx = templ.ClearChildren(ctx)
 		staff := utils.ExtractStaffFromSession(session)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><section class=\"grid\"><a role=\"button\" href=\"/books/add\">Add New Book</a> <a role=\"button\" href=\"/loans/add\">Create New Loan</a> <a role=\"button\" href=\"/members/add\">Register Member</a> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><section class=\"grid\"><a role=\"button\" href=\"/books/add\">کتاب جدید</a> <a role=\"button\" href=\"/loans/add\">امانت جدید</a> <a role=\"button\" href=\"/members/add\">عضو جدید</a> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if staff.Role == models.RoleAdmin {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a role=\"button\" href=\"/staff/add\">Add New Staff</a>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a role=\"button\" href=\"/staff/add\">کتابدار جدید</a>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</section><section class=\"grid\"><article><header><h4>Total Books</h4></header><p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</section><section class=\"grid\"><article><header><h4>تعداد کل کتاب\u200cها</h4></header><p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -60,7 +60,7 @@ func Dashboard(data *models.Dashboard, session sessions.Session) templ.Component
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p></article><article><header><h4>Total Members</h4></header><p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p></article><article><header><h4>تعداد کل اعضا</h4></header><p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -73,7 +73,7 @@ func Dashboard(data *models.Dashboard, session sessions.Session) templ.Component
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</p></article><article><header><h4>Total Active Loans</h4></header><strong>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</p></article><article><header><h4>تعداد کل امانت\u200cها فعال</h4></header><strong>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -86,7 +86,7 @@ func Dashboard(data *models.Dashboard, session sessions.Session) templ.Component
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</strong></article><article><header><h4>Total Overdue Loans</h4></header><strong>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</strong></article><article><header><h4>تعداد کل امانت\u200cهای معوق</h4></header><strong>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -99,7 +99,7 @@ func Dashboard(data *models.Dashboard, session sessions.Session) templ.Component
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</strong></article></section><section class=\"grid\"><article><header><h4>Popular Books</h4></header>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</strong></article></section><section class=\"grid\"><article><header><h4>کتاب\u200cهای محبوب</h4></header>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -135,7 +135,7 @@ func Dashboard(data *models.Dashboard, session sessions.Session) templ.Component
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</article><article><header><h4>Popular Categories</h4></header>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</article><article><header><h4>دسته\u200cبندی\u200cهای محبوب</h4></header>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -171,7 +171,7 @@ func Dashboard(data *models.Dashboard, session sessions.Session) templ.Component
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</article><article><header><h4>Active Members</h4></header>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 15, "</article><article><header><h4>اعضای فعال</h4></header>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -207,7 +207,7 @@ func Dashboard(data *models.Dashboard, session sessions.Session) templ.Component
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</article></section><section class=\"grid\"><article><header><h4>Upcoming Loans</h4></header>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "</article></section><section class=\"grid\"><article><header><h4>امانت\u200cهای نزدیک بازگشت</h4></header>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -256,7 +256,7 @@ func Dashboard(data *models.Dashboard, session sessions.Session) templ.Component
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</article><article><header><h4>Overdue Loans</h4></header></article></section><section><article><header><h4>Recent Activities</h4></header><table class=\"striped\"><thead><tr><th scope=\"col\">Activity ID</th><th scope=\"col\">Activity Type</th><th scope=\"col\">Actor ID</th><th scope=\"col\">Actor Type</th><th scope=\"col\">Description</th><th scope=\"col\">Entity ID</th><th scope=\"col\">Entity Type</th><th scope=\"col\">TIMESTAMP</th></tr></thead> <tbody>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</article><article><header><h4>امانت\u200cهای معوق</h4></header></article></section><section><article><header><h4>فعالیت\u200cهای اخیر در سیستم</h4></header><table class=\"striped\"><thead><tr><th scope=\"col\">ایدی فعالیت</th><th scope=\"col\">نوع فعالیت</th><th scope=\"col\">ایدی عامل</th><th scope=\"col\">نوع عامل</th><th scope=\"col\">شرح</th><th scope=\"col\">ایدی موجودیت</th><th scope=\"col\">نوع موجودیت</th><th scope=\"col\">زمان انجام فعالیت</th></tr></thead> <tbody>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

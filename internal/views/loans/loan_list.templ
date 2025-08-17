@@ -13,37 +13,37 @@ templ LoanList(loans []models.Loan, data *models.SearchData) {
 				<tr>
 					<th scope="col">
 						<a href={ data.SortWith("id") }>
-							ID
+							ایدی
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("memberName") }>
-							Member Name
+							نام عضو	
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("bookTitle") }>
-							Book Title
+							عنوان کتاب	
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("borrow_date") }>
-							Borrow Date
+							تاریخ امانت	
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("due_date") }>
-							Due Date
+							تاریخ پس‌دادن 
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("status") }>
-							Status	
+							وضعیت	
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("return_date") }>
-							Return Date
+							تاریخ بازگشت	
 						</a>
 					</th>
 				</tr>
@@ -52,8 +52,8 @@ templ LoanList(loans []models.Loan, data *models.SearchData) {
 				for _, l := range loans {
 					<tr>
 						<th scope="row"><a href={ fmt.Sprintf("/loans/%d", l.ID) }>{ l.ID }</a></th>
-						<td>{ l.Member.FullName }</td>
-						<td>{ l.Book.Title }</td>
+						<td><a href={ fmt.Sprintf("/members/%d", l.MemberId) }>{ l.Member.FullName } </a></td>
+						<td><a href={ fmt.Sprintf("/books/%d", l.BookId) }>{ l.Book.Title } </a></td>
 						<td>{ l.BorrowDate.Format(time.RFC3339) }</td>
 						<td>{ l.DueDate.Format(time.RFC3339) }</td>
 						<td>{ l.Status }</td>

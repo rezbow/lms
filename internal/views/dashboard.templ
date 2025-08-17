@@ -11,35 +11,35 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 	{{ staff := utils.ExtractStaffFromSession(session) }}
 	<div>
 		<section class="grid">
-			<a role="button" href="/books/add">Add New Book</a>
-			<a role="button" href="/loans/add">Create New Loan</a>
-			<a role="button" href="/members/add">Register Member</a>
+			<a role="button" href="/books/add">کتاب جدید</a>
+			<a role="button" href="/loans/add">امانت جدید</a>
+			<a role="button" href="/members/add">عضو جدید</a>
 			if staff.Role == models.RoleAdmin {
-				<a role="button" href="/staff/add">Add New Staff</a>
+				<a role="button" href="/staff/add">کتابدار جدید</a>
 			}
 		</section>
 		<section class="grid">
 			<article>
 				<header>
-					<h4>Total Books</h4>
+					<h4>تعداد کل کتاب‌ها</h4>
 				</header>
 				<p>{ data.TotalBooks }</p>
 			</article>
 			<article>
 				<header>
-					<h4>Total Members</h4>
+					<h4>تعداد کل اعضا</h4>
 				</header>
 				<p>{ data.TotalMembers }</p>
 			</article>
 			<article>
 				<header>
-					<h4>Total Active Loans</h4>
+					<h4>تعداد کل امانت‌ها فعال</h4>
 				</header>
 				<strong>{ data.TotalActiveLoans }</strong>
 			</article>
 			<article>
 				<header>
-					<h4>Total Overdue Loans</h4>
+					<h4>تعداد کل امانت‌های معوق</h4>
 				</header>
 				<strong>{ data.TotalOverdueLoans }</strong>
 			</article>
@@ -47,7 +47,7 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 		<section class="grid">
 			<article>
 				<header>
-					<h4>Popular Books</h4>
+					<h4>کتاب‌های محبوب</h4>
 				</header>
 				for _, book := range data.PopularBooks {
 					<a href={ fmt.Sprintf("/books/%d", book.ID) }><strong>{ book.Title }</strong></a>
@@ -56,7 +56,7 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 			</article>
 			<article>
 				<header>
-					<h4>Popular Categories</h4>
+					<h4>دسته‌بندی‌های محبوب</h4>
 				</header>
 				for _, category := range data.PopularCategory {
 					<a href={ fmt.Sprintf("/categories/%s", category.Slug) }><strong>{ category.Name }</strong></a>
@@ -65,7 +65,7 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 			</article>
 			<article>
 				<header>
-					<h4>Active Members</h4>
+					<h4>اعضای فعال</h4>
 				</header>
 				for _, member := range data.ActiveMembers {
 					<a href={ fmt.Sprintf("/members/%d", member.ID) }><strong>{ member.FullName }</strong></a>
@@ -76,7 +76,7 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 		<section class="grid">
 			<article>
 				<header>
-					<h4>Upcoming Loans</h4>
+					<h4>امانت‌های نزدیک بازگشت</h4>
 				</header>
 				for _, loan := range data.UpcomingLoans {
 					<a href={ fmt.Sprintf("/loans/%d", loan.ID) }><strong>{ loan.BookTitle }/{ loan.MemberName }</strong></a>
@@ -85,26 +85,26 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 			</article>
 			<article>
 				<header>
-					<h4>Overdue Loans</h4>
+					<h4>امانت‌های معوق</h4>
 				</header>
 			</article>
 		</section>
 		<section>
 			<article>
 				<header>
-					<h4>Recent Activities</h4>
+					<h4>فعالیت‌های اخیر در سیستم</h4>
 				</header>
 				<table class="striped">
 					<thead>
 						<tr>
-							<th scope="col">Activity ID</th>
-							<th scope="col">Activity Type</th>
-							<th scope="col">Actor ID</th>
-							<th scope="col">Actor Type</th>
-							<th scope="col">Description</th>
-							<th scope="col">Entity ID</th>
-							<th scope="col">Entity Type</th>
-							<th scope="col">TIMESTAMP</th>
+							<th scope="col">ایدی فعالیت</th>
+							<th scope="col">نوع فعالیت</th>
+							<th scope="col">ایدی عامل</th>
+							<th scope="col">نوع عامل</th>
+							<th scope="col">شرح</th>
+							<th scope="col">ایدی موجودیت</th>
+							<th scope="col">نوع موجودیت</th>
+							<th scope="col">زمان انجام فعالیت</th>
 						</tr>
 					</thead>
 					<tbody>

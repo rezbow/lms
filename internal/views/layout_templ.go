@@ -34,35 +34,35 @@ func Layout(children templ.Component, title string, session sessions.Session) te
 		}
 		ctx = templ.ClearChildren(ctx)
 		staff := utils.ExtractStaffFromSession(session)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<html><head><title>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<html dir=\"rtl\" lang=\"fa\"><head><title>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layout.templ`, Line: 12, Col: 17}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `layout.templ`, Line: 11, Col: 17}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><link rel=\"stylesheet\" href=\"https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css\"></head><body class=\"container\"><header><nav><ul><li><strong>Library Management System</strong></li></ul><ul>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><link rel=\"preconnect\" href=\"https://fonts.googleapis.com\"><link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin><link href=\"https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap\" rel=\"stylesheet\"><link rel=\"stylesheet\" href=\"/static/pico.css\"><link rel=\"stylesheet\" href=\"/static/style.css\"></head><body class=\"container\"><header><nav><ul><li><strong>سیستم مدیریت کتابخانه</strong></li></ul><ul>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if staff != nil {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li><a href=\"/\">Dashboard</a></li><li><a href=\"/books\">Books</a></li><li><a href=\"/members\">Members</a></li><li><a href=\"/loans\">Loans</a></li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<li><a href=\"/\">داشبورد</a></li><li><a href=\"/books\">کتاب\u200cها</a></li><li><a href=\"/members\">اعضا</a></li><li><a href=\"/loans\">امانت\u200cها</a></li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if staff.Role == models.RoleAdmin {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<li><a href=\"/staff\">Staff</a></li>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<li><a href=\"/staff\">کارکنان</a></li>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " <li><a href=\"/authors\">Authors</a></li><li><a href=\"/categories\">Categories</a></li><li><form method=\"POST\" action=\"/logout\"><input type=\"submit\" value=\"Logout\"></form></li>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, " <li><a href=\"/authors\">نویسنده\u200cها</a></li><li><a href=\"/categories\">دسته\u200cبندی\u200cها</a></li><li><form method=\"POST\" action=\"/logout\"><input type=\"submit\" value=\"خروج\"></form></li>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -1,5 +1,5 @@
 ## Database 
-- [ ] write activities table
+- [x] write activities table
 - [ ] update the sync available copies so that it stays sync when book_id changes on loan table
 - [ ] write a trigger for preventing a suspended member to borrow books
 ## Backend
@@ -7,7 +7,8 @@
 - [x] add authentication for staffs
 - [x] add staff model and its handlers 
 - [x] add dashboard repo methods 
-- [ ] let user add category to books
-- [ ] implement generic search for dashboard
-- [ ] add sortby and pagination for models
-- [ ] better search funcionallity add searching models based on range date 
+- [x] let user add category to books
+- [x] add sortby and pagination for models
+- [ ] recent loans by member in member's dashobard 
+- [ ] fix sort by book title and member name in loans search
+- [ ] custom 404 page for gin 

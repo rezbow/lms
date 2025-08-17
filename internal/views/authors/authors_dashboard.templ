@@ -6,16 +6,16 @@ import "fmt"
 templ AuthorsDashboard(data *models.AuthorDashboard) {
 	<div>
 		<section class="grid">
-			<a role="button" href="/authors/add">Add a new author</a>
-			<a role="button" href="/authors/search">Search</a>
+			<a role="button" href="/authors/add">نویسنده جدید</a>
+			<a role="button" href="/authors/search">جستوجو</a>
 		</section>
 		<section class="grid">
 			<article>
-				<header>Total Authors</header>
+				<header>تعداد نویسنده‌ها</header>
 				<strong>{ data.TotalAuthors }</strong>
 			</article>
 			<article>
-				<header>Recent Authors</header>
+				<header>اخرین نویسنده‌ها</header>
 				<ol>
 					for _, a := range data.RecentAuthors {
 						<li>
@@ -28,7 +28,7 @@ templ AuthorsDashboard(data *models.AuthorDashboard) {
 				</ol>
 			</article>
 			<article>
-				<header>Popular Authors</header>
+				<header>نویسنده‌های محبوب</header>
 				<ol>
 					for _, a := range data.PopularAuthors {
 						<li>

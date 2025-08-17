@@ -34,7 +34,7 @@ func BookSearch(books []models.Book, data *models.SearchData) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><form role=\"search\" method=\"GET\" action=\"/books/search\"><input name=\"q\" type=\"search\" placeholder=\"Search\"> <input type=\"submit\" value=\"Search\"></form><div id=\"results\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><form role=\"search\" method=\"GET\" action=\"/books/search\"><input name=\"q\" type=\"search\" placeholder=\"جستوجو\"> <input type=\"submit\" value=\"جستوجو\"></form><div id=\"results\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -7,14 +7,14 @@ import (
 
 templ AuthorList(authors []models.Author, data *models.SearchData) {
 	if len(authors) == 0 {
-		<h4>No Authors found</h4>
+		<h4>نویسنده‌ای یافت نشد.</h4>
 	} else {
 		<table>
-			<thead data-theme="dark">
+			<thead>
 				<tr>
-					<th scope="col"><a href={ data.SortWith("id") }>ID </a></th>
-					<th scope="col"><a href={ data.SortWith("full_name") }>Title</a></th>
-					<th scope="col"><a href={ data.SortWith("nationality") }>Nationality</a></th>
+					<th scope="col"><a href={ data.SortWith("id") }>ایدی</a></th>
+					<th scope="col"><a href={ data.SortWith("full_name") }>نام</a></th>
+					<th scope="col"><a href={ data.SortWith("nationality") }>ملیت</a></th>
 				</tr>
 			</thead>
 			<tbody>

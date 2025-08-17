@@ -15,7 +15,7 @@ templ Staff(staff *models.Staff) {
 				<ul>
 					<li>
 						<a role="button" href={ fmt.Sprintf("/staff/%d/edit", staff.ID) }>
-							Edit
+							ویرایش	
 						</a>
 					</li>
 					if staff.Role != models.RoleAdmin {
@@ -29,31 +29,28 @@ templ Staff(staff *models.Staff) {
 		<hr/>
 		<section class="grid">
 			<section>
-				<h6>Username</h6>
-				<p>{ staff.Username }</p>
-			</section>
-			<section>
-				<h6>Email</h6>
+				<h6>ایمیل</h6>
 				<p>{ staff.Email }</p>
 			</section>
 			<section>
-				<h6>Phone Number</h6>
+				<h6>شماره همراه</h6>
 				<p>{ staff.PhoneNumber }</p>
 			</section>
 			<section>
-				<h6>Role</h6>
+				<h6>نقش</h6>
 				<p>{ staff.Role }</p>
 			</section>
 			<section>
-				<h6>Status</h6>
+				<h6>وضعیت</h6>
 				<p>{ staff.Status }</p>
 			</section>
 			<section>
-				<h6>Last Login</h6>
+				<h6>اخرین ورود به سیستم</h6>
 				if staff.LastLogin != nil {
 					<p>{ staff.LastLogin.Format(time.RFC3339) }</p>
+				} else {
+					<p>-</p>
 				}
-				<p>-</p>
 			</section>
 		</section>
 		<hr/>

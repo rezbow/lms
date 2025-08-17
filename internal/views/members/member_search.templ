@@ -6,8 +6,8 @@ import "lms/internal/views/common"
 templ MemberSearch(members []models.Member, data *models.SearchData) {
 	<div>
 		<form method="GET" action="/members/search" role="search">
-			<input name="q" type="search" placeholder="Search"/>
-			<input type="submit" value="Search"/>
+			<input name="q" type="search" placeholder="جستوجو"/>
+			<input type="submit" value="جستوجو"/>
 		</form>
 		<div id="results">
 			@MemberList(members, data)

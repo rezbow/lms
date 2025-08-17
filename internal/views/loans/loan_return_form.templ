@@ -4,19 +4,20 @@ import "lms/internal/models"
 import "fmt"
 
 templ LoanReturnForm(loan *models.Loan) {
-	<div>
+	<div class="grid">
 		<form
 			method="POST"
 			action={ fmt.Sprintf("/loans/%d/return", loan.ID) }
 		>
 			<div>
+				<label for="returnDate">تاریخ بازگشت</label>
 				<input
 					id="returnDate"
 					type="date"
 					name="returnDate"
 				/>
 			</div>
-			<button type="submit">Return</button>
+			<button type="submit">بازگشت</button>
 		</form>
 	</div>
 }

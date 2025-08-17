@@ -9,15 +9,15 @@ templ StaffList(staff []models.Staff, data *models.SearchData) {
 		<h4>No Staff found</h4>
 	} else {
 		<table>
-			<thead data-theme="dark">
+			<thead>
 				<tr>
-					<th scope="col"><a href={ data.SortWith("id") }>ID </a></th>
-					<th scope="col"><a href={ data.SortWith("full_name") }>Full Name</a></th>
-					<th scope="col"><a href={ data.SortWith("username") }>Username</a></th>
-					<th scope="col"><a href={ data.SortWith("phone_number") }>Phone Number</a></th>
-					<th scope="col"><a href={ data.SortWith("email") }>Email</a></th>
-					<th scope="col"><a href={ data.SortWith("role") }>Role</a></th>
-					<th scope="col"><a href={ data.SortWith("last_login") }>Last Login</a></th>
+					<th scope="col"><a href={ data.SortWith("id") }>ایدی</a></th>
+					<th scope="col"><a href={ data.SortWith("full_name") }>نام</a></th>
+					<th scope="col"><a href={ data.SortWith("phone_number") }>شماره همراه</a></th>
+					<th scope="col"><a href={ data.SortWith("email") }>ایمیل</a></th>
+					<th scope="col"><a href={ data.SortWith("role") }>نقش</a></th>
+					<th scope="col"><a href={ data.SortWith("status") }>وضعیت</a></th>
+					<th scope="col"><a href={ data.SortWith("last_login") }>اخرین ورود</a></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -25,10 +25,10 @@ templ StaffList(staff []models.Staff, data *models.SearchData) {
 					<tr>
 						<th scope="row"><a href={ fmt.Sprintf("/staff/%d", s.ID) }>{ s.ID }</a></th>
 						<td>{ s.FullName }</td>
-						<td>{ s.Username }</td>
 						<td>{ s.PhoneNumber }</td>
 						<td>{ s.Email }</td>
 						<td>{ s.Role }</td>
+						<td>{ s.Status }</td>
 						if s.LastLogin != nil {
 							<td>{ s.LastLogin.Format(time.RFC3339) }</td>
 						} else {

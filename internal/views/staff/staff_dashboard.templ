@@ -6,16 +6,16 @@ import "fmt"
 templ StaffDashboard(data *models.StaffDashboard) {
 	<div>
 		<section class="grid">
-			<a role="button" href="/staff/add">Add a new staff</a>
-			<a role="button" href="/staff/search">Search</a>
+			<a role="button" href="/staff/add">پرسنل جدید</a>
+			<a role="button" href="/staff/search">جستوجو</a>
 		</section>
 		<section class="grid">
 			<article>
-				<header>Total Staff</header>
+				<header>تعداد کارکنان</header>
 				<strong>{ data.TotalStaff }</strong>
 			</article>
 			<article>
-				<header>Admin</header>
+				<header>ادمین</header>
 				<strong>
 					<a href={ fmt.Sprintf("/staff/%d", data.Admin.ID) }>
 						{ data.Admin.FullName }
@@ -25,16 +25,15 @@ templ StaffDashboard(data *models.StaffDashboard) {
 		</section>
 		<section class="grid">
 			<article>
-				<header>Librarians</header>
-				<ul>
-					for _, l := range data.Librarians {
-						<li>
-							<a href={ fmt.Sprintf("/staff/%d", l.ID) }>
-								{ l.FullName }
-							</a>
-						</li>
-					}
-				</ul>
+				<header>کتابداران</header>
+				for _, l := range data.Librarians {
+					<p>
+						<a href={ fmt.Sprintf("/staff/%d", l.ID) }>
+							{ l.FullName }
+						</a>
+					</p>
+					<hr/>
+				}
 			</article>
 		</section>
 	</div>

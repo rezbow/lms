@@ -6,18 +6,18 @@ import "fmt"
 templ CategoryDashboard(categories []models.Category) {
 	<div>
 		<section>
-			<a role="button" href="/authors/add">
-				Add a new category
+			<a role="button" href="/categories/add">
+				دسته‌بندی جدید
 			</a>
 		</section>
 		<section>
 			<article>
 				for _ , c := range categories {
-					<strong>
+					<p>
 						<a href={ fmt.Sprintf("/categories/%s", c.Slug) }>
 							{ c.Name }
 						</a>
-					</strong>
+					</p>
 					<hr/>
 				}
 			</article>

@@ -12,13 +12,13 @@ templ BookList(books []models.Book, data *models.SearchData) {
 		<table>
 			<thead data-theme="dark">
 				<tr>
-					<th scope="col"><a href={ data.SortWith("id") }>ID </a></th>
-					<th scope="col"><a href={ data.SortWith("title") }>Title</a></th>
-					<th scope="col"><a href={ data.SortWith("isbn") }>ISBN </a></th>
-					<th scope="col"><a href={ data.SortWith("author_id") }>Author</a></th>
-					<th scope="col"><a href={ data.SortWith("language") }>Language</a></th>
-					<th scope="col"><a href={ data.SortWith("total_copies") }>Total Copies</a></th>
-					<th scope="col"><a href={ data.SortWith("available_copies") }>Available Copies</a></th>
+					<th scope="col"><a href={ data.SortWith("id") }>ایدی</a></th>
+					<th scope="col"><a href={ data.SortWith("title") }>عنوان</a></th>
+					<th scope="col"><a href={ data.SortWith("isbn") }>شابک</a></th>
+					<th scope="col"><a href={ data.SortWith("author_id") }>نویسنده</a></th>
+					<th scope="col"><a href={ data.SortWith("language") }>زبان</a></th>
+					<th scope="col"><a href={ data.SortWith("total_copies") }>کل نسخه‌ها</a></th>
+					<th scope="col"><a href={ data.SortWith("available_copies") }>نسخه‌های موجود</a></th>
 				</tr>
 			</thead>
 			<tbody>

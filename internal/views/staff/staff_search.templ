@@ -12,8 +12,8 @@ templ StaffSearch(staff []models.Staff, data *models.SearchData) {
 			method="GET"
 			action="/staff/search"
 		>
-			<input name="q" type="search" placeholder="Search staff" value={ data.Term }/>
-			<input type="submit" value="Search"/>
+			<input name="q" type="search" placeholder="جستوجو" value={ data.Term }/>
+			<input type="submit" value="جستوجو"/>
 		</form>
 		<div id="results">
 			@StaffList(staff, data)

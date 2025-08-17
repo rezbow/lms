@@ -6,37 +6,43 @@ import "lms/internal/models"
 
 templ Layout(children templ.Component, title string, session sessions.Session) {
 	{{ staff := utils.ExtractStaffFromSession(session) }}
-	// <html dir="rtl" lang="fa">
-	<html>
+	<html dir="rtl" lang="fa">
 		<head>
 			<title>{ title }</title>
+			<link rel="preconnect" href="https://fonts.googleapis.com"/>
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+			<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet"/>
 			<link
 				rel="stylesheet"
-				href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+				href="/static/pico.css"
+			/>
+			<link
+				rel="stylesheet"
+				href="/static/style.css"
 			/>
 		</head>
 		<body class="container">
 			<header>
 				<nav>
 					<ul>
-						<li><strong>Library Management System</strong></li>
+						<li><strong>سیستم مدیریت کتابخانه</strong></li>
 					</ul>
 					<ul>
 						if staff != nil {
-							<li><a href="/">Dashboard</a></li>
-							<li><a href="/books">Books</a></li>
-							<li><a href="/members">Members</a></li>
-							<li><a href="/loans">Loans</a></li>
+							<li><a href="/">داشبورد</a></li>
+							<li><a href="/books">کتاب‌ها</a></li>
+							<li><a href="/members">اعضا</a></li>
+							<li><a href="/loans">امانت‌ها</a></li>
 							if staff.Role == models.RoleAdmin {
-								<li><a href="/staff">Staff</a></li>
+								<li><a href="/staff">کارکنان</a></li>
 							}
-							<li><a href="/authors">Authors</a></li>
-							<li><a href="/categories">Categories</a></li>
+							<li><a href="/authors">نویسنده‌ها</a></li>
+							<li><a href="/categories">دسته‌بندی‌ها</a></li>
 							<li>
 								<form
 									method="POST"
 									action="/logout"
-								><input type="submit" value="Logout"/></form>
+								><input type="submit" value="خروج"/></form>
 							</li>
 						}
 					</ul>

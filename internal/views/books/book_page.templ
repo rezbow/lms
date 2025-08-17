@@ -17,8 +17,8 @@ templ Book(book *models.Book) {
 					</hgroup>
 				</ul>
 				<ul>
-					<li><a href={ fmt.Sprintf("/books/%d/edit", book.ID) } role="button">Edit</a> </li>
-					<li><a href={ fmt.Sprintf("/books/%d/addloan", book.ID) } role="button">Add Loan</a> </li>
+					<li><a href={ fmt.Sprintf("/books/%d/edit", book.ID) } role="button">ویرایش</a> </li>
+					<li><a href={ fmt.Sprintf("/books/%d/addloan", book.ID) } role="button">امانت جدید</a> </li>
 					if len(book.Loans) == 0 {
 						<li>
 							@common.DeleteButton("Delete", fmt.Sprintf("/books/%d/delete", book.ID))
@@ -30,27 +30,27 @@ templ Book(book *models.Book) {
 		<hr/>
 		<section class="grid">
 			<section>
-				<h6>ISBN</h6>
+				<h6>شابک</h6>
 				<p>{ book.ISBN }</p>
 			</section>
 			<section>
-				<h6>Language</h6>
+				<h6>زبان</h6>
 				<p>{ book.Language }</p>
 			</section>
 			<section>
-				<h6>Publisher</h6>
+				<h6>ناشر</h6>
 				<p>{ book.Publisher }</p>
 			</section>
 			<section>
-				<h6>Total Copies</h6>
+				<h6>تعداد کل نسخه‌ها</h6>
 				<p>{ book.TotalCopies }</p>
 			</section>
 			<section>
-				<h6>Available Copies</h6>
+				<h6>تعداد نسخه‌های موجود</h6>
 				<p>{ book.AvailableCopies }</p>
 			</section>
 			<section>
-				<h6>Categories</h6>
+				<h6>دسته‌بندی‌ها</h6>
 				for _, c := range book.Categories {
 					<span>{ c.Name },</span>
 				}

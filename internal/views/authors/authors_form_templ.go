@@ -47,7 +47,7 @@ func AuthorsForm(data *models.AuthorFormData, errors views.Errors, action string
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><section class=\"grid\"><div><input name=\"fullName\" placeholder=\"enter the full name\" type=\"text\" required")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><section class=\"grid\"><div><input name=\"fullName\" placeholder=\"نام کامل\" type=\"text\" required")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -99,7 +99,7 @@ func AuthorsForm(data *models.AuthorFormData, errors views.Errors, action string
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><div><input name=\"nationality\" placeholder=\"enter the nationality\" type=\"text\" required")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "</div><div><input name=\"nationality\" placeholder=\"ملیت\" type=\"text\" required")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -151,7 +151,7 @@ func AuthorsForm(data *models.AuthorFormData, errors views.Errors, action string
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div></section><section class=\"grid\"><textarea name=\"bio\" placeholder=\"a short bio...\" aria-label=\"short bio\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "</div></section><section class=\"grid\"><textarea name=\"bio\" placeholder=\"بیوگرافی کوتاه\" aria-label=\"short bio\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -199,7 +199,7 @@ func AuthorsForm(data *models.AuthorFormData, errors views.Errors, action string
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</section><section class=\"grid\"><input type=\"submit\"> <input type=\"reset\"></section><section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</section><section class=\"grid\"><input type=\"submit\" value=\"ثبت\"> <input type=\"reset\" value=\"بازنشانی\"></section><section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

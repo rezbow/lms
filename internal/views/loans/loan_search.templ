@@ -10,8 +10,8 @@ templ LoanSearch(loans []models.Loan, data *models.SearchData) {
 			method="GET"
 			action="/loans/search"
 		>
-			<input name="q" type="search" placeholder="Search" value={ data.Term }/>
-			<input type="submit" value="Search"/>
+			<input name="q" type="search" placeholder="جستوجو" value={ data.Term }/>
+			<input type="submit" value="جستوجو"/>
 		</form>
 		<div id="results">
 			@LoanList(loans, data)

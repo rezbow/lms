@@ -8,11 +8,11 @@ templ LoginForm(errors views.Errors) {
 			method="POST"
 			action="/login"
 		>
-			<input name="email" type="email" placeholder="Enter Email" autocomplete="email"/>
-			<input name="password" type="password" placeholder="Enter Password"/>
+			<input name="email" type="email" placeholder="ایمیل خود را وارد کنید" autocomplete="email"/>
+			<input name="password" type="password" placeholder="رمز عبور خود را وارد کنید"/>
 			<input
 				type="submit"
-				value="Log in"
+				value="ورود"
 				if errors["login"] != "" {
 					aria-invalid="true"
 				}

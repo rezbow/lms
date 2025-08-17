@@ -6,13 +6,13 @@ import "fmt"
 templ MembersDashboard(data *models.MemberDashboard) {
 	<div>
 		<section class="grid">
-			<a role="button" href="/members/add">Add a new member</a>
-			<a role="button" href="/members/search">Search</a>
+			<a role="button" href="/members/add">عضو جدید</a>
+			<a role="button" href="/members/search">جستوجو</a>
 		</section>
 		<section class="grid">
 			<article>
 				<header>
-					Total Members
+					تعداد کل اعضا
 				</header>
 				<strong>
 					{ data.TotalMembers }
@@ -20,7 +20,7 @@ templ MembersDashboard(data *models.MemberDashboard) {
 			</article>
 			<article>
 				<header>
-					Total Active Members
+					تعداد اعضای فعال
 				</header>
 				<strong>
 					{ data.TotalActiveMembers }
@@ -28,7 +28,7 @@ templ MembersDashboard(data *models.MemberDashboard) {
 			</article>
 			<article>
 				<header>
-					Total Suspended Members	
+					تعداد اعضای معلق
 				</header>
 				<strong>
 					{ data.TotalSuspendedMember }
@@ -38,7 +38,7 @@ templ MembersDashboard(data *models.MemberDashboard) {
 		<section>
 			<article>
 				<header>
-					Most Active Members	
+					فعال‌ترین اعضا
 				</header>
 				<ul>
 					for _, m := range data.ActiveMembers {

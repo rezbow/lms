@@ -8,44 +8,44 @@ import (
 
 templ MemberList(members []models.Member, data *models.SearchData) {
 	if len(members) == 0 {
-		<h4>No Members found</h4>
+		<h4>عضوی پیدا نشد</h4>
 	} else {
 		<table>
 			<thead data-theme="dark">
 				<tr>
 					<th scope="col">
 						<a href={ data.SortWith("id") }>
-							ID
+							ایدی	
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("full_name") }>
-							Full Name
+							نام کامل
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("email") }>
-							Email
+							ایمیل	
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("national_id") }>
-							National Id
+							کد ملی	
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("phone_number") }>
-							Phone Number
+							شماره همراه	
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("status") }>
-							Status
+							وضعیت	
 						</a>
 					</th>
 					<th scope="col">
 						<a href={ data.SortWith("joined_at") }>
-							Joined At	
+							تاریخ عضویت
 						</a>
 					</th>
 				</tr>

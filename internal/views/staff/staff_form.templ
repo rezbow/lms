@@ -15,7 +15,7 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 					name="fullName"
 					type="text"
 					required
-					placeholder="full name"
+					placeholder="نام کامل"
 					if errors["fullName"] != "" {
 						aria-invalid="true"
 					}
@@ -26,22 +26,6 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 				if errors["fullName"] != "" {
 					<small>{ errors["fullName"] }</small>
 				}
-				<input
-					id="username"
-					name="username"
-					type="text"
-					required
-					placeholder="user name"
-					if errors["username"] != "" {
-						aria-invalid="true"
-					}
-					if staff != nil {
-						value={ staff.Username }
-					}
-				/>
-				if errors["username"] != "" {
-					<small>{ errors["username"] }</small>
-				}
 			</div>
 			<div class="grid">
 				<input
@@ -49,7 +33,7 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 					name="phoneNumber"
 					type="text"
 					required
-					placeholder="phone number"
+					placeholder="شماره همراه"
 					if errors["phoneNumber"] != "" {
 						aria-invalid="true"
 					}
@@ -65,7 +49,7 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 					name="email"
 					type="email"
 					required
-					placeholder="email"
+					placeholder="ایمیل"
 					if errors["email"] != "" {
 						aria-invalid="true"
 					}
@@ -84,7 +68,7 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 						name="password"
 						type="password"
 						required
-						placeholder="enter password"
+						placeholder="رمز عبور"
 						if errors["password"] != "" {
 							aria-invalid="true"
 						}
@@ -95,46 +79,48 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 				</div>
 			}
 			<div>
-				<select name="role" aria-label="Select role" required>
+				<label for="role">نقش</label>
+				<select id="role" name="role" aria-label="Select role" required>
 					<option
 						value="librarian"
 						if staff != nil && staff.Role == models.RoleLibrarian {
 							selected
 						}
-					>Librarian</option>
+					>کتابدار</option>
 					<option
 						value="admin"
 						if staff != nil && staff.Role == models.RoleAdmin {
 							selected
 						}
-					>Admin</option>
+					>ادمین</option>
 				</select>
 				if errors["role"] != "" {
 					<small>{ errors["role"] }</small>
 				}
 			</div>
 			<div>
+				<label for="status">وضعیت</label>
 				<select name="status" aria-label="Select status" required>
 					<option
 						value="active"
 						if staff != nil && staff.Status == models.StatusActive {
 							selected
 						}
-					>Active</option>
+					>فعال</option>
 					<option
 						value="suspended"
 						if staff != nil && staff.Status == models.StatusSuspended {
 							selected
 						}
-					>Suspended</option>
+					>معلق</option>
 				</select>
 				if errors["status"] != "" {
 					<small>{ errors["status"] }</small>
 				}
 			</div>
 			<div class="grid">
-				<input type="submit"/>
-				<input type="reset"/>
+				<input type="submit" value="ثبت"/>
+				<input type="reset" value="بازنشانی"/>
 			</div>
 			if errors["_"] != "" {
 				<article style="color: #D93526;">{ errors["_"] }</article>
