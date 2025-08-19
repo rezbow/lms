@@ -103,7 +103,7 @@ func (mr *MemberRepo) ActiveMembers(limit int) ([]models.Member, error) {
 
 func (mr *MemberRepo) Total() (int64, error) {
 	var total int64
-	err := mr.DB.Model(&models.Book{}).Count(&total).Error
+	err := mr.DB.Model(&models.Member{}).Count(&total).Error
 	if err != nil {
 		return 0, ErrInternal
 	}

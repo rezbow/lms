@@ -29,33 +29,20 @@ func DeleteButton(title, action string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><button onclick=\"toggleModal('delete-dialog')\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<div><button onclick=\"toggleModal('delete-dialog')\">حذف</button> <dialog id=\"delete-dialog\"><article><header><button aria-label=\"Close\" rel=\"prev\" onclick=\"toggleModal('delete-dialog')\"></button><h3>از حذف این مورد مطمئن هستید؟</h3></header><p><strong>این اقدام قابل بازگردانی نیست</strong></p><footer><form method=\"POST\" action=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string
-		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(title)
+		var templ_7745c5c3_Var2 templ.SafeURL
+		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinURLErrs(action)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `common/delete_button.templ`, Line: 6, Col: 10}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `common/delete_button.templ`, Line: 20, Col: 40}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</button> <dialog id=\"delete-dialog\"><article><header><button aria-label=\"Close\" rel=\"prev\" onclick=\"toggleModal('delete-dialog')\"></button><h3>Are you sure you want to delete this item?</h3></header><p><strong>This action cannot be undone</strong></p><footer><form method=\"POST\" action=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var3 templ.SafeURL
-		templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinURLErrs(action)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `common/delete_button.templ`, Line: 20, Col: 40}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\"><input type=\"submit\" autofocus value=\"Confirm\"></form></footer></article></dialog></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\"><input type=\"submit\" autofocus value=\"تأیید\"></form></footer></article></dialog></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

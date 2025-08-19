@@ -11,23 +11,23 @@ templ LoanInfo(loan *models.Loan) {
 		<section>
 			<nav>
 				<ul>
-					<h1>Loan #{ loan.ID }</h1>
+					<h1>امانت #{ loan.ID }</h1>
 				</ul>
 				<ul>
 					if loan.Status == models.StatusBorrowed {
 						<li>
 							<a role="button" href={ fmt.Sprintf("/loans/%d/return", loan.ID) }>
-								Return
+								بازگشت	
 							</a>
 						</li>
 					}
 					<li>
 						<a role="button" href={ fmt.Sprintf("/loans/%d/edit", loan.ID) }>
-							Edit
+							ویرایش	
 						</a>
 					</li>
 					<li>
-						@common.PostButton("Delete", fmt.Sprintf("/loans/%d/delete", loan.ID))
+						@common.DeleteButton("Delete", fmt.Sprintf("/loans/%d/delete", loan.ID))
 					</li>
 				</ul>
 			</nav>
@@ -35,28 +35,28 @@ templ LoanInfo(loan *models.Loan) {
 		<hr/>
 		<section class="grid">
 			<section>
-				<h6>Brrowed By</h6>
+				<h6>امانت گرفته‌شده توسط</h6>
 				<p><a href={ fmt.Sprintf("/members/%d", loan.MemberId) }>{ loan.Member.FullName } </a> </p>
 			</section>
 			<section>
-				<h6>Book</h6>
+				<h6>کتاب</h6>
 				<p><a href={ fmt.Sprintf("/books/%d", loan.BookId) }>{ loan.Book.Title } </a> </p>
 			</section>
 			<section>
-				<h6>Borrow Date</h6>
+				<h6>تاریخ امانت</h6>
 				<p>{ loan.BorrowDate.Format(time.RFC3339) }</p>
 			</section>
 			<section>
-				<h6>Due Date</h6>
+				<h6>تاریخ موعد</h6>
 				<p>{ loan.DueDate.Format(time.RFC3339) }</p>
 			</section>
 			<section>
-				<h6>Status</h6>
+				<h6>وضعیت</h6>
 				<p>{ loan.Status }</p>
 			</section>
 			if loan.ReturnDate != nil {
 				<section>
-					<h6>Return Date</h6>
+					<h6>تاریخ بازگشت</h6>
 					<p>{ loan.ReturnDate.Format(time.RFC3339) }</p>
 				</section>
 			}

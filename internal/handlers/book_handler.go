@@ -114,17 +114,17 @@ func (bh *BookHandler) AddPage(ctx *gin.Context) {
 
 func (bh *BookHandler) Add(ctx *gin.Context) {
 	var bookForm struct {
-		Title       string `form:"title" binding:"required" validate:"required,min=1,max=100"`
-		ISBN        string `form:"isbn" binding:"required" validate:"required,max=20"`
-		TotalCopies int    `form:"totalCopies" binding:"required" validate:"required,min=1"`
-		AuthorId    uint   `form:"authorId" binding:"required" validate:"required,min=1"`
+		Title       string                `form:"title" binding:"required" validate:"required,min=1,max=100"`
+		ISBN        string                `form:"isbn" binding:"required" validate:"required,max=20"`
+		TotalCopies int                   `form:"totalCopies" binding:"required" validate:"required,min=1"`
+		AuthorId    uint                  `form:"authorId" binding:"required" validate:"required,min=1"`
+		CoverImage  *multipart.FileHeader `form:"coverImage" binding:"required"`
 		// optional
-		Publisher  *string               `form:"publisher" binding:"omitempty" validate:"omitempty,max=30"`
-		Language   *string               `form:"language" binding:"omitempty" validate:"omitempty,max=30"`
-		Summary    *string               `form:"summary" binding:"omitempty" validate:"omitempty,max=1000"`
-		Translator *string               `form:"translator" binding:"omitempty" validate:"omitempty,max=50"`
-		Categories []uint                `form:"categories" binding:"required"`
-		CoverImage *multipart.FileHeader `form:"coverImage" binding:"required"`
+		Publisher  *string `form:"publisher" binding:"omitempty" validate:"omitempty,max=100"`
+		Language   *string `form:"language" binding:"omitempty" validate:"omitempty,max=100"`
+		Summary    *string `form:"summary" binding:"omitempty" validate:"omitempty,max=1000"`
+		Translator *string `form:"translator" binding:"omitempty" validate:"omitempty,max=100"`
+		Categories []uint  `form:"categories"`
 	}
 
 	if err := ctx.ShouldBind(&bookForm); err != nil {
@@ -137,9 +137,16 @@ func (bh *BookHandler) Add(ctx *gin.Context) {
 		return
 	}
 
-	url, err := resizeAndSaveImage(bookForm.CoverImage)
-	if err != nil {
-		serverError(ctx)
+	var url string
+	var err error
+	if bookForm.CoverImage.Filename != "" {
+		url, err = resizeAndSaveImage(bookForm.CoverImage)
+		if err != nil {
+			serverError(ctx)
+			return
+		}
+	} else {
+		render(ctx, bookViews.BookForm(nil, views.Errors{"coverImage": "جلد کتاب را انتخاب کنید"}, "/books/add", nil), "add book")
 		return
 	}
 
@@ -311,8 +318,8 @@ func (bh *BookHandler) Update(ctx *gin.Context) {
 		return
 	}
 
-	if bookUpdateForm.CoverImage != nil {
-		log.Println("user updading cover image")
+	if bookUpdateForm.CoverImage != nil && bookUpdateForm.CoverImage.Filename != "" {
+		log.Println("user updading cover image: ", bookUpdateForm.CoverImage.Filename)
 		url, err := resizeAndSaveImage(bookUpdateForm.CoverImage)
 		if err != nil {
 			serverError(ctx)

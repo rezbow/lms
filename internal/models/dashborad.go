@@ -43,6 +43,6 @@ type Dashboard struct {
 	PopularBooks      []PopularBook
 	ActiveMembers     []ActiveMember
 	PopularCategory   []PopularCategory
-	UpcomingLoans     []UpcomingLoan
+	UpcomingLoans     []Loan
 	RecentActivities  []ActivityLog
 }

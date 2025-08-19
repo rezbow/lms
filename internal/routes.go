@@ -2,6 +2,7 @@ package internal
 
 import (
 	"lms/internal/handlers"
+	"lms/internal/views/common"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -21,8 +22,6 @@ func SetupRouter(
 
 	r.Static("/static", "./static")
 
-	//r.HTMLRender = &TemplRender{}
-
 	store := cookie.NewStore([]byte("cfaa7e52"))
 	r.Use(sessions.Sessions("session", store))
 	r.GET("/login", staffHandler.LoginPage)
@@ -31,6 +30,10 @@ func SetupRouter(
 	r.Use(AuthRequired())
 	r.GET("/", dashboradHandler.Dashboard)
 	r.POST("/logout", staffHandler.Logout)
+
+	r.NoRoute(func(ctx *gin.Context) {
+		handlers.Render(ctx, common.NotFound(), "404")
+	})
 
 	// books resource
 	books := r.Group("/books")

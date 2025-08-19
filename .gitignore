@@ -1,1 +1,3 @@
 go.sum
+static/covers/
+.env

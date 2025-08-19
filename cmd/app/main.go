@@ -2,20 +2,54 @@ package main
 
 import (
 	"encoding/gob"
+	"fmt"
 	"lms/internal"
 	"lms/internal/database"
 	"lms/internal/handlers"
 	"lms/internal/models"
 	"lms/internal/repositories"
+	"log"
+	"os"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
 )
+
+func getDsn() string {
+	host := os.Getenv("DB_HOST")
+	if host == "" {
+		host = "localhost"
+	}
+	user := os.Getenv("DB_USER")
+	if user == "" {
+		log.Fatal(".env: missing db_user")
+	}
+	password := os.Getenv("DB_PASSWORD")
+	if password == "" {
+		log.Fatal(".env: missing db_password")
+	}
+	name := os.Getenv("DB_NAME")
+	if name == "" {
+		log.Fatal(".env: missing db_name")
+	}
+	port := os.Getenv("DB_PORT")
+	if port == "" {
+		port = "5432"
+	}
+	return fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
+		host, user, password, name, port,
+	)
+}
 
 func main() {
 
-	dsn := "host=localhost user=admin password=cfaa7e52 dbname=lms_db port=5432 sslmode=disable TimeZone=UTC"
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	validate := validator.New()
-	db := database.SetupDataBase(dsn)
+	db := database.SetupDataBase(getDsn())
 
 	gob.Register(models.Staff{})
 

@@ -61,23 +61,23 @@ templ StaffForm(staff *models.Staff, errors views.Errors, endpoint string) {
 					<small>{ errors["email"] }</small>
 				}
 			</div>
-			if staff == nil || staff.ID == 0 {
-				<div>
-					<input
-						id="password"
-						name="password"
-						type="password"
+			<div>
+				<input
+					id="password"
+					name="password"
+					type="password"
+					if staff == nil {
 						required
-						placeholder="رمز عبور"
-						if errors["password"] != "" {
-							aria-invalid="true"
-						}
-					/>
-					if errors["password"] != "" {
-						<small>{ errors["password"] }</small>
 					}
-				</div>
-			}
+					placeholder="رمز عبور"
+					if errors["password"] != "" {
+						aria-invalid="true"
+					}
+				/>
+				if errors["password"] != "" {
+					<small>{ errors["password"] }</small>
+				}
+			</div>
 			<div>
 				<label for="role">نقش</label>
 				<select id="role" name="role" aria-label="Select role" required>

@@ -154,6 +154,9 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 					جلد کتاب
 				</label>
 				<input type="file" name="coverImage"/>
+				if errors["coverImage"] != "" {
+					<small>{ errors["coverImage"] }</small>
+				}
 			</section>
 			<section>
 				if book != nil {
@@ -165,5 +168,12 @@ templ BookForm(book *models.Book, errors views.Errors, endpoint string, categori
 				<input type="reset" value="بازنشانی"/>
 			</section>
 		</form>
+		if errors != nil {
+			<section>
+				for _,v := range errors {
+					<strong>{ v }</strong>
+				}
+			</section>
+		}
 	</div>
 }

@@ -113,13 +113,12 @@ func (sh *StaffHandler) EditPage(ctx *gin.Context) {
 // post
 func (sh *StaffHandler) Edit(ctx *gin.Context) {
 	var userInput struct {
-		FullName    *string `form:"fullName" validate:"omitempty,min=1,max=100"`
-		Username    *string `form:"username" validate:"omitempty,min=1,max=200"`
-		PhoneNumber *string `form:"phoneNumber" validate:"omitempty,min=1,max=50"`
-		Email       *string `form:"email" validate:"omitempty,email,min=1,max=100"`
-		Password    *string `form:"password" validate:"omitempty,min=8,max=20"`
-		Role        *string `form:"role" validate:"omitempty,oneof=admin librarian,min=1,max=50"`
-		Status      *string `form:"status" validate:"omitempty,oneof=active suspended,min=1,max=50"`
+		FullName    *string `form:"fullName" binding:"omitempty" validate:"omitempty,min=1,max=100"`
+		PhoneNumber *string `form:"phoneNumber" binding:"omitempty" validate:"omitempty,min=1,max=50"`
+		Email       *string `form:"email" binding:"omitempty" validate:"omitempty,email,min=1,max=100"`
+		Password    *string `form:"password" binding:"omitempty" validate:"omitempty,min=0,max=20"`
+		Role        *string `form:"role" binding:"omitempty" validate:"omitempty,oneof=admin librarian,min=1,max=50"`
+		Status      *string `form:"status" binding:"omitempty" validate:"omitempty,oneof=active suspended,min=1,max=50"`
 	}
 
 	id, err := readID(ctx)
@@ -170,12 +169,7 @@ func (sh *StaffHandler) Edit(ctx *gin.Context) {
 		staff.PhoneNumber = *userInput.PhoneNumber
 	}
 
-	if userInput.Username != nil {
-		staff.Username = *userInput.Username
-	}
-
-	if userInput.Password != nil {
-		// TODO: hash and save
+	if userInput.Password != nil && *userInput.Password != "" {
 		hash, err := generateHash(*userInput.Password)
 		if err != nil {
 			serverError(ctx)
@@ -210,7 +204,6 @@ func (sh *StaffHandler) Edit(ctx *gin.Context) {
 func (sh *StaffHandler) Add(ctx *gin.Context) {
 	var userInput struct {
 		FullName    string `form:"fullName" binding:"required" validate:"required,min=1,max=100"`
-		Username    string `form:"username" binding:"required" validate:"required,min=1,max=200"`
 		PhoneNumber string `form:"phoneNumber" binding:"required" validate:"required,min=1,max=50"`
 		Email       string `form:"email" binding:"required" validate:"required,email,min=1,max=50"`
 		Role        string `form:"role" binding:"required" validate:"required,oneof=admin librarian,min=1,max=50"`
@@ -221,7 +214,6 @@ func (sh *StaffHandler) Add(ctx *gin.Context) {
 		render(ctx, staffView.StaffForm(
 			&models.Staff{
 				FullName:    userInput.FullName,
-				Username:    userInput.Username,
 				PhoneNumber: userInput.PhoneNumber,
 				Email:       userInput.Email,
 				Role:        userInput.Role,
@@ -236,7 +228,6 @@ func (sh *StaffHandler) Add(ctx *gin.Context) {
 		render(ctx, staffView.StaffForm(
 			&models.Staff{
 				FullName:    userInput.FullName,
-				Username:    userInput.Username,
 				PhoneNumber: userInput.PhoneNumber,
 				Email:       userInput.Email,
 				Role:        userInput.Role,
@@ -256,7 +247,6 @@ func (sh *StaffHandler) Add(ctx *gin.Context) {
 
 	staff := models.Staff{
 		FullName:     userInput.FullName,
-		Username:     userInput.Username,
 		PhoneNumber:  userInput.PhoneNumber,
 		Email:        userInput.Email,
 		Role:         userInput.Role,
@@ -275,7 +265,6 @@ func (sh *StaffHandler) Add(ctx *gin.Context) {
 			render(ctx, staffView.StaffForm(
 				&models.Staff{
 					FullName:    userInput.FullName,
-					Username:    userInput.Username,
 					PhoneNumber: userInput.PhoneNumber,
 					Email:       userInput.Email,
 					Role:        userInput.Role,

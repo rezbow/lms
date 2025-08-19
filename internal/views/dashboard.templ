@@ -56,15 +56,6 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 			</article>
 			<article>
 				<header>
-					<h4>دسته‌بندی‌های محبوب</h4>
-				</header>
-				for _, category := range data.PopularCategory {
-					<a href={ fmt.Sprintf("/categories/%s", category.Slug) }><strong>{ category.Name }</strong></a>
-					<hr/>
-				}
-			</article>
-			<article>
-				<header>
 					<h4>اعضای فعال</h4>
 				</header>
 				for _, member := range data.ActiveMembers {
@@ -79,7 +70,7 @@ templ Dashboard(data *models.Dashboard, session sessions.Session) {
 					<h4>امانت‌های نزدیک بازگشت</h4>
 				</header>
 				for _, loan := range data.UpcomingLoans {
-					<a href={ fmt.Sprintf("/loans/%d", loan.ID) }><strong>{ loan.BookTitle }/{ loan.MemberName }</strong></a>
+					<a href={ fmt.Sprintf("/loans/%d", loan.ID) }><strong>{ loan.Book.Title }/{ loan.Member.FullName }</strong></a>
 					<hr/>
 				}
 			</article>

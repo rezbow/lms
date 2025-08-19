@@ -159,7 +159,7 @@ func LoanForm(loan *models.Loan, errors views.Errors, endpoint string) templ.Com
 				return templ_7745c5c3_Err
 			}
 		}
-		if loan != nil {
+		if loan != nil && loan.ID > 0 {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 18, " value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -211,15 +211,15 @@ func LoanForm(loan *models.Loan, errors views.Errors, endpoint string) templ.Com
 				return templ_7745c5c3_Err
 			}
 		}
-		if loan != nil {
+		if loan != nil && loan.ID > 0 {
 			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, " value=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var9 string
-			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(loan.DueDate.Format("2006-01-02"))
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(loan.BorrowDate.Format("2006-01-02"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `loans/loan_form.templ`, Line: 76, Col: 48}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `loans/loan_form.templ`, Line: 76, Col: 51}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {

@@ -54,7 +54,7 @@ templ LoanForm(loan *models.Loan, errors views.Errors, endpoint string) {
 						if errors["borrowDate"] != "" {
 							aria-invalid="true"
 						}
-						if loan != nil {
+						if loan != nil && loan.ID > 0 {
 							value={ loan.BorrowDate.Format("2006-01-02") }
 						}
 					/>
@@ -72,8 +72,8 @@ templ LoanForm(loan *models.Loan, errors views.Errors, endpoint string) {
 						if errors["dueDate"] != "" {
 							aria-invalid="true"
 						}
-						if loan != nil {
-							value={ loan.DueDate.Format("2006-01-02") }
+						if loan != nil && loan.ID > 0 {
+							value={ loan.BorrowDate.Format("2006-01-02") }
 						}
 					/>
 					if errors["dueDate"] != "" {

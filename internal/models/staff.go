@@ -10,7 +10,7 @@ var (
 )
 
 var StaffSafeSortList = []string{
-	"id", "full_name", "username",
+	"id", "full_name",
 	"phone_number", "email", "role",
 	"last_login", "status",
 }
@@ -18,7 +18,6 @@ var StaffSafeSortList = []string{
 type Staff struct {
 	ID           uint
 	FullName     string
-	Username     string
 	PhoneNumber  string
 	Email        string
 	Role         string

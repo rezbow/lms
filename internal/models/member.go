@@ -30,7 +30,7 @@ type Member struct {
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 	version     uint
-	Loans       []*Loan
+	Loans       []Loan
 }
 
 type MemberDashboard struct {

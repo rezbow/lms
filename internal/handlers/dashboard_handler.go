@@ -24,7 +24,7 @@ func (dh *DashboardHanlder) Dashboard(ctx *gin.Context) {
 	popularBooks, err := dh.Repo.MostPopularBooks()
 	activeMembers, err := dh.Repo.ActiveMembers()
 	popularCategories, err := dh.Repo.PopularCategories()
-	upcomingLoans, err := dh.Repo.UpcomingLoans()
+	upcomingLoans, err := dh.Repo.UpcomingLoans(10)
 	recentActivities, err := dh.LogRepo.Recent(10)
 
 	if err != nil {

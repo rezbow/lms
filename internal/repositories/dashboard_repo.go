@@ -83,9 +83,19 @@ func (dp *DashboardRepo) PopularCategories() ([]models.PopularCategory, error) {
 	return categories, nil
 }
 
-func (dp *DashboardRepo) UpcomingLoans() ([]models.UpcomingLoan, error) {
-	var loans []models.UpcomingLoan
-	err := dp.DB.Table("upcoming_loans_view").Scan(&loans).Error
+func (dp *DashboardRepo) UpcomingLoans(limit int) ([]models.Loan, error) {
+	var loans []models.Loan
+	err := dp.DB.
+		Model(&models.Loan{}).
+		Preload("Member").
+		Preload("Book").
+		Where("return_date is NULL").
+		Where("status = 'borrowed'").
+		Where("due_date >= CURRENT_TIMESTAMP").
+		Where("due_date <= CURRENT_DATE + INTERVAL '5 days' ").
+		Order("due_date DESC").
+		Limit(limit).
+		Find(&loans).Error
 	if err != nil {
 		return nil, ErrInternal
 	}

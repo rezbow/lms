@@ -9,6 +9,6 @@
 - [x] add dashboard repo methods 
 - [x] let user add category to books
 - [x] add sortby and pagination for models
-- [ ] recent loans by member in member's dashobard 
+- [x] recent loans by member in member's dashobard 
+- [x] custom 404 page for gin 
 - [ ] fix sort by book title and member name in loans search
-- [ ] custom 404 page for gin 

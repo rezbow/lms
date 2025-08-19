@@ -23,7 +23,7 @@ templ MemberInfo(member *models.Member) {
 						</a>
 					</li>
 					<li>
-						@common.PostButton("Delete", fmt.Sprintf("/members/%d/delete", member.ID))
+						@common.DeleteButton("Delete", fmt.Sprintf("/members/%d/delete", member.ID))
 					</li>
 				</ul>
 			</nav>
@@ -52,5 +52,11 @@ templ MemberInfo(member *models.Member) {
 			</section>
 		</section>
 		<hr/>
+		<section>
+			<h1>امانت‌های اخیر</h1>
+			for _, l := range member.Loans {
+				<p><a href={ fmt.Sprintf("/loans/%d", l.ID) }>#{ l.ID }</a> </p>
+			}
+		</section>
 	</div>
 }
