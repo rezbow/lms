@@ -18,37 +18,31 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: email; Type: DOMAIN; Schema: public; Owner: admin
+-- Name: email; Type: DOMAIN; Schema: public; Owner: -
 --
 
 CREATE DOMAIN public.email AS character varying(200)
 	CONSTRAINT email_check CHECK (((VALUE)::text ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'::text));
 
 
-ALTER DOMAIN public.email OWNER TO admin;
-
 --
--- Name: phone_number; Type: DOMAIN; Schema: public; Owner: admin
+-- Name: phone_number; Type: DOMAIN; Schema: public; Owner: -
 --
 
 CREATE DOMAIN public.phone_number AS character varying(100)
 	CONSTRAINT phone_number_check CHECK (((VALUE)::text ~ '^09[0-9]{9}$'::text));
 
 
-ALTER DOMAIN public.phone_number OWNER TO admin;
-
 --
--- Name: status; Type: DOMAIN; Schema: public; Owner: admin
+-- Name: status; Type: DOMAIN; Schema: public; Owner: -
 --
 
 CREATE DOMAIN public.status AS character varying(20)
 	CONSTRAINT status_check CHECK (((VALUE)::text = ANY ((ARRAY['active'::character varying, 'suspended'::character varying])::text[])));
 
 
-ALTER DOMAIN public.status OWNER TO admin;
-
 --
--- Name: prevent_insert_loan_as_returend(); Type: FUNCTION; Schema: public; Owner: admin
+-- Name: prevent_insert_loan_as_returend(); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.prevent_insert_loan_as_returend() RETURNS trigger
@@ -62,10 +56,8 @@ end;
 $$;
 
 
-ALTER FUNCTION public.prevent_insert_loan_as_returend() OWNER TO admin;
-
 --
--- Name: set_available_copies_to_total(); Type: FUNCTION; Schema: public; Owner: admin
+-- Name: set_available_copies_to_total(); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.set_available_copies_to_total() RETURNS trigger
@@ -78,10 +70,8 @@ end;
 $$;
 
 
-ALTER FUNCTION public.set_available_copies_to_total() OWNER TO admin;
-
 --
--- Name: update_available_copies(); Type: FUNCTION; Schema: public; Owner: admin
+-- Name: update_available_copies(); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.update_available_copies() RETURNS trigger
@@ -118,10 +108,8 @@ end;
 $$;
 
 
-ALTER FUNCTION public.update_available_copies() OWNER TO admin;
-
 --
--- Name: update_available_copies_on_totalcopy_update(); Type: FUNCTION; Schema: public; Owner: admin
+-- Name: update_available_copies_on_totalcopy_update(); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.update_available_copies_on_totalcopy_update() RETURNS trigger
@@ -146,10 +134,8 @@ end;
 $$;
 
 
-ALTER FUNCTION public.update_available_copies_on_totalcopy_update() OWNER TO admin;
-
 --
--- Name: update_update_fields(); Type: FUNCTION; Schema: public; Owner: admin
+-- Name: update_update_fields(); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.update_update_fields() RETURNS trigger
@@ -163,10 +149,8 @@ end;
 $$;
 
 
-ALTER FUNCTION public.update_update_fields() OWNER TO admin;
-
 --
--- Name: validate_available_copies_update(); Type: FUNCTION; Schema: public; Owner: admin
+-- Name: validate_available_copies_update(); Type: FUNCTION; Schema: public; Owner: -
 --
 
 CREATE FUNCTION public.validate_available_copies_update() RETURNS trigger
@@ -188,10 +172,8 @@ end;
 $$;
 
 
-ALTER FUNCTION public.validate_available_copies_update() OWNER TO admin;
-
 --
--- Name: active_members_view; Type: VIEW; Schema: public; Owner: admin
+-- Name: active_members_view; Type: VIEW; Schema: public; Owner: -
 --
 
 CREATE VIEW public.active_members_view AS
@@ -201,14 +183,12 @@ SELECT
     NULL::bigint AS loan_count;
 
 
-ALTER VIEW public.active_members_view OWNER TO admin;
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- Name: activity_logs; Type: TABLE; Schema: public; Owner: admin
+-- Name: activity_logs; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.activity_logs (
@@ -225,10 +205,8 @@ CREATE TABLE public.activity_logs (
 );
 
 
-ALTER TABLE public.activity_logs OWNER TO admin;
-
 --
--- Name: activity_log_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+-- Name: activity_log_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.activity_log_id_seq
@@ -240,17 +218,15 @@ CREATE SEQUENCE public.activity_log_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.activity_log_id_seq OWNER TO admin;
-
 --
--- Name: activity_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+-- Name: activity_log_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.activity_log_id_seq OWNED BY public.activity_logs.id;
 
 
 --
--- Name: authors; Type: TABLE; Schema: public; Owner: admin
+-- Name: authors; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.authors (
@@ -264,10 +240,8 @@ CREATE TABLE public.authors (
 );
 
 
-ALTER TABLE public.authors OWNER TO admin;
-
 --
--- Name: authors_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+-- Name: authors_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.authors_id_seq
@@ -279,17 +253,15 @@ CREATE SEQUENCE public.authors_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.authors_id_seq OWNER TO admin;
-
 --
--- Name: authors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+-- Name: authors_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.authors_id_seq OWNED BY public.authors.id;
 
 
 --
--- Name: books; Type: TABLE; Schema: public; Owner: admin
+-- Name: books; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.books (
@@ -312,10 +284,8 @@ CREATE TABLE public.books (
 );
 
 
-ALTER TABLE public.books OWNER TO admin;
-
 --
--- Name: books_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+-- Name: books_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.books_id_seq
@@ -327,17 +297,15 @@ CREATE SEQUENCE public.books_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.books_id_seq OWNER TO admin;
-
 --
--- Name: books_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+-- Name: books_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.books_id_seq OWNED BY public.books.id;
 
 
 --
--- Name: categories; Type: TABLE; Schema: public; Owner: admin
+-- Name: categories; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.categories (
@@ -350,10 +318,8 @@ CREATE TABLE public.categories (
 );
 
 
-ALTER TABLE public.categories OWNER TO admin;
-
 --
--- Name: category_books; Type: TABLE; Schema: public; Owner: admin
+-- Name: category_books; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.category_books (
@@ -362,10 +328,8 @@ CREATE TABLE public.category_books (
 );
 
 
-ALTER TABLE public.category_books OWNER TO admin;
-
 --
--- Name: category_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+-- Name: category_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.category_id_seq
@@ -377,17 +341,15 @@ CREATE SEQUENCE public.category_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.category_id_seq OWNER TO admin;
-
 --
--- Name: category_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+-- Name: category_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.category_id_seq OWNED BY public.categories.id;
 
 
 --
--- Name: loans; Type: TABLE; Schema: public; Owner: admin
+-- Name: loans; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.loans (
@@ -405,10 +367,8 @@ CREATE TABLE public.loans (
 );
 
 
-ALTER TABLE public.loans OWNER TO admin;
-
 --
--- Name: loans_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+-- Name: loans_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.loans_id_seq
@@ -420,17 +380,15 @@ CREATE SEQUENCE public.loans_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.loans_id_seq OWNER TO admin;
-
 --
--- Name: loans_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+-- Name: loans_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.loans_id_seq OWNED BY public.loans.id;
 
 
 --
--- Name: low_stock_high_demand_books_view; Type: VIEW; Schema: public; Owner: admin
+-- Name: low_stock_high_demand_books_view; Type: VIEW; Schema: public; Owner: -
 --
 
 CREATE VIEW public.low_stock_high_demand_books_view AS
@@ -442,10 +400,8 @@ SELECT
     NULL::bigint AS loan_count;
 
 
-ALTER VIEW public.low_stock_high_demand_books_view OWNER TO admin;
-
 --
--- Name: members; Type: TABLE; Schema: public; Owner: admin
+-- Name: members; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.members (
@@ -463,10 +419,8 @@ CREATE TABLE public.members (
 );
 
 
-ALTER TABLE public.members OWNER TO admin;
-
 --
--- Name: members_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+-- Name: members_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.members_id_seq
@@ -478,17 +432,15 @@ CREATE SEQUENCE public.members_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.members_id_seq OWNER TO admin;
-
 --
--- Name: members_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+-- Name: members_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.members_id_seq OWNED BY public.members.id;
 
 
 --
--- Name: popular_authors_view; Type: VIEW; Schema: public; Owner: admin
+-- Name: popular_authors_view; Type: VIEW; Schema: public; Owner: -
 --
 
 CREATE VIEW public.popular_authors_view AS
@@ -498,10 +450,8 @@ SELECT
     NULL::bigint AS total_loans;
 
 
-ALTER VIEW public.popular_authors_view OWNER TO admin;
-
 --
--- Name: popular_books_view; Type: VIEW; Schema: public; Owner: admin
+-- Name: popular_books_view; Type: VIEW; Schema: public; Owner: -
 --
 
 CREATE VIEW public.popular_books_view AS
@@ -511,10 +461,8 @@ SELECT
     NULL::bigint AS loan_count;
 
 
-ALTER VIEW public.popular_books_view OWNER TO admin;
-
 --
--- Name: popular_categories_view; Type: VIEW; Schema: public; Owner: admin
+-- Name: popular_categories_view; Type: VIEW; Schema: public; Owner: -
 --
 
 CREATE VIEW public.popular_categories_view AS
@@ -529,10 +477,8 @@ CREATE VIEW public.popular_categories_view AS
   ORDER BY (count(l.id)) DESC;
 
 
-ALTER VIEW public.popular_categories_view OWNER TO admin;
-
 --
--- Name: staff; Type: TABLE; Schema: public; Owner: admin
+-- Name: staff; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE public.staff (
@@ -547,15 +493,12 @@ CREATE TABLE public.staff (
     last_login timestamp without time zone,
     version integer DEFAULT 1 NOT NULL,
     status public.status DEFAULT 'active'::character varying NOT NULL,
-    username character varying(100) NOT NULL,
     CONSTRAINT staff_role_check CHECK (((role)::text = ANY ((ARRAY['admin'::character varying, 'librarian'::character varying])::text[])))
 );
 
 
-ALTER TABLE public.staff OWNER TO admin;
-
 --
--- Name: staff_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+-- Name: staff_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
 CREATE SEQUENCE public.staff_id_seq
@@ -567,17 +510,15 @@ CREATE SEQUENCE public.staff_id_seq
     CACHE 1;
 
 
-ALTER SEQUENCE public.staff_id_seq OWNER TO admin;
-
 --
--- Name: staff_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+-- Name: staff_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
 ALTER SEQUENCE public.staff_id_seq OWNED BY public.staff.id;
 
 
 --
--- Name: upcoming_due_loans; Type: VIEW; Schema: public; Owner: admin
+-- Name: upcoming_due_loans; Type: VIEW; Schema: public; Owner: -
 --
 
 CREATE VIEW public.upcoming_due_loans AS
@@ -592,10 +533,8 @@ CREATE VIEW public.upcoming_due_loans AS
   ORDER BY l.due_date;
 
 
-ALTER VIEW public.upcoming_due_loans OWNER TO admin;
-
 --
--- Name: upcoming_due_loans_view; Type: VIEW; Schema: public; Owner: admin
+-- Name: upcoming_due_loans_view; Type: VIEW; Schema: public; Owner: -
 --
 
 CREATE VIEW public.upcoming_due_loans_view AS
@@ -610,10 +549,8 @@ CREATE VIEW public.upcoming_due_loans_view AS
   ORDER BY l.due_date;
 
 
-ALTER VIEW public.upcoming_due_loans_view OWNER TO admin;
-
 --
--- Name: upcoming_loans_view; Type: VIEW; Schema: public; Owner: admin
+-- Name: upcoming_loans_view; Type: VIEW; Schema: public; Owner: -
 --
 
 CREATE VIEW public.upcoming_loans_view AS
@@ -628,144 +565,65 @@ CREATE VIEW public.upcoming_loans_view AS
   ORDER BY l.due_date;
 
 
-ALTER VIEW public.upcoming_loans_view OWNER TO admin;
-
 --
--- Name: activity_logs id; Type: DEFAULT; Schema: public; Owner: admin
+-- Name: activity_logs id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.activity_logs ALTER COLUMN id SET DEFAULT nextval('public.activity_log_id_seq'::regclass);
 
 
 --
--- Name: authors id; Type: DEFAULT; Schema: public; Owner: admin
+-- Name: authors id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.authors ALTER COLUMN id SET DEFAULT nextval('public.authors_id_seq'::regclass);
 
 
 --
--- Name: books id; Type: DEFAULT; Schema: public; Owner: admin
+-- Name: books id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.books ALTER COLUMN id SET DEFAULT nextval('public.books_id_seq'::regclass);
 
 
 --
--- Name: categories id; Type: DEFAULT; Schema: public; Owner: admin
+-- Name: categories id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.category_id_seq'::regclass);
 
 
 --
--- Name: loans id; Type: DEFAULT; Schema: public; Owner: admin
+-- Name: loans id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.loans ALTER COLUMN id SET DEFAULT nextval('public.loans_id_seq'::regclass);
 
 
 --
--- Name: members id; Type: DEFAULT; Schema: public; Owner: admin
+-- Name: members id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.members ALTER COLUMN id SET DEFAULT nextval('public.members_id_seq'::regclass);
 
 
 --
--- Name: staff id; Type: DEFAULT; Schema: public; Owner: admin
+-- Name: staff id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.staff ALTER COLUMN id SET DEFAULT nextval('public.staff_id_seq'::regclass);
 
 
 --
--- Data for Name: activity_logs; Type: TABLE DATA; Schema: public; Owner: admin
+-- Data for Name: activity_logs; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public.activity_logs (id, activity_type, actor_id, actor_type, description, entity_id, entity_type, created_at) FROM stdin;
-1	member_deleted	8	staff	Reza Bolhasani delete member 45	45	member	2025-08-06 16:20:15.465225
-2	member_deleted	8	staff	Reza Bolhasani delete member 46	46	member	2025-08-06 16:21:57.356973
-3	loan_added	8	staff	Reza Bolhasani added member 47	47	member	2025-08-07 10:30:03.961824
-4	member_deleted	8	staff	Reza Bolhasani added member 47	47	member	2025-08-07 10:30:58.265849
-5	member_added	8	staff	Reza Bolhasani added member with id 48	48	member	2025-08-07 10:37:32.460044
-6	member_updated	8	staff	Reza Bolhasani updated member with id 48	48	member	2025-08-07 10:43:14.309013
-7	member_updated	8	staff	Reza Bolhasani updated member with id 48	48	member	2025-08-07 10:44:31.355275
-8	member_updated	8	staff	Reza Bolhasani updated member with id 48	48	member	2025-08-07 10:47:16.263771
-9	member_updated	8	staff	Reza Bolhasani updated member with id 48	48	member	2025-08-07 10:47:20.051332
-10	member_updated	8	staff	Reza Bolhasani updated member with id 48	48	member	2025-08-07 10:47:21.851438
-11	member_deleted	8	staff	Reza Bolhasani deleted member with id 48	48	member	2025-08-07 10:47:51.752841
-12	book_added	8	staff	added Book	123	book	2025-08-07 11:16:34.707476
-13	book_updated	8	staff	updated book	123	book	2025-08-07 11:18:18.07522
-14	book_added	8	staff	added Book	124	book	2025-08-07 11:21:28.319806
-15	book_updated	8	staff	updated book	124	book	2025-08-07 11:22:14.481612
-16	member_added	8	staff	Reza Bolhasani added member with id 49	49	member	2025-08-07 11:24:03.339974
-17	member_added	8	staff	Reza Bolhasani added member with id 52	52	member	2025-08-07 11:24:47.616672
-18	loan_added	8	staff	added loan	57	loan	2025-08-07 11:25:48.276091
-19	loan_added	8	staff	added loan	58	loan	2025-08-07 11:26:57.50461
-20	loan_returned	8	staff	marked loan as returned	57	loan	2025-08-07 11:32:29.05786
-21	member_added	8	staff	Reza Bolhasani added member with id 53	53	member	2025-08-07 15:59:18.690851
-22	book_added	8	staff	added Book	125	book	2025-08-07 19:47:32.514119
-23	book_added	8	staff	added Book	126	book	2025-08-07 19:51:25.589943
-24	book_added	8	staff	added Book	128	book	2025-08-07 20:05:18.727395
-25	loan_added	8	staff	added loan	59	loan	2025-08-07 20:06:52.856442
-26	book_updated	8	staff	updated book	123	book	2025-08-08 09:27:31.617602
-27	book_updated	8	staff	updated book	123	book	2025-08-08 09:28:07.292359
-28	member_updated	8	staff	Reza Bolhasani updated member with id 52	52	member	2025-08-09 12:27:43.845501
-29	member_updated	8	staff	Reza Bolhasani updated member with id 52	52	member	2025-08-09 12:27:57.739935
-30	member_deleted	8	staff	Reza Bolhasani deleted member with id 53	53	member	2025-08-09 12:44:05.196395
-31	book_deleted	8	staff	deleted Book	126	book	2025-08-09 14:44:38.374266
-32	book_added	10	staff	added Book	129	book	2025-08-10 19:19:59.097611
-33	book_added	10	staff	added Book	130	book	2025-08-10 20:09:18.740689
-34	book_updated	10	staff	updated book	129	book	2025-08-10 20:14:05.168471
-35	loan_returned	10	staff	marked loan as returned	58	loan	2025-08-15 11:32:52.738694
-36	loan_deleted	10	staff	deleted loan	57	loan	2025-08-18 14:17:49.416378
-37	loan_deleted	10	staff	deleted loan	58	loan	2025-08-18 14:17:53.98513
-38	member_deleted	10	staff	Reza Bolhasani deleted member with id 49	49	member	2025-08-18 14:18:03.317819
-39	member_deleted	10	staff	Reza Bolhasani deleted member with id 52	52	member	2025-08-18 14:18:09.067372
-40	book_deleted	10	staff	deleted Book	130	book	2025-08-18 14:18:18.647133
-41	book_deleted	10	staff	deleted Book	129	book	2025-08-18 14:18:29.97412
-42	book_deleted	10	staff	deleted Book	128	book	2025-08-18 14:18:40.138008
-43	book_deleted	10	staff	deleted Book	125	book	2025-08-19 08:31:58.560456
-44	book_deleted	10	staff	deleted Book	124	book	2025-08-19 08:35:11.056503
-45	book_deleted	10	staff	deleted Book	123	book	2025-08-19 08:35:14.476765
-46	book_added	10	staff	added Book	131	book	2025-08-19 09:08:51.040806
-47	book_updated	10	staff	updated book	131	book	2025-08-19 09:13:19.46646
-48	book_added	10	staff	added Book	132	book	2025-08-19 09:21:00.109089
-49	book_added	10	staff	added Book	133	book	2025-08-19 09:25:30.800334
-50	book_added	10	staff	added Book	134	book	2025-08-19 09:29:11.541979
-51	book_added	10	staff	added Book	135	book	2025-08-19 09:32:51.155957
-52	book_added	10	staff	added Book	136	book	2025-08-19 09:36:02.583665
-53	book_added	10	staff	added Book	137	book	2025-08-19 09:39:16.891741
-54	book_updated	10	staff	updated book	136	book	2025-08-19 09:52:13.954889
-55	book_updated	10	staff	updated book	136	book	2025-08-19 09:52:21.585643
-56	book_added	10	staff	added Book	138	book	2025-08-19 09:54:50.470083
-57	book_updated	10	staff	updated book	138	book	2025-08-19 09:55:02.697236
-58	book_added	10	staff	added Book	139	book	2025-08-19 09:56:58.431226
-59	book_added	10	staff	added Book	140	book	2025-08-19 10:00:37.89284
-60	book_added	10	staff	added Book	141	book	2025-08-19 10:03:32.450451
-61	member_added	10	staff	محمدمهدی بوالحسنی added member with id 54	54	member	2025-08-19 10:07:11.779444
-62	member_updated	10	staff	محمدمهدی بوالحسنی updated member with id 54	54	member	2025-08-19 10:07:26.184043
-63	member_added	10	staff	محمدمهدی بوالحسنی added member with id 55	55	member	2025-08-19 10:08:00.472602
-64	member_added	10	staff	محمدمهدی بوالحسنی added member with id 56	56	member	2025-08-19 10:08:49.669647
-65	member_added	10	staff	محمدمهدی بوالحسنی added member with id 57	57	member	2025-08-19 10:09:18.476219
-66	member_added	10	staff	محمدمهدی بوالحسنی added member with id 58	58	member	2025-08-19 10:10:35.310744
-67	member_added	10	staff	محمدمهدی بوالحسنی added member with id 59	59	member	2025-08-19 10:11:40.012321
-68	member_added	10	staff	محمدمهدی بوالحسنی added member with id 60	60	member	2025-08-19 10:12:36.833962
-69	member_added	10	staff	محمدمهدی بوالحسنی added member with id 61	61	member	2025-08-19 10:13:13.247044
-70	member_added	10	staff	محمدمهدی بوالحسنی added member with id 62	62	member	2025-08-19 10:13:45.533985
-71	loan_added	10	staff	added loan	60	loan	2025-08-19 10:16:41.902217
-72	loan_added	10	staff	added loan	61	loan	2025-08-19 10:21:06.521451
-73	loan_added	10	staff	added loan	62	loan	2025-08-19 10:22:25.782985
-74	loan_added	10	staff	added loan	63	loan	2025-08-19 10:33:42.225528
-75	loan_added	10	staff	added loan	64	loan	2025-08-19 10:34:38.129284
-76	loan_added	10	staff	added loan	65	loan	2025-08-19 11:58:15.112191
-77	loan_deleted	10	staff	deleted loan	65	loan	2025-08-19 11:59:41.223718
 \.
 
 
 --
--- Data for Name: authors; Type: TABLE DATA; Schema: public; Owner: admin
+-- Data for Name: authors; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public.authors (id, full_name, nationality, bio, created_at, updated_at, version) FROM stdin;
@@ -783,7 +641,7 @@ COPY public.authors (id, full_name, nationality, bio, created_at, updated_at, ve
 
 
 --
--- Data for Name: books; Type: TABLE DATA; Schema: public; Owner: admin
+-- Data for Name: books; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public.books (id, title, isbn, author_id, total_copies, available_copies, created_at, updated_at, version, publisher, language, summary, translator, cover_image_url) FROM stdin;
@@ -802,7 +660,7 @@ COPY public.books (id, title, isbn, author_id, total_copies, available_copies, c
 
 
 --
--- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: admin
+-- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public.categories (id, slug, name, created_at, updated_at, version) FROM stdin;
@@ -810,7 +668,7 @@ COPY public.categories (id, slug, name, created_at, updated_at, version) FROM st
 
 
 --
--- Data for Name: category_books; Type: TABLE DATA; Schema: public; Owner: admin
+-- Data for Name: category_books; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public.category_books (book_id, category_id) FROM stdin;
@@ -818,7 +676,7 @@ COPY public.category_books (book_id, category_id) FROM stdin;
 
 
 --
--- Data for Name: loans; Type: TABLE DATA; Schema: public; Owner: admin
+-- Data for Name: loans; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public.loans (id, book_id, member_id, borrow_date, due_date, return_date, status, created_at, updated_at, version) FROM stdin;
@@ -831,7 +689,7 @@ COPY public.loans (id, book_id, member_id, borrow_date, due_date, return_date, s
 
 
 --
--- Data for Name: members; Type: TABLE DATA; Schema: public; Owner: admin
+-- Data for Name: members; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 COPY public.members (id, full_name, email, phone_number, joined_at, status, created_at, updated_at, version, national_id) FROM stdin;
@@ -848,65 +706,65 @@ COPY public.members (id, full_name, email, phone_number, joined_at, status, crea
 
 
 --
--- Data for Name: staff; Type: TABLE DATA; Schema: public; Owner: admin
+-- Data for Name: staff; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.staff (id, full_name, phone_number, email, role, password_hash, created_at, updated_at, last_login, version, status, username) FROM stdin;
-10	محمدمهدی بوالحسنی	09357846561	admin@lms.org	admin	$2a$10$f7RkrRwbgcPxlZDfzlMcTu3duoTDkZj5QPxHxz4hV/flsZ9eGQEu6	2025-08-10 02:26:52.545505	2025-08-19 12:00:39.972806	2025-08-19 15:30:39.972718	14	active	rezbo
+COPY public.staff (id, full_name, phone_number, email, role, password_hash, created_at, updated_at, last_login, version, status) FROM stdin;
+10	محمدمهدی بوالحسنی	09350000000	admin@lms.org	admin	$2a$10$f7RkrRwbgcPxlZDfzlMcTu3duoTDkZj5QPxHxz4hV/flsZ9eGQEu6	2025-08-10 02:26:52.545505	2025-08-20 16:24:19.921053	2025-08-19 21:00:02.053924	18	active
 \.
 
 
 --
--- Name: activity_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+-- Name: activity_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.activity_log_id_seq', 77, true);
 
 
 --
--- Name: authors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+-- Name: authors_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.authors_id_seq', 20, true);
 
 
 --
--- Name: books_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+-- Name: books_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.books_id_seq', 141, true);
 
 
 --
--- Name: category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+-- Name: category_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.category_id_seq', 9, true);
 
 
 --
--- Name: loans_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+-- Name: loans_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.loans_id_seq', 65, true);
 
 
 --
--- Name: members_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+-- Name: members_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.members_id_seq', 62, true);
 
 
 --
--- Name: staff_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+-- Name: staff_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
 SELECT pg_catalog.setval('public.staff_id_seq', 12, true);
 
 
 --
--- Name: activity_logs activity_log_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: activity_logs activity_log_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.activity_logs
@@ -914,7 +772,7 @@ ALTER TABLE ONLY public.activity_logs
 
 
 --
--- Name: authors authors_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: authors authors_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.authors
@@ -922,7 +780,7 @@ ALTER TABLE ONLY public.authors
 
 
 --
--- Name: books books_isbn_key; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: books books_isbn_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.books
@@ -930,7 +788,7 @@ ALTER TABLE ONLY public.books
 
 
 --
--- Name: books books_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: books books_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.books
@@ -938,7 +796,7 @@ ALTER TABLE ONLY public.books
 
 
 --
--- Name: category_books category_books_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: category_books category_books_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.category_books
@@ -946,7 +804,7 @@ ALTER TABLE ONLY public.category_books
 
 
 --
--- Name: categories category_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: categories category_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.categories
@@ -954,7 +812,7 @@ ALTER TABLE ONLY public.categories
 
 
 --
--- Name: categories category_slug_key; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: categories category_slug_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.categories
@@ -962,7 +820,7 @@ ALTER TABLE ONLY public.categories
 
 
 --
--- Name: loans loans_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: loans loans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.loans
@@ -970,7 +828,7 @@ ALTER TABLE ONLY public.loans
 
 
 --
--- Name: members members_email_key; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: members members_email_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.members
@@ -978,7 +836,7 @@ ALTER TABLE ONLY public.members
 
 
 --
--- Name: members members_national_id_key; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: members members_national_id_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.members
@@ -986,7 +844,7 @@ ALTER TABLE ONLY public.members
 
 
 --
--- Name: members members_phone_key; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: members members_phone_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.members
@@ -994,7 +852,7 @@ ALTER TABLE ONLY public.members
 
 
 --
--- Name: members members_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: members members_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.members
@@ -1002,7 +860,7 @@ ALTER TABLE ONLY public.members
 
 
 --
--- Name: staff staff_email_key; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: staff staff_email_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.staff
@@ -1010,7 +868,7 @@ ALTER TABLE ONLY public.staff
 
 
 --
--- Name: staff staff_phone_number_key; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: staff staff_phone_number_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.staff
@@ -1018,7 +876,7 @@ ALTER TABLE ONLY public.staff
 
 
 --
--- Name: staff staff_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+-- Name: staff staff_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.staff
@@ -1026,22 +884,14 @@ ALTER TABLE ONLY public.staff
 
 
 --
--- Name: staff staff_username_unique; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public.staff
-    ADD CONSTRAINT staff_username_unique UNIQUE (username);
-
-
---
--- Name: unique_active_loan; Type: INDEX; Schema: public; Owner: admin
+-- Name: unique_active_loan; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX unique_active_loan ON public.loans USING btree (member_id, book_id) WHERE (status = 'borrowed'::text);
 
 
 --
--- Name: active_members_view _RETURN; Type: RULE; Schema: public; Owner: admin
+-- Name: active_members_view _RETURN; Type: RULE; Schema: public; Owner: -
 --
 
 CREATE OR REPLACE VIEW public.active_members_view AS
@@ -1055,7 +905,7 @@ CREATE OR REPLACE VIEW public.active_members_view AS
 
 
 --
--- Name: popular_books_view _RETURN; Type: RULE; Schema: public; Owner: admin
+-- Name: popular_books_view _RETURN; Type: RULE; Schema: public; Owner: -
 --
 
 CREATE OR REPLACE VIEW public.popular_books_view AS
@@ -1069,7 +919,7 @@ CREATE OR REPLACE VIEW public.popular_books_view AS
 
 
 --
--- Name: low_stock_high_demand_books_view _RETURN; Type: RULE; Schema: public; Owner: admin
+-- Name: low_stock_high_demand_books_view _RETURN; Type: RULE; Schema: public; Owner: -
 --
 
 CREATE OR REPLACE VIEW public.low_stock_high_demand_books_view AS
@@ -1086,7 +936,7 @@ CREATE OR REPLACE VIEW public.low_stock_high_demand_books_view AS
 
 
 --
--- Name: popular_authors_view _RETURN; Type: RULE; Schema: public; Owner: admin
+-- Name: popular_authors_view _RETURN; Type: RULE; Schema: public; Owner: -
 --
 
 CREATE OR REPLACE VIEW public.popular_authors_view AS
@@ -1101,84 +951,84 @@ CREATE OR REPLACE VIEW public.popular_authors_view AS
 
 
 --
--- Name: loans trg_prevent_returned_loan_insertion; Type: TRIGGER; Schema: public; Owner: admin
+-- Name: loans trg_prevent_returned_loan_insertion; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER trg_prevent_returned_loan_insertion BEFORE INSERT ON public.loans FOR EACH ROW WHEN ((new.status = 'returned'::text)) EXECUTE FUNCTION public.prevent_insert_loan_as_returend();
 
 
 --
--- Name: books trg_set_available_copies_to_total; Type: TRIGGER; Schema: public; Owner: admin
+-- Name: books trg_set_available_copies_to_total; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER trg_set_available_copies_to_total BEFORE INSERT ON public.books FOR EACH ROW EXECUTE FUNCTION public.set_available_copies_to_total();
 
 
 --
--- Name: loans trg_sync_available_copies; Type: TRIGGER; Schema: public; Owner: admin
+-- Name: loans trg_sync_available_copies; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER trg_sync_available_copies AFTER INSERT OR DELETE OR UPDATE ON public.loans FOR EACH ROW EXECUTE FUNCTION public.update_available_copies();
 
 
 --
--- Name: books trg_sync_available_copies_on_totalcopy_update; Type: TRIGGER; Schema: public; Owner: admin
+-- Name: books trg_sync_available_copies_on_totalcopy_update; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER trg_sync_available_copies_on_totalcopy_update BEFORE UPDATE OF total_copies ON public.books FOR EACH ROW WHEN ((old.total_copies <> new.total_copies)) EXECUTE FUNCTION public.update_available_copies_on_totalcopy_update();
 
 
 --
--- Name: authors trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: admin
+-- Name: authors trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER trg_update_update_fields BEFORE UPDATE ON public.authors FOR EACH ROW EXECUTE FUNCTION public.update_update_fields();
 
 
 --
--- Name: books trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: admin
+-- Name: books trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER trg_update_update_fields BEFORE UPDATE ON public.books FOR EACH ROW EXECUTE FUNCTION public.update_update_fields();
 
 
 --
--- Name: categories trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: admin
+-- Name: categories trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER trg_update_update_fields BEFORE UPDATE ON public.categories FOR EACH ROW EXECUTE FUNCTION public.update_update_fields();
 
 
 --
--- Name: loans trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: admin
+-- Name: loans trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER trg_update_update_fields BEFORE UPDATE ON public.loans FOR EACH ROW EXECUTE FUNCTION public.update_update_fields();
 
 
 --
--- Name: members trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: admin
+-- Name: members trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER trg_update_update_fields BEFORE UPDATE ON public.members FOR EACH ROW EXECUTE FUNCTION public.update_update_fields();
 
 
 --
--- Name: staff trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: admin
+-- Name: staff trg_update_update_fields; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER trg_update_update_fields BEFORE UPDATE ON public.staff FOR EACH ROW EXECUTE FUNCTION public.update_update_fields();
 
 
 --
--- Name: books trg_validate_available_copies_on_update; Type: TRIGGER; Schema: public; Owner: admin
+-- Name: books trg_validate_available_copies_on_update; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER trg_validate_available_copies_on_update BEFORE UPDATE OF available_copies ON public.books FOR EACH ROW WHEN ((new.available_copies <> old.available_copies)) EXECUTE FUNCTION public.validate_available_copies_update();
 
 
 --
--- Name: books books_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+-- Name: books books_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.books
@@ -1186,7 +1036,7 @@ ALTER TABLE ONLY public.books
 
 
 --
--- Name: category_books category_books_book_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+-- Name: category_books category_books_book_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.category_books
@@ -1194,7 +1044,7 @@ ALTER TABLE ONLY public.category_books
 
 
 --
--- Name: category_books category_books_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+-- Name: category_books category_books_category_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.category_books
@@ -1202,7 +1052,7 @@ ALTER TABLE ONLY public.category_books
 
 
 --
--- Name: loans loans_book_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+-- Name: loans loans_book_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.loans
@@ -1210,7 +1060,7 @@ ALTER TABLE ONLY public.loans
 
 
 --
--- Name: loans loans_member_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+-- Name: loans loans_member_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.loans
