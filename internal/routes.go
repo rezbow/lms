@@ -3,6 +3,8 @@ package internal
 import (
 	"lms/internal/handlers"
 	"lms/internal/views/common"
+	"log"
+	"os"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -18,11 +20,17 @@ func SetupRouter(
 	staffHandler *handlers.StaffHandler,
 	dashboradHandler *handlers.DashboardHanlder,
 ) *gin.Engine {
+
+	secret := os.Getenv("COOKIE_SECRET")
+	if secret == "" {
+		log.Fatal("missing COOKIE_SECRET environment variable")
+	}
+
 	r := gin.Default()
 
 	r.Static("/static", "./static")
 
-	store := cookie.NewStore([]byte("cfaa7e52"))
+	store := cookie.NewStore([]byte(secret))
 	r.Use(sessions.Sessions("session", store))
 	r.GET("/login", staffHandler.LoginPage)
 	r.POST("/login", staffHandler.Login)

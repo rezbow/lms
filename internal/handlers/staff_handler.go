@@ -275,6 +275,7 @@ func (sh *StaffHandler) Add(ctx *gin.Context) {
 		}
 		return
 	}
+
 	redirect(ctx, fmt.Sprintf("/staff/%d", staff.ID))
 }
 
